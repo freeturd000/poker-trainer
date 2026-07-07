@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#14171A">
+<title>Table Positions — 6-max</title>
+<style>
+  :root{
+    --bg:#14171A; --panel:#1B1F24; --line:#2A2F36;
+    --text:#E9E7E2; --muted:#727B86; --accent:#E6C066;
+    --green:#3FA372; --felt:#1C3B2E; --feltline:#2F5A45; --felttext:#9EC7B0;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; background:var(--bg); color:var(--text);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; line-height:1.6;}
+  .wrap{max-width:660px; margin:0 auto; padding:20px 16px 48px;}
+  .eyebrow{font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 4px;}
+  h1{font-size:23px; font-weight:600; margin:0 0 2px; letter-spacing:-.01em;}
+  .sub{font-size:13px; color:var(--muted); margin:0 0 20px;}
+  h2{font-size:16px; font-weight:600; margin:28px 0 10px; letter-spacing:-.01em;}
+  p{font-size:14.5px; margin:0 0 12px;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+  svg{width:100%; height:auto; display:block;}
+  .seat{cursor:pointer;}
+  .seat rect{fill:var(--panel); stroke:var(--line); stroke-width:1; transition:.12s;}
+  .seat:hover rect{stroke:#4A525C;}
+  .seat.btn rect{fill:#2B2718; stroke:var(--accent);}
+  .seat.sel rect{stroke:var(--accent); stroke-width:2.5;}
+  .seat .pos{fill:var(--text); font-weight:600; font-size:15px;}
+  .seat.btn .pos{fill:var(--accent);}
+  .seat .num{fill:var(--muted); font-size:11px;}
+  .rolelbl{fill:var(--muted); font-size:11px;}
+  .felttext{fill:var(--felttext);}
+  .detail{margin-top:6px; padding:16px; background:var(--panel);
+    border:1px solid var(--line); border-radius:12px;}
+  .detail .dname{font-size:19px; font-weight:600; margin:0 0 10px;}
+  .chips{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 12px;}
+  .chip{font-size:11.5px; padding:4px 9px; border-radius:6px; background:#22272D;
+    color:#A9B2BC; border:1px solid var(--line);}
+  .chip.pos-in{background:#193227; color:#7FD3A6; border-color:#2A5540;}
+  .chip.pos-out{background:#2E2320; color:#E0A98A; border-color:#5A4034;}
+  .detail .dnote{font-size:14px; color:#C6C4BC; margin:0;}
+  .callout{padding:14px 16px; background:var(--panel); border:1px solid var(--line);
+    border-left:3px solid var(--accent); border-radius:0 10px 10px 0; margin:12px 0;}
+  .callout b{color:var(--text); font-weight:600;}
+  .foot{margin-top:32px; padding-top:16px; border-top:1px solid var(--line);
+    font-size:12px; color:#4B535C; line-height:1.7;}
+  .hint{font-size:12.5px; color:var(--muted); margin:8px 0 14px; text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">Step 1 · Preflop</p>
+  <h1>Table positions</h1>
+  <p class="sub">6-max cash · who sits where, and who acts when</p>
+
+  <svg viewBox="0 0 680 430" role="img" aria-label="6-max poker table with six seats around the dealer button">
+    <ellipse cx="340" cy="210" rx="200" ry="110" fill="var(--felt)" stroke="var(--feltline)" stroke-width="1.5"/>
+    <text class="felttext" x="340" y="200" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="600">6-max table</text>
+    <text class="felttext" x="340" y="224" text-anchor="middle" dominant-baseline="central" font-size="12" opacity="0.85">action moves clockwise</text>
+
+    <circle cx="428" cy="300" r="13" fill="var(--text)"/>
+    <text x="428" y="300" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700" fill="#14171A">D</text>
+
+    <g class="seat btn" data-pos="BTN">
+      <rect x="458" y="295" width="84" height="50" rx="8"/>
+      <text class="pos" x="500" y="314" text-anchor="middle" dominant-baseline="central">BTN</text>
+      <text class="num" x="500" y="332" text-anchor="middle" dominant-baseline="central">dealt 6th</text>
+    </g>
+
+    <g class="seat" data-pos="SB">
+      <rect x="298" y="337" width="84" height="50" rx="8"/>
+      <text class="pos" x="340" y="356" text-anchor="middle" dominant-baseline="central">SB</text>
+      <text class="num" x="340" y="374" text-anchor="middle" dominant-baseline="central">dealt 1st</text>
+    </g>
+    <text class="rolelbl" x="340" y="404" text-anchor="middle">posts small blind</text>
+
+    <g class="seat" data-pos="BB">
+      <rect x="138" y="295" width="84" height="50" rx="8"/>
+      <text class="pos" x="180" y="314" text-anchor="middle" dominant-baseline="central">BB</text>
+      <text class="num" x="180" y="332" text-anchor="middle" dominant-baseline="central">dealt 2nd</text>
+    </g>
+    <text class="rolelbl" x="180" y="366" text-anchor="middle">posts big blind</text>
+
+    <text class="rolelbl" x="180" y="64" text-anchor="middle">first to act preflop</text>
+    <g class="seat" data-pos="UTG">
+      <rect x="138" y="75" width="84" height="50" rx="8"/>
+      <text class="pos" x="180" y="94" text-anchor="middle" dominant-baseline="central">UTG</text>
+      <text class="num" x="180" y="112" text-anchor="middle" dominant-baseline="central">dealt 3rd</text>
+    </g>
+
+    <g class="seat" data-pos="HJ">
+      <rect x="298" y="35" width="84" height="50" rx="8"/>
+      <text class="pos" x="340" y="54" text-anchor="middle" dominant-baseline="central">HJ</text>
+      <text class="num" x="340" y="72" text-anchor="middle" dominant-baseline="central">dealt 4th</text>
+    </g>
+
+    <g class="seat" data-pos="CO">
+      <rect x="458" y="75" width="84" height="50" rx="8"/>
+      <text class="pos" x="500" y="94" text-anchor="middle" dominant-baseline="central">CO</text>
+      <text class="num" x="500" y="112" text-anchor="middle" dominant-baseline="central">dealt 5th</text>
+    </g>
+  </svg>
+
+  <p class="hint">Tap any seat for the full breakdown</p>
+
+  <div class="detail" id="detail">
+    <p class="dname" id="dname">Button (BTN)</p>
+    <div class="chips" id="dchips"></div>
+    <p class="dnote" id="dnote"></p>
+  </div>
+
+  <h2>Dealt order is not acting order</h2>
+  <p>The single thing beginners mix up. Cards are <b>dealt</b> starting left of the button (SB first) and ending on the button — that's literally why it holds the dealer button. But who <b>acts</b> first is different:</p>
+  <div class="callout">
+    <p style="margin:0 0 6px;"><b>Preflop:</b> action starts at UTG; the blinds act last (BB has "the option" to raise). The blinds wait because their money's already in.</p>
+    <p style="margin:0;"><b>Postflop:</b> it flips — blinds act first, button acts last on every street.</p>
+  </div>
+  <p>The only number that matters for strategy is <b>who acts last</b>, and that's the button. Acting last means you've seen everyone else decide before you do. That's the whole reason the button opens ~45% of hands and UTG opens ~15%. Position isn't a seat — it's information.</p>
+
+  <h2>In position vs out of position</h2>
+  <p>You saw "in position" and "out of position" on the seat cards above. Here's what they mean, because these two phrases run through everything in poker.</p>
+  <p>First, one word to define: a <b>street</b> is just one round of betting. After the first two cards are dealt, there are three more betting rounds — the flop, the turn, and the river. Each of those is a "street," and on each one the players take turns acting in a set order.</p>
+  <div class="callout">
+    <p style="margin:0 0 6px;"><b>In position (IP):</b> you act <b>after</b> your opponent on every street after the flop.</p>
+    <p style="margin:0;"><b>Out of position (OOP):</b> you act <b>before</b> your opponent.</p>
+  </div>
+  <p>That's the entire definition — it's just who has to move first. And it comes straight from where you sit relative to the button, which is why "position" and "who acts last" are really the same idea.</p>
+  <p>Why it matters more than almost anything else: <b>acting last is a permanent information edge.</b> When you're in position, you get to watch what your opponent does — bet, check, how big — <b>before</b> you have to decide anything. When you're out of position, you're guessing in the dark and they get to react to you. The exact same two cards win more money in position than out of position, every single time. And it's free — it depends only on your seat.</p>
+  <p>Quick way to lock it in: the <b>button is always in position</b> (it acts last against everyone). The <b>blinds are always out of position</b> after the flop (they act first). Everyone in between is in position against the seats to their right, and out of position against the seats to their left.</p>
+  <div class="callout">
+    <p style="margin:0 0 6px;"><b>See it in a hand:</b> it folds to you on the button, you raise, and the big blind calls. The flop comes. The big blind has to act first and checks — now <b>you</b> decide, already knowing what they did. That's playing <b>in position.</b></p>
+    <p style="margin:0;">Now flip it: you're in the big blind, the button raises, you call. The flop comes and <b>you</b> have to act first, with no idea what the button will do. Same flop, worse spot — that's <b>out of position.</b></p>
+  </div>
+
+  <h2>Early, middle, and late position</h2>
+  <p>The seats also get grouped into buckets, and you'll hear these words constantly. They just describe how early or late you have to act:</p>
+  <div class="callout">
+    <p style="margin:0 0 6px;"><b>Early position:</b> the first seat to act — in 6-max that's UTG. You act before almost everyone, so you play the tightest range. The worst seats to be in.</p>
+    <p style="margin:0 0 6px;"><b>Middle position:</b> the bridge seat — in 6-max that's the HJ. Better than early, not as good as late.</p>
+    <p style="margin:0 0 6px;"><b>Late position:</b> the seats nearest the button — the CO and the BTN. You act last or nearly last, so you play the widest range. The best seats.</p>
+    <p style="margin:0;"><b>The blinds:</b> the SB and BB — forced-bet seats that are stuck out of position after the flop, so they're their own special category.</p>
+  </div>
+  <p>The simple version: <b>early = tight, late = wide, blinds = special.</b> That grouping is the same at every table size — it's the framework worth memorizing, not the individual seat names.</p>
+
+  <h2>More or fewer players</h2>
+  <p>Tables come in other sizes. <b>9-handed</b> is "full ring" — and live $1/$2 and $1/$3 in Vegas are almost always full ring. It just adds more early seats in front. Going toward the button at 9-handed you get UTG, UTG+1, UTG+2, then LJ, HJ, CO, BTN, plus the blinds. (<b>LJ</b> is "lojack" — just the name for one of those extra middle seats, poker slang riffing on "hijack." A 6-max table doesn't have one.) Fewer than six is "short-handed," which happens as players bust or leave.</p>
+  <p>One rule covers both directions: <b>more players behind you = play tighter; fewer players = play wider.</b> You don't need a separate chart per table size. Position = how many players still act after you. A 6-max UTG range is basically a full-ring middle-position range. Master 6-max first; full ring is just "bolt two tighter early seats on top."</p>
+
+  <p class="foot">Page two of the study set. Core positions are the same everywhere — online, live, home game. Standard NLHE. More pages get added as we build.</p>
+</div>
+
+<script>
+(function(){
+  var D={
+    BTN:{name:"Button (BTN)",chips:["Dealt 6th (last)","Acts last postflop","In position"],inpos:"in",
+      note:"Best seat at the table. You watch everyone act before you decide, so you open the widest range — around 45% of hands. The dealer button rotates one seat left after every hand, so everyone takes a turn here."},
+    SB:{name:"Small blind (SB)",chips:["Dealt 1st","Acts 2nd-last preflop / first postflop","Out of position"],inpos:"out",
+      note:"One seat left of the button. Posts a forced half-bet before seeing cards. Preflop it's a steal-or-fold seat, but on every later street you're stuck acting first — a real disadvantage."},
+    BB:{name:"Big blind (BB)",chips:["Dealt 2nd","Acts last preflop","Out of position"],inpos:"out",
+      note:"Posts the full big blind — the unit the whole table is measured in. Gets 'the option' to raise preflop since money's already in, so it defends a wide range at a discount. Still out of position postflop."},
+    UTG:{name:"Under the gun (UTG)",chips:["Dealt 3rd","Acts first preflop","Out of position"],inpos:"out",
+      note:"The pressure seat — first to open with the entire table still behind you. Tightest range, around 15%. Only strong hands survive here because so many players can wake up with something."},
+    HJ:{name:"Hijack (HJ)",chips:["Dealt 4th","Acts early-middle","Middle position"],inpos:"mid",
+      note:"Two seats off the button. Old slang for 'hijacking' the steal the later seats were about to make. Range widens from here as fewer players remain behind you."},
+    CO:{name:"Cutoff (CO)",chips:["Dealt 5th","Acts late","Late position"],inpos:"in",
+      note:"One seat off the button — second-best position at the table. 'Cuts off' the button's steal by acting before it. Opens wide, around 27%, and steals blinds often."}
+  };
+  var order=["BTN","SB","BB","UTG","HJ","CO"];
+  var seats={};
+  document.querySelectorAll('.seat').forEach(function(s){ seats[s.dataset.pos]=s; });
+
+  function show(pos){
+    var d=D[pos];
+    document.getElementById('dname').textContent=d.name;
+    var wrap=document.getElementById('dchips'); wrap.innerHTML='';
+    d.chips.forEach(function(c,i){
+      var el=document.createElement('span'); el.className='chip';
+      if(i===2){ el.className+= d.inpos==='in'?' pos-in': (d.inpos==='out'?' pos-out':''); }
+      el.textContent=c; wrap.appendChild(el);
+    });
+    document.getElementById('dnote').textContent=d.note;
+    order.forEach(function(p){ seats[p].classList.toggle('sel', p===pos); });
+  }
+  order.forEach(function(p){
+    seats[p].addEventListener('click',function(){ show(p); });
+  });
+  show('BTN');
+})();
+</script>
+</body>
+</html>

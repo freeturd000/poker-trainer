@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#14171A">
+<title>Preflop Ranges — 6-max cash</title>
+<style>
+  :root{
+    --bg:#14171A; --panel:#1B1F24; --line:#2A2F36;
+    --text:#E9E7E2; --muted:#727B86;
+    --raise-bg:#2A7A54; --raise-text:#CFF6E0; --raise-line:#38996B;
+    --fold-bg:#181B1F; --fold-text:#525A64;
+    --accent:#E6C066;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; background:var(--bg); color:var(--text);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;}
+  .wrap{max-width:640px; margin:0 auto; padding:20px 16px 40px;}
+  .eyebrow{font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 4px;}
+  h1{font-size:22px; font-weight:600; margin:0 0 2px; letter-spacing:-.01em;}
+  .sub{font-size:13px; color:var(--muted); margin:0 0 20px;}
+  .tabs{display:flex; gap:6px; margin-bottom:16px;}
+  .tab{flex:1; padding:10px 4px; border:1px solid var(--line); background:transparent;
+    color:var(--muted); border-radius:9px; font-size:14px; font-weight:600;
+    cursor:pointer; transition:.12s; font-family:inherit;}
+  .tab:hover{color:var(--text); border-color:#3a4149;}
+  .tab.on{background:var(--accent); color:#1a1a12; border-color:var(--accent);}
+  .meta{display:flex; justify-content:space-between; align-items:baseline;
+    gap:10px; flex-wrap:wrap; margin-bottom:14px;}
+  .meta .desc{font-size:14px; color:var(--muted); margin:0;}
+  .meta .pct{font-size:14px; font-weight:600; color:var(--raise-line);
+    white-space:nowrap; margin:0;}
+  .grid{display:grid; grid-template-columns:repeat(13,1fr); gap:3px;}
+  .cell{aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
+    border-radius:4px; font-family:ui-monospace,"SF Mono",Menlo,monospace;
+    font-size:clamp(8px,2.2vw,12px); font-weight:500; cursor:pointer;
+    user-select:none; transition:background .1s;}
+  .cell.raise{background:var(--raise-bg); color:var(--raise-text);}
+  .cell.fold{background:var(--fold-bg); color:var(--fold-text);}
+  .cell.sel{outline:2px solid var(--accent); outline-offset:-1px;}
+  .readout{margin-top:14px; padding:12px 14px; background:var(--panel);
+    border:1px solid var(--line); border-radius:10px; min-height:52px;
+    display:flex; align-items:center; gap:12px;}
+  .readout .hand{font-family:ui-monospace,"SF Mono",Menlo,monospace;
+    font-size:20px; font-weight:600; color:var(--text); min-width:52px;}
+  .readout .info{font-size:13px; color:var(--muted); line-height:1.4;}
+  .readout .info b{color:var(--raise-line); font-weight:600;}
+  .readout.empty .info{color:var(--muted);}
+  .legend{display:flex; gap:18px; margin-top:16px; font-size:13px; color:var(--muted);}
+  .legend span{display:inline-flex; align-items:center; gap:7px;}
+  .chip{width:14px; height:14px; border-radius:3px; display:inline-block;}
+  .foot{margin-top:24px; font-size:12px; color:#4b535c; line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">Step 1 · Preflop</p>
+  <h1>Opening ranges</h1>
+  <p class="sub">6-max cash · which hands to raise when it folds to you (RFI)</p>
+
+  <div class="tabs" id="tabs">
+    <button class="tab" data-pos="UTG">UTG</button>
+    <button class="tab" data-pos="HJ">HJ</button>
+    <button class="tab" data-pos="CO">CO</button>
+    <button class="tab" data-pos="BTN">BTN</button>
+    <button class="tab" data-pos="SB">SB</button>
+  </div>
+
+  <div class="meta">
+    <p class="desc" id="desc"></p>
+    <p class="pct" id="pct"></p>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="readout empty" id="readout">
+    <span class="hand" id="rHand">—</span>
+    <span class="info" id="rInfo">Tap any hand to see which seats open it.</span>
+  </div>
+
+  <div class="legend">
+    <span><span class="chip" style="background:var(--raise-bg);"></span>Raise (open)</span>
+    <span><span class="chip" style="background:var(--fold-bg); border:1px solid var(--line);"></span>Fold</span>
+  </div>
+
+  <p class="foot">Standard 6-max cash opening ranges. The core (pairs, big suited aces, broadways) is solid everywhere; the bottom-edge hands vary slightly by source. This is page one — more pages get added as we build.</p>
+</div>
+
+<script>
+(function(){
+  var order="23456789TJQKA";
+  var ranks=['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
+  function si(r){return order.indexOf(r);}
+  function expand(tok){
+    var out=[], plus=tok.endsWith('+'), base=plus?tok.slice(0,-1):tok;
+    if(base.length===2 && base[0]===base[1]){
+      var st=si(base[0]), en=plus?si('A'):st;
+      for(var s=st;s<=en;s++) out.push(order[s]+order[s]);
+      return out;
+    }
+    var suit=base[base.length-1], high=base[0], low=base[1];
+    var ls=si(low), le=plus?si(high)-1:ls;
+    for(var s2=ls;s2<=le;s2++) out.push(high+order[s2]+suit);
+    return out;
+  }
+  var POS=['UTG','HJ','CO','BTN','SB'];
+  var R={
+    UTG:{desc:"Under the gun — first to act, tightest range",
+      t:['22+','A2s+','K9s+','Q9s+','J9s+','T8s+','98s','87s','76s','65s','54s','ATo+','KJo+','QJo']},
+    HJ:{desc:"Hijack — one seat before the cutoff",
+      t:['22+','A2s+','K8s+','Q9s+','J9s+','T8s+','97s+','86s+','76s','65s','54s','ATo+','KJo+','QJo','JTo']},
+    CO:{desc:"Cutoff — one seat before the button",
+      t:['22+','A2s+','K5s+','Q8s+','J8s+','T7s+','96s+','86s+','75s+','65s','54s','A8o+','KTo+','QTo+','JTo','T9o']},
+    BTN:{desc:"Button — best seat, widest range",
+      t:['22+','A2s+','K2s+','Q4s+','J6s+','T6s+','96s+','85s+','75s+','64s+','54s','A2o+','K8o+','Q9o+','J9o+','T8o+','98o']},
+    SB:{desc:"Small blind — raise to steal, or fold",
+      t:['22+','A2s+','K4s+','Q6s+','J7s+','T7s+','97s+','86s+','75s+','65s','54s','A2o+','K9o+','Q9o+','J9o+','T9o']}
+  };
+  POS.forEach(function(k){
+    var set=new Set();
+    R[k].t.forEach(function(tok){ expand(tok).forEach(function(h){set.add(h);}); });
+    R[k].set=set;
+    var combos=0;
+    set.forEach(function(h){ combos += h.length===2?6:(h[2]==='s'?4:12); });
+    R[k].pct=Math.round(combos/1326*100);
+  });
+
+  var grid=document.getElementById('grid'), cells=[];
+  for(var r=0;r<13;r++){for(var c=0;c<13;c++){
+    var name = r===c?ranks[r]+ranks[r] : (r<c?ranks[r]+ranks[c]+'s':ranks[c]+ranks[r]+'o');
+    var d=document.createElement('div');
+    d.className='cell'; d.textContent=name; d.dataset.hand=name;
+    grid.appendChild(d); cells.push(d);
+  }}
+
+  var current='BTN', selected=null;
+  function render(pos){
+    current=pos;
+    var p=R[pos];
+    document.getElementById('desc').textContent=p.desc;
+    document.getElementById('pct').textContent='opens '+p.pct+'% of hands';
+    cells.forEach(function(d){
+      d.classList.remove('raise','fold');
+      d.classList.add(p.set.has(d.dataset.hand)?'raise':'fold');
+    });
+    document.querySelectorAll('.tab').forEach(function(b){
+      b.classList.toggle('on', b.dataset.pos===pos);
+    });
+    if(selected) selected.classList.add('sel');
+  }
+  function inspect(hand, el){
+    if(selected) selected.classList.remove('sel');
+    selected=el; el.classList.add('sel');
+    var opens=POS.filter(function(k){return R[k].set.has(hand);});
+    var ro=document.getElementById('readout');
+    document.getElementById('rHand').textContent=hand;
+    if(opens.length===0){
+      ro.classList.remove('empty');
+      document.getElementById('rInfo').innerHTML='Fold from every seat. Below opening threshold.';
+    } else if(opens.length===5){
+      ro.classList.remove('empty');
+      document.getElementById('rInfo').innerHTML='<b>Raise from every seat</b> — a core hand you always open.';
+    } else {
+      ro.classList.remove('empty');
+      document.getElementById('rInfo').innerHTML='Raise from <b>'+opens.join(', ')+'</b>. Fold from the earlier seats.';
+    }
+  }
+
+  document.getElementById('tabs').addEventListener('click',function(e){
+    var b=e.target.closest('.tab'); if(b) render(b.dataset.pos);
+  });
+  grid.addEventListener('click',function(e){
+    var d=e.target.closest('.cell'); if(d) inspect(d.dataset.hand,d);
+  });
+  render('BTN');
+})();
+</script>
+</body>
+</html>

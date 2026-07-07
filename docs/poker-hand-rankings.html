@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#14171A">
+<title>Hand Rankings — NLHE</title>
+<style>
+  :root{
+    --bg:#14171A; --panel:#1B1F24; --line:#2A2F36;
+    --text:#E9E7E2; --muted:#727B86; --accent:#E6C066;
+    --red:#E0655F; --green:#3FA372;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; background:var(--bg); color:var(--text);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; line-height:1.6;}
+  .wrap{max-width:660px; margin:0 auto; padding:20px 16px 48px;}
+  .eyebrow{font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 4px;}
+  h1{font-size:23px; font-weight:600; margin:0 0 2px; letter-spacing:-.01em;}
+  .sub{font-size:13px; color:var(--muted); margin:0 0 22px;}
+  .row{display:flex; gap:12px; padding:14px; background:var(--panel);
+    border:1px solid var(--line); border-radius:12px; margin-bottom:10px; align-items:flex-start;}
+  .rank{flex-shrink:0; width:30px; height:30px; border-radius:8px; background:#22272D;
+    border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:15px; color:var(--accent);}
+  .body{flex:1; min-width:0;}
+  .name{font-size:16px; font-weight:600; margin:0 0 6px;}
+  .cards{display:flex; gap:4px; margin:0 0 8px; flex-wrap:wrap;}
+  .card{width:30px; height:40px; border-radius:5px; background:#F4F1EA; color:#14171A;
+    display:flex; align-items:center; justify-content:center; font-weight:700;
+    font-size:15px; font-family:ui-monospace,"SF Mono",Menlo,monospace;
+    border:1px solid #cfc9bb;}
+  .card.r{color:var(--red);}
+  .desc{font-size:14px; color:#C6C4BC; margin:0;}
+  .desc b{color:var(--text); font-weight:600;}
+  .note{margin-top:20px; padding:14px 16px; background:var(--panel);
+    border:1px solid var(--line); border-left:3px solid var(--accent);
+    border-radius:0 10px 10px 0;}
+  .note p{font-size:14px; margin:0 0 8px;} .note p:last-child{margin:0;}
+  .note b{color:var(--text); font-weight:600;}
+  .foot{margin-top:28px; padding-top:16px; border-top:1px solid var(--line);
+    font-size:12px; color:#4B535C; line-height:1.7;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">Step 1 · Foundations</p>
+  <h1>Hand rankings</h1>
+  <p class="sub">Best to worst · your hand is your best five cards</p>
+
+  <div class="row">
+    <div class="rank">1</div>
+    <div class="body">
+      <p class="name">Royal flush</p>
+      <div class="cards"><span class="card r">A♥</span><span class="card r">K♥</span><span class="card r">Q♥</span><span class="card r">J♥</span><span class="card r">T♥</span></div>
+      <p class="desc">A, K, Q, J, 10 — all the <b>same suit</b>. The best possible hand. You may never see one; that's fine.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="rank">2</div>
+    <div class="body">
+      <p class="name">Straight flush</p>
+      <div class="cards"><span class="card">8♠</span><span class="card">7♠</span><span class="card">6♠</span><span class="card">5♠</span><span class="card">4♠</span></div>
+      <p class="desc">Five in a row, all the <b>same suit</b>. Rarer than everything below it.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="rank">3</div>
+    <div class="body">
+      <p class="name">Four of a kind</p>
+      <div class="cards"><span class="card">Q♠</span><span class="card r">Q♥</span><span class="card r">Q♦</span><span class="card">Q♣</span><span class="card">3♠</span></div>
+      <p class="desc">All four of the same rank — "quads." Here, four queens.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="rank">4</div>
+    <div class="body">
+      <p class="name">Full house</p>
+      <div class="cards"><span class="card">K♠</span><span class="card r">K♥</span><span class="card">K♣</span><span class="card">7♠</span><span class="card r">7♦</span></div>
+      <p class="desc"><b>Three of a kind plus a pair.</b> Here, three kings and two 7s — said as "kings full of sevens."</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="rank">5</div>
+    <div class="body">
+      <p class="name">Flush</p>
+      <div class="cards"><span class="card r">A♦</span><span class="card r">J♦</span><span class="card r">8♦</span><span class="card r">5♦</span><span class="card r">2♦</span></div>
+      <p class="desc">Five cards <b>all the same suit</b>, in any order. Beaten only by the four hands above.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="rank">6</div>
+    <div class="body">
+      <p class="name">Straight</p>
+      <div class="cards"><span class="card">9♠</span><span class="card r">8♥</span><span class="card">7♣</span><span class="card r">6♦</span><span class="card">5♠</span></div>
+      <p class="desc">Five cards <b>in a row</b>, any suits. Ace can be high (10-J-Q-K-A) or low (A-2-3-4-5).</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="rank">7</div>
+    <div class="body">
+      <p class="name">Three of a kind</p>
+      <div class="cards"><span class="card">9♠</span><span class="card r">9♥</span><span class="card r">9♦</span><span class="card">K♠</span><span class="card r">4♥</span></div>
+      <p class="desc">Three of the same rank — "trips" or a "set." Here, three 9s.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="rank">8</div>
+    <div class="body">
+      <p class="name">Two pair</p>
+      <div class="cards"><span class="card">J♠</span><span class="card r">J♦</span><span class="card">5♠</span><span class="card r">5♥</span><span class="card">A♠</span></div>
+      <p class="desc"><b>Two different pairs.</b> Here, two jacks and two 5s.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="rank">9</div>
+    <div class="body">
+      <p class="name">One pair</p>
+      <div class="cards"><span class="card">T♠</span><span class="card r">T♥</span><span class="card">A♠</span><span class="card r">7♦</span><span class="card">3♠</span></div>
+      <p class="desc">Two cards of the same rank. Here, a pair of 10s. Very common.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="rank">10</div>
+    <div class="body">
+      <p class="name">High card</p>
+      <div class="cards"><span class="card r">A♥</span><span class="card">Q♠</span><span class="card r">9♦</span><span class="card">5♣</span><span class="card">2♠</span></div>
+      <p class="desc">Nothing connects — no pair, no straight, no flush. Your best single card plays. Here, "ace high."</p>
+    </div>
+  </div>
+
+  <div class="note">
+    <p><b>The pattern:</b> rarer hands win. A flush is harder to make than a straight, so it beats it. Memorize the order and you've got the one thing you truly must know cold.</p>
+    <p><b>Ties broken by the "kicker":</b> if two players both have one pair of 10s, the highest side card decides it. A-kicker beats K-kicker, and so on.</p>
+    <p><b>Suits never break ties.</b> No suit beats another — a spade flush and a heart flush of equal cards split the pot.</p>
+  </div>
+
+  <p class="foot">Foundations. Same rankings in every form of Hold'em — online, live, home game. Standard NLHE.</p>
+</div>
+</body>
+</html>
