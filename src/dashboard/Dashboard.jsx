@@ -13,6 +13,7 @@ const MODULES = [
   { id: 'range-trainer', view: 'range', name: 'Range Trainer', blurb: '6-max cash · preflop RFI openings' },
   { id: 'odds-trainer', view: 'odds', name: 'Odds Trainer', blurb: 'Pot odds, outs & call/fold verdicts' },
   { id: 'board-reader', view: 'board', name: 'Board Reader', blurb: 'Texture, what beats you & range reads' },
+  { id: 'postflop-trainer', view: 'postflop', name: 'Postflop Trainer', blurb: 'C-bets, facing bets & sizing (heuristic lines)' },
 ]
 
 // ⚠️ READINESS FORMULA — FLAG FOR REVIEW (CLAUDE.md §5).
@@ -24,9 +25,16 @@ const MODULES = [
 // a weighted average of those contributions, weighting the Range Trainer higher
 // because preflop ranges are the single highest-ROI fundamental (CLAUDE.md §4 M1).
 // Weights sum to 1, so the result stays on a clean 0–100 scale. (Re-weighted when
-// the Board Reader landed: range .5 / odds .3 / board .2 — preflop still leads.)
+// the Postflop Trainer landed: range .40 / odds .25 / board .15 / postflop .20 —
+// preflop still leads; postflop gets .20 because it's where real edges live, but
+// it's an advanced skill so it sits below the preflop foundation. Was .5/.3/.2.)
 const CONFIDENCE_TARGET = 50
-const READINESS_WEIGHTS = { 'range-trainer': 0.5, 'odds-trainer': 0.3, 'board-reader': 0.2 }
+const READINESS_WEIGHTS = {
+  'range-trainer': 0.4,
+  'odds-trainer': 0.25,
+  'board-reader': 0.15,
+  'postflop-trainer': 0.2,
+}
 
 function readinessContribution(p) {
   const confidence = Math.min(p.attempts / CONFIDENCE_TARGET, 1)
@@ -51,14 +59,18 @@ function readinessBand(score) {
 }
 
 // Turn a raw leak-log entry into something readable + routable. Module is inferred
-// from the tag namespace (odds_ → Odds Trainer, board_ → Board Reader, else Range
-// Trainer); the human label prefers the leak's stored meta and falls back to the tag.
+// from the tag namespace (odds_ → Odds Trainer, board_ → Board Reader, postflop_ →
+// Postflop Trainer, else Range Trainer); the human label prefers the leak's stored
+// meta and falls back to the tag.
 function describeLeak(leak) {
   if (leak.tag.startsWith('odds_')) {
     return { module: 'Odds Trainer', view: 'odds', text: leak.meta?.label ?? 'Odds spot' }
   }
   if (leak.tag.startsWith('board_')) {
     return { module: 'Board Reader', view: 'board', text: leak.meta?.label ?? 'Board spot' }
+  }
+  if (leak.tag.startsWith('postflop_')) {
+    return { module: 'Postflop Trainer', view: 'postflop', text: leak.meta?.label ?? 'Postflop spot' }
   }
   const pos = leak.meta?.position
   const token = leak.meta?.token

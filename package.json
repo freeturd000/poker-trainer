@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "sanity": "node src/engine/sanity.test.mjs",
-    "test:board": "node src/modules/board-reader/board-reader.test.mjs"
+    "test:board": "node src/modules/board-reader/board-reader.test.mjs",
+    "test:postflop": "node src/modules/postflop-trainer/postflop-trainer.test.mjs"
   },
   "dependencies": {
     "pokersolver": "^2.1.4",
