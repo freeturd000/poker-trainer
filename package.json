@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "sanity": "node src/engine/sanity.test.mjs"
+    "sanity": "node src/engine/sanity.test.mjs",
+    "test:board": "node src/modules/board-reader/board-reader.test.mjs"
   },
   "dependencies": {
     "pokersolver": "^2.1.4",

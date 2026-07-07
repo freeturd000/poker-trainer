@@ -6,11 +6,13 @@ import { useState } from 'react'
 import Dashboard from './dashboard/Dashboard.jsx'
 import RangeTrainer from './modules/range-trainer/RangeTrainer.jsx'
 import OddsTrainer from './modules/odds-trainer/OddsTrainer.jsx'
+import BoardReader from './modules/board-reader/BoardReader.jsx'
 
 const VIEWS = [
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'range', label: 'Range Trainer' },
   { id: 'odds', label: 'Odds Trainer' },
+  { id: 'board', label: 'Board Reader' },
 ]
 
 export default function App() {
@@ -37,6 +39,7 @@ export default function App() {
       {view === 'dashboard' && <Dashboard onNavigate={setView} />}
       {view === 'range' && <RangeTrainer />}
       {view === 'odds' && <OddsTrainer />}
+      {view === 'board' && <BoardReader />}
     </div>
   )
 }
