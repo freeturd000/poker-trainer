@@ -7,12 +7,12 @@
 
 import { createDeck, shuffle, deal } from '../../engine/deck.js'
 import { getLeaks, getLeakWeight } from '../../store'
-import { POSITIONS, handToken, tokenToCards } from './ranges.js'
+import { POSITIONS, BBDEF_POSITIONS, handToken, tokenToCards } from './ranges.js'
 
 // Chance the next spot is drawn from your existing leaks rather than fresh-random.
 const LEAK_SERVE_RATE = 0.35
 
-/** Leak tag for a specific spot, e.g. "UTG_open_72o". */
+/** Leak tag for a specific RFI spot, e.g. "UTG_open_72o". */
 export const leakTag = (position, token) => `${position}_open_${token}`
 
 /** Inverse of leakTag → { position, token }, or null if it doesn't parse. */
@@ -22,9 +22,27 @@ export function parseLeakTag(tag) {
   return { position: m[1], token: m[2] }
 }
 
+/** Leak tag for a specific BB-defense spot, e.g. "BBdef_vs_UTG_72o". */
+export const bbDefLeakTag = (position, token) => `BBdef_vs_${position}_${token}`
+
+/** Inverse of bbDefLeakTag → { position, token }, or null if it doesn't parse. */
+export function parseBBDefLeakTag(tag) {
+  const m = /^BBdef_vs_([A-Z]+)_(.+)$/.exec(tag)
+  if (!m || !BBDEF_POSITIONS.includes(m[1])) return null
+  return { position: m[1], token: m[2] }
+}
+
+// Per-mode config for spot generation and leak filtering. The two parse fns are
+// mutually exclusive (an RFI tag never matches the BB-def regex and vice versa),
+// so each mode only ever re-serves its own leaks.
+const MODES = {
+  rfi: { positions: POSITIONS, parse: parseLeakTag },
+  bbdef: { positions: BBDEF_POSITIONS, parse: parseBBDefLeakTag },
+}
+
 /** A fresh random spot. `only` locks the seat; null/undefined = random seat. */
-function randomSpot(only) {
-  const position = only ?? POSITIONS[Math.floor(Math.random() * POSITIONS.length)]
+function randomSpot(only, positions) {
+  const position = only ?? positions[Math.floor(Math.random() * positions.length)]
   const { cards } = deal(shuffle(createDeck()), 2)
   return { position, cards, token: handToken(cards[0], cards[1]) }
 }
@@ -32,10 +50,11 @@ function randomSpot(only) {
 /**
  * Pick a leak spot weighted by leak weight; null if there are no (matching)
  * leaks. `only` restricts to leaks at that seat; null/undefined = any seat.
+ * `parse` selects which mode's leaks are eligible.
  */
-function weightedLeakSpot(only) {
+function weightedLeakSpot(only, parse) {
   const leaks = getLeaks()
-    .map((l) => ({ ...parseLeakTag(l.tag), weight: getLeakWeight(l.tag) }))
+    .map((l) => ({ ...parse(l.tag), weight: getLeakWeight(l.tag) }))
     .filter((l) => l.position && l.token && (!only || l.position === only))
   if (leaks.length === 0) return null
 
@@ -48,14 +67,16 @@ function weightedLeakSpot(only) {
 
 /**
  * The next spot to serve. Occasionally re-serves a weighted leak spot.
- * @param {string} [only] - restrict to a single seat (one of POSITIONS); omit
- *   or pass null/undefined for the default all-seats-random behavior.
+ * @param {string} [only] - restrict to a single seat (one of the mode's
+ *   positions); omit or pass null/undefined for all-seats-random.
+ * @param {'rfi'|'bbdef'} [mode] - which trainer mode; defaults to 'rfi'.
  * @returns {{ position: string, cards: [string,string], token: string }}
  */
-export function nextSpot(only) {
+export function nextSpot(only, mode = 'rfi') {
+  const cfg = MODES[mode] ?? MODES.rfi
   if (Math.random() < LEAK_SERVE_RATE) {
-    const leak = weightedLeakSpot(only)
+    const leak = weightedLeakSpot(only, cfg.parse)
     if (leak) return leak
   }
-  return randomSpot(only)
+  return randomSpot(only, cfg.positions)
 }

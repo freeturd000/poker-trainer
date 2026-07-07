@@ -1,25 +1,68 @@
-// Module 1 — Preflop Range Trainer (6-max cash, RFI). CLAUDE.md §4.
+// Module 1 — Preflop Range Trainer (6-max cash). CLAUDE.md §4.
 //
-// Core loop: deal a random position + hand -> user picks Raise/Fold -> grade
-// against the chart -> show correct action + "why" on a miss -> next. Wires into
-// the shared store for progress + leak tracking.
+// Two modes:
+//   'rfi'   — deal a seat + hand -> user picks Raise/Fold -> grade vs the RFI chart.
+//   'bbdef' — deal a raiser's seat + hand -> user picks 3-Bet/Call/Fold -> grade vs
+//             the BB-defense chart (hero is always the big blind facing one raise).
+// Both grade instantly, show the correct action + a "why" on a miss, and wire into
+// the shared store for progress + leak tracking (leaks tagged per spot per mode).
 
 import { useState } from 'react'
 import Card from '../../components/Card.jsx'
 import { getProgress, recordAttempt, recordLeak, resetProgress, clearLeaks } from '../../store'
-import { getAction, whyText, POSITIONS } from './ranges.js'
-import { nextSpot, leakTag, parseLeakTag } from './spot.js'
+import { getAction, whyText, getBBDefAction, bbDefWhyText, POSITIONS } from './ranges.js'
+import { nextSpot, leakTag, parseLeakTag, bbDefLeakTag, parseBBDefLeakTag } from './spot.js'
 
 const MODULE_ID = 'range-trainer'
 const SESSION_LENGTHS = [10, 25, 50, 100]
 
-// Seat options for the setup screen. `null` = All (random) — the default.
+// Trainer modes for the setup screen. 'rfi' is the default (unchanged behavior).
+const MODE_OPTIONS = [
+  { id: 'rfi', label: 'RFI (opening)', blurb: 'RFI (raise-first-in) openings' },
+  { id: 'bbdef', label: 'BB Defense (facing a raise)', blurb: 'Big-blind defense vs a single raise' },
+]
+
+// Action buttons per mode. `tone` maps to a static Tailwind class set below.
+const ACTIONS = {
+  rfi: [
+    { id: 'raise', label: 'Raise', tone: 'emerald' },
+    { id: 'fold', label: 'Fold', tone: 'rose' },
+  ],
+  bbdef: [
+    { id: '3bet', label: '3-Bet', tone: 'emerald' },
+    { id: 'call', label: 'Call', tone: 'sky' },
+    { id: 'fold', label: 'Fold', tone: 'rose' },
+  ],
+}
+
+// Static class strings per tone so Tailwind's scanner keeps them.
+const TONE_CLASS = {
+  emerald: 'bg-emerald-500 hover:bg-emerald-400',
+  sky: 'bg-sky-500 hover:bg-sky-400',
+  rose: 'bg-rose-500 hover:bg-rose-400',
+}
+
+// Human labels for a graded action (used in the result banner).
+const ACTION_LABEL = { raise: 'Raise', fold: 'Fold', '3bet': '3-Bet', call: 'Call' }
+
+// Mode-dispatch helpers — pure, no state.
+const gradeAction = (mode, position, token) =>
+  mode === 'bbdef' ? getBBDefAction(position, token) : getAction(position, token)
+const gradeWhy = (mode, position, token, correct) =>
+  mode === 'bbdef' ? bbDefWhyText(position, token, correct) : whyText(position, token, correct)
+const gradeTag = (mode, position, token) =>
+  mode === 'bbdef' ? bbDefLeakTag(position, token) : leakTag(position, token)
+
+// Seat options for the setup screen. `null` = All (random) — the default. Both
+// modes drill the same five seats (in RFI it's hero's seat; in BB-def it's the
+// raiser hero is facing).
 const SEAT_OPTIONS = [{ label: 'All (random)', value: null }, ...POSITIONS.map((p) => ({ label: p, value: p }))]
 
 const emptyStats = () => ({ answered: 0, correct: 0 })
 
 export default function RangeTrainer() {
   const [phase, setPhase] = useState('setup') // 'setup' | 'playing' | 'summary'
+  const [mode, setMode] = useState('rfi') // 'rfi' | 'bbdef'
   const [length, setLength] = useState(25)
   const [seat, setSeat] = useState(null) // null = All (random); else a POSITIONS value
   const [spot, setSpot] = useState(null)
@@ -36,13 +79,13 @@ export default function RangeTrainer() {
     setSessionLeaks({})
     setSelection(null)
     setResult(null)
-    setSpot(nextSpot(seat))
+    setSpot(nextSpot(seat, mode))
     setPhase('playing')
   }
 
   const answer = (choice) => {
     if (selection) return // already graded this spot
-    const correctAction = getAction(spot.position, spot.token)
+    const correctAction = gradeAction(mode, spot.position, spot.token)
     const isCorrect = choice === correctAction
 
     const progress = recordAttempt(MODULE_ID, { correct: isCorrect })
@@ -50,7 +93,7 @@ export default function RangeTrainer() {
     setStats((s) => ({ answered: s.answered + 1, correct: s.correct + (isCorrect ? 1 : 0) }))
 
     if (!isCorrect) {
-      const tag = leakTag(spot.position, spot.token)
+      const tag = gradeTag(mode, spot.position, spot.token)
       recordLeak(tag, { position: spot.position, token: spot.token, correct: correctAction })
       setSessionLeaks((m) => ({
         ...m,
@@ -63,7 +106,7 @@ export default function RangeTrainer() {
     }
 
     setSelection(choice)
-    setResult({ correct: isCorrect, correctAction, why: whyText(spot.position, spot.token, correctAction) })
+    setResult({ correct: isCorrect, correctAction, why: gradeWhy(mode, spot.position, spot.token, correctAction) })
   }
 
   const next = () => {
@@ -73,14 +116,14 @@ export default function RangeTrainer() {
     }
     setSelection(null)
     setResult(null)
-    setSpot(nextSpot(seat))
+    setSpot(nextSpot(seat, mode))
   }
 
   // Clear only the range-trainer's stored progress and its own leaks (leaks whose
   // tags parse as a range-trainer spot); other modules' data is left intact.
   const confirmReset = () => {
     resetProgress(MODULE_ID)
-    clearLeaks((leak) => parseLeakTag(leak.tag) !== null)
+    clearLeaks((leak) => parseLeakTag(leak.tag) !== null || parseBBDefLeakTag(leak.tag) !== null)
     setLifetime(getProgress(MODULE_ID).accuracy)
     setConfirmingReset(false)
   }
@@ -93,9 +136,33 @@ export default function RangeTrainer() {
     return (
       <Shell>
         <h1 className="text-2xl font-bold text-white">Preflop Range Trainer</h1>
-        <p className="text-emerald-100">6-max cash · RFI (raise-first-in) openings</p>
+        <p className="text-emerald-100">
+          6-max cash · {MODE_OPTIONS.find((m) => m.id === mode).blurb}
+        </p>
 
-        <p className="mt-6 text-sm text-emerald-200">Choose a seat to drill:</p>
+        <p className="mt-6 text-sm text-emerald-200">Choose a mode:</p>
+        <div className="mt-2 flex flex-wrap justify-center gap-2">
+          {MODE_OPTIONS.map((opt) => {
+            const active = mode === opt.id
+            return (
+              <button
+                key={opt.id}
+                onClick={() => setMode(opt.id)}
+                className={`rounded-lg px-4 py-2 text-sm font-semibold shadow transition ${
+                  active
+                    ? 'bg-white text-emerald-900'
+                    : 'bg-emerald-700 text-emerald-50 hover:bg-emerald-600'
+                }`}
+              >
+                {opt.label}
+              </button>
+            )
+          })}
+        </div>
+
+        <p className="mt-6 text-sm text-emerald-200">
+          {mode === 'bbdef' ? 'Choose a raiser to defend against:' : 'Choose a seat to drill:'}
+        </p>
         <div className="mt-2 flex flex-wrap justify-center gap-2">
           {SEAT_OPTIONS.map((opt) => {
             const active = seat === opt.value
@@ -216,12 +283,20 @@ export default function RangeTrainer() {
       </div>
 
       <div className="mt-6 flex flex-col items-center gap-1">
-        <span className="text-emerald-200 text-sm uppercase tracking-wide">You are in</span>
+        <span className="text-emerald-200 text-sm uppercase tracking-wide">
+          {mode === 'bbdef' ? 'You are in the BB vs an open from' : 'You are in'}
+        </span>
         <span className="rounded-lg bg-emerald-950/40 px-4 py-1 text-2xl font-bold text-white">
           {spot.position}
         </span>
         <span className="text-xs text-emerald-300">
-          {seat ? `drilling ${seat} · fixed seat this session` : 'all seats · random'}
+          {mode === 'bbdef'
+            ? seat
+              ? `defending vs ${seat} · fixed this session`
+              : 'all raisers · random'
+            : seat
+              ? `drilling ${seat} · fixed seat this session`
+              : 'all seats · random'}
         </span>
       </div>
 
@@ -232,18 +307,15 @@ export default function RangeTrainer() {
 
       {!selection ? (
         <div className="mt-8 flex gap-4">
-          <button
-            onClick={() => answer('raise')}
-            className="rounded-xl bg-emerald-500 px-8 py-3 text-lg font-bold text-white shadow hover:bg-emerald-400"
-          >
-            Raise
-          </button>
-          <button
-            onClick={() => answer('fold')}
-            className="rounded-xl bg-rose-500 px-8 py-3 text-lg font-bold text-white shadow hover:bg-rose-400"
-          >
-            Fold
-          </button>
+          {ACTIONS[mode].map((a) => (
+            <button
+              key={a.id}
+              onClick={() => answer(a.id)}
+              className={`rounded-xl px-8 py-3 text-lg font-bold text-white shadow ${TONE_CLASS[a.tone]}`}
+            >
+              {a.label}
+            </button>
+          ))}
         </div>
       ) : (
         <div className="mt-8 flex w-full max-w-md flex-col items-center gap-3">
@@ -258,7 +330,7 @@ export default function RangeTrainer() {
               }`}
             >
               {result.correct ? 'Correct' : 'Incorrect'} — {spot.token} is a{' '}
-              {result.correctAction.toUpperCase()}
+              {ACTION_LABEL[result.correctAction].toUpperCase()}
             </div>
             {!result.correct && <div className="mt-1 text-sm text-gray-700">{result.why}</div>}
           </div>

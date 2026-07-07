@@ -1,0 +1,104 @@
+{
+  "_meta": {
+    "format": "6-max cash, 100bb. Big-blind DEFENSE facing a single raise (no other callers).",
+    "action_model": "3bet / call / fold — for each raising position a hand is listed under either \"threebet\" or \"call\"; any hand NOT listed for a position is a FOLD. Majority-action convention (solvers mix; each cell is the more-frequent action).",
+    "hero": "Hero is always the BIG BLIND. positions_order below are the RAISER's seats we are defending against, not hero's seat.",
+    "source": "REVIEW BEFORE TRUSTING — CORRECTNESS-CRITICAL. Standard solver-baseline 6-max cash BB-defense shapes (facing ~2.5bb opens, low/no rake), reconstructed to match published charts (GTO Wizard cash 6-max BB-vs-RFI / Upswing) by shape and frequency, NOT copied cell-for-cell from one source. Defense widens as the opener's seat gets later; BB is OOP vs UTG..BTN but has position vs SB, so vs-SB is the widest and most 3-bet heavy. Verify every cell against your reference before relying on the grading.",
+    "schema": "positions[RAISER] = { threebet: [tokens re-raised], call: [tokens flat-called] }. Pairs \"AA\", suited \"AKs\", offsuit \"AKo\" (higher rank first). Everything else folds.",
+    "positions_order": ["UTG", "HJ", "CO", "BTN", "SB"]
+  },
+  "positions": {
+    "UTG": {
+      "threebet": ["AA", "KK", "QQ", "JJ", "AKs", "AKo", "AQs", "A5s", "A4s"],
+      "call": [
+        "TT", "99", "88", "77", "66", "55", "44", "33", "22",
+        "AQo", "AJs", "ATs", "A9s", "A8s", "A7s", "A6s", "A3s", "A2s",
+        "KQs", "KJs", "KTs", "K9s",
+        "QJs", "QTs", "Q9s",
+        "JTs", "J9s",
+        "T9s", "T8s",
+        "98s", "87s", "76s", "65s", "54s",
+        "KQo", "AJo"
+      ]
+    },
+    "HJ": {
+      "threebet": ["AA", "KK", "QQ", "JJ", "AKs", "AKo", "AQs", "AJs", "A5s", "A4s", "A3s"],
+      "call": [
+        "TT", "99", "88", "77", "66", "55", "44", "33", "22",
+        "AQo", "AJo", "ATo", "ATs", "A9s", "A8s", "A7s", "A6s", "A2s",
+        "KQs", "KJs", "KTs", "K9s", "K8s",
+        "QJs", "QTs", "Q9s", "Q8s",
+        "JTs", "J9s", "J8s",
+        "T9s", "T8s", "T7s",
+        "98s", "97s", "87s", "86s", "76s", "75s", "65s", "54s", "43s",
+        "KQo", "KJo", "QJo", "JTo"
+      ]
+    },
+    "CO": {
+      "threebet": ["AA", "KK", "QQ", "JJ", "TT", "AKs", "AKo", "AQs", "AJs", "ATs", "A5s", "A4s", "A3s", "A2s", "KJs"],
+      "call": [
+        "99", "88", "77", "66", "55", "44", "33", "22",
+        "AQo", "AJo", "ATo", "A9s", "A8s", "A7s", "A6s",
+        "KQs", "KTs", "K9s", "K8s", "K7s",
+        "KQo", "KJo", "KTo",
+        "QJs", "QTs", "Q9s", "Q8s", "Q7s",
+        "QJo", "QTo",
+        "JTs", "J9s", "J8s", "J7s",
+        "JTo",
+        "T9s", "T8s", "T7s",
+        "98s", "97s", "96s", "87s", "86s", "85s", "76s", "75s", "65s", "64s", "54s", "53s", "43s"
+      ]
+    },
+    "BTN": {
+      "threebet": ["AA", "KK", "QQ", "JJ", "TT", "AKs", "AKo", "AQs", "AJs", "ATs", "A5s", "A4s", "A3s", "A2s", "KJs", "KTs"],
+      "call": [
+        "99", "88", "77", "66", "55", "44", "33", "22",
+        "AQo", "AJo", "ATo", "A9o", "A8o", "A7o", "A5o", "A4o",
+        "A9s", "A8s", "A7s", "A6s",
+        "KQs", "K9s", "K8s", "K7s", "K6s", "K5s", "K4s", "K3s", "K2s",
+        "KQo", "KJo", "KTo", "K9o",
+        "QJs", "QTs", "Q9s", "Q8s", "Q7s", "Q6s", "Q5s",
+        "QJo", "QTo", "Q9o",
+        "JTs", "J9s", "J8s", "J7s", "J6s",
+        "JTo", "J9o",
+        "T9s", "T8s", "T7s", "T6s",
+        "T9o", "T8o",
+        "98s", "97s", "96s", "95s", "98o",
+        "87s", "86s", "85s", "84s", "87o",
+        "76s", "75s", "74s", "76o",
+        "65s", "64s", "63s", "65o",
+        "54s", "53s", "52s", "54o",
+        "43s", "42s", "32s"
+      ]
+    },
+    "SB": {
+      "threebet": [
+        "AA", "KK", "QQ", "JJ", "TT", "99",
+        "AKs", "AKo", "AQs", "AQo", "AJs", "ATs",
+        "KQs", "KJs",
+        "A5s", "A4s", "A3s", "A2s", "A5o",
+        "KQo",
+        "76s", "65s", "54s"
+      ],
+      "call": [
+        "88", "77", "66", "55", "44", "33", "22",
+        "AJo", "ATo", "A9o", "A8o", "A7o", "A6o", "A4o", "A3o", "A2o",
+        "A9s", "A8s", "A7s", "A6s",
+        "KTs", "K9s", "K8s", "K7s", "K6s", "K5s", "K4s", "K3s", "K2s",
+        "KJo", "KTo", "K9o", "K8o",
+        "QJs", "QTs", "Q9s", "Q8s", "Q7s", "Q6s", "Q5s", "Q4s", "Q3s", "Q2s",
+        "QJo", "QTo", "Q9o", "Q8o",
+        "JTs", "J9s", "J8s", "J7s", "J6s", "J5s",
+        "JTo", "J9o", "J8o",
+        "T9s", "T8s", "T7s", "T6s", "T5s",
+        "T9o", "T8o", "T7o",
+        "98s", "97s", "96s", "95s", "98o", "97o",
+        "87s", "86s", "85s", "84s", "87o", "86o",
+        "75s", "74s", "76o", "75o",
+        "64s", "63s", "65o", "64o",
+        "53s", "52s", "54o",
+        "43s", "42s", "32s"
+      ]
+    }
+  }
+}
