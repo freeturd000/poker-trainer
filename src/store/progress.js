@@ -4,7 +4,7 @@
 // keyed by a module id string. Accuracy is DERIVED on read, never stored, so it
 // can't drift out of sync with attempts/correct.
 
-import { get, set } from './storage.js'
+import { get, set, remove } from './storage.js'
 
 const key = (moduleId) => `progress:${moduleId}`
 
@@ -63,4 +63,13 @@ export function recordAttempt(moduleId, { correct = false } = {}) {
 
   set(key(moduleId), p)
   return getProgress(moduleId)
+}
+
+/**
+ * Clear a single module's stored progress (back to zeros). Only touches that
+ * module's key — other modules' progress is untouched.
+ * @param {string} moduleId
+ */
+export function resetProgress(moduleId) {
+  remove(key(moduleId))
 }

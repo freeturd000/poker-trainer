@@ -5,7 +5,7 @@
 // "BTN_vs_3bet_overfold". Each tag accumulates a hit count, a last-seen time,
 // and optional freeform meta (the most recent one wins) for later display.
 
-import { get, set } from './storage.js'
+import { get, set, remove } from './storage.js'
 
 const KEY = 'leaks'
 
@@ -62,4 +62,23 @@ const WEIGHT_CAP = 5
 export function getLeakWeight(tag) {
   const count = readAll()[tag]?.count ?? 0
   return Math.min(1 + count, WEIGHT_CAP)
+}
+
+/**
+ * Remove leaks. With a predicate, only entries where `predicate(leak)` is truthy
+ * are removed (others are kept) — this is how a single module clears just its own
+ * leaks. With no predicate, clears the entire leak log.
+ * @param {(leak: Leak) => boolean} [predicate]
+ */
+export function clearLeaks(predicate) {
+  if (!predicate) {
+    remove(KEY)
+    return
+  }
+  const leaks = readAll()
+  const kept = {}
+  for (const [tag, leak] of Object.entries(leaks)) {
+    if (!predicate(leak)) kept[tag] = leak
+  }
+  set(KEY, kept)
 }

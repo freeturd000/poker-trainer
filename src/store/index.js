@@ -2,5 +2,5 @@
 // the individual files, so the surface stays stable if internals move.
 
 export { PREFIX, SCHEMA_VERSION, get, set, remove, getSchemaVersion } from './storage.js'
-export { getProgress, recordAttempt } from './progress.js'
-export { recordLeak, getLeaks, getLeakWeight } from './leaks.js'
+export { getProgress, recordAttempt, resetProgress } from './progress.js'
+export { recordLeak, getLeaks, getLeakWeight, clearLeaks } from './leaks.js'
