@@ -5,6 +5,7 @@
 // can't drift out of sync with attempts/correct.
 
 import { get, set, remove } from './storage.js'
+import { recordActiveDays } from './activity.js'
 
 const key = (moduleId) => `progress:${moduleId}`
 
@@ -62,6 +63,7 @@ export function recordAttempt(moduleId, { correct = false } = {}) {
   p.lastPlayed = Date.now()
 
   set(key(moduleId), p)
+  recordActiveDays(p.lastPlayed) // log the calendar day for the nightly streak
   return getProgress(moduleId)
 }
 
