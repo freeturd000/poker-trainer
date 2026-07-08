@@ -14,12 +14,14 @@ import { useEffect, useRef, useState } from 'react'
 import { startHand, getLegalActions, applyAction, viewState } from './handEngine.js'
 import { resolveBot, BOT_NAMES } from './bots.js'
 import { botActionFor, describeAction } from './botDriver.js'
-import { recordAttempt } from '../../store'
+import { recordAttempt, recordSimHand, getSimHands, clearSimHands } from '../../store'
 import SimSetup from './SimSetup.jsx'
 import SimTable from './SimTable.jsx'
 import SimControls from './SimControls.jsx'
 import CoachPanel from './CoachPanel.jsx'
+import HandHistoryPanel from './HandHistoryPanel.jsx'
 import { adviseHero, explainBotAction, recapResult } from './coach.js'
+import { beginHand, recordAction, buildRecord, describeHand } from './handHistory.js'
 import { evaluateHand } from '../../engine/evaluator.js'
 
 const HERO = 0
@@ -64,11 +66,14 @@ export default function Simulator() {
   const [shownBoardLen, setShownBoardLen] = useState(0) // board cards revealed to the UI (step-through)
   const [seatStacks, setSeatStacks] = useState(null) // carried between hands
   const [session, setSession] = useState({ hands: 0, heroNet: 0 })
+  const [history, setHistory] = useState(() => getSimHands()) // finished hand records, newest first
 
   const botsRef = useRef({ fnBySeat: {}, nameBySeat: {}, archBySeat: {} })
   const handStartRef = useRef(null) // stacks at the start of the current hand
   const recordedRef = useRef(false)
   const timerRef = useRef(null)
+  const builderRef = useRef(null) // in-progress hand-history record builder
+  const handNoRef = useRef(0) // 1-based hand counter within the session
 
   const view = state ? viewState(state) : null
   const complete = view?.complete
@@ -95,6 +100,7 @@ export default function Simulator() {
     setSeatStacks(stacks)
     setButtonIndex(btn)
     setSession({ hands: 0, heroNet: 0 })
+    handNoRef.current = 0
     setPhase('table')
     dealHand(config, stacks, btn)
   }
@@ -110,6 +116,16 @@ export default function Simulator() {
     })
     handStartRef.current = stacks
     recordedRef.current = false
+    // Start a fresh hand-history record from the opening snapshot.
+    handNoRef.current += 1
+    builderRef.current = beginHand({
+      view: viewState(hand),
+      blinds: { sb: config.sb, bb: config.bb },
+      buttonSeat: btn,
+      heroSeat: HERO,
+      nameBySeat: botsRef.current.nameBySeat,
+      handNo: handNoRef.current,
+    })
     setLastBySeat({})
     setLastActed(null)
     setShownBoardLen(0)
@@ -137,6 +153,10 @@ export default function Simulator() {
     const text = describeAction(action)
     const street = state.street
     const next = applyAction(state, action)
+    // Log the action into the hand-history record (street it was taken on).
+    if (builderRef.current) {
+      recordAction(builderRef.current, { seat, street, type: action.type, amount: action.amount })
+    }
     setLastBySeat((m) => ({ ...m, [seat]: { text, street } }))
     setLastActed({ seat, text, street, type: action.type })
     setState(next)
@@ -204,6 +224,22 @@ export default function Simulator() {
     const heroStart = handStartRef.current[HERO]
     setSession((s) => ({ hands: s.hands + 1, heroNet: s.heroNet + (heroEnd - heroStart) }))
     setSeatStacks(v.players.map((p) => p.stack))
+
+    // Finalize + persist the structured hand-history record (full board revealed).
+    if (builderRef.current) {
+      try {
+        const record = buildRecord({
+          builder: builderRef.current,
+          view: v,
+          board: v.board,
+          final: true,
+          ts: Date.now(),
+        })
+        setHistory(recordSimHand(record))
+      } catch (e) {
+        console.error('hand-history record failed', e) // never break the table
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state])
 
@@ -282,6 +318,37 @@ export default function Simulator() {
     return null
   }
 
+  // ── Hand history (always recording; the panel itself is collapsed by default) ─
+  // The current hand is rebuilt live from the same builder, capped to the visible
+  // board so step-through isn't spoiled. Past hands come from the persisted store.
+  const liveHand =
+    builderRef.current && !complete
+      ? safeDescribe(builderRef.current, view, view.board.slice(0, visibleBoardLen))
+      : null
+  const pastHands = history
+    .map((r) => {
+      try {
+        return describeHand(r)
+      } catch {
+        return null // ignore any record we can't format (e.g. older schema)
+      }
+    })
+    .filter(Boolean)
+
+  function safeDescribe(builder, snapshot, board) {
+    try {
+      return describeHand(buildRecord({ builder, view: snapshot, board, final: false }))
+    } catch (e) {
+      console.error('hand-history live view failed', e)
+      return null
+    }
+  }
+
+  function clearHistory() {
+    clearSimHands()
+    setHistory([])
+  }
+
   return (
     <div className="flex min-h-screen flex-col items-center bg-emerald-800 p-4">
       <div className="w-full max-w-3xl">
@@ -344,6 +411,8 @@ export default function Simulator() {
             </div>
           )}
         </div>
+
+        <HandHistoryPanel current={liveHand} past={pastHands} onClear={clearHistory} />
       </div>
     </div>
   )

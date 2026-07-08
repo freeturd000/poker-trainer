@@ -5,3 +5,4 @@ export { PREFIX, SCHEMA_VERSION, get, set, remove, getSchemaVersion } from './st
 export { getProgress, recordAttempt, resetProgress } from './progress.js'
 export { recordLeak, getLeaks, getLeakWeight, clearLeaks } from './leaks.js'
 export { recordActiveDays, getActiveDays, getDayStreak, dayKey } from './activity.js'
+export { getSimHands, recordSimHand, clearSimHands, MAX_HANDS } from './simHistory.js'
