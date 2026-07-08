@@ -1,0 +1,240 @@
+{
+  "_comment": "⚠️ CARD CONTENT — FLAG FOR REVIEW (CLAUDE.md §4 Module 6). Starter deck for the Spaced-Repetition Concept Deck. Each card is { id, category, front, back }. `id` is the STABLE scheduling key — never reuse or renumber an id once cards have been reviewed, or a card's saved schedule will attach to the wrong prompt. To grow the deck, append new cards with fresh ids; order here is only the tie-break order in which brand-new cards are introduced. Categories in use: Positions, Preflop, Math, Board Texture, Hand Rankings, Bankroll.",
+  "version": 1,
+  "cards": [
+    {
+      "id": "pos-utg",
+      "category": "Positions",
+      "front": "What does \"UTG\" mean?",
+      "back": "Under the Gun — the seat first to act preflop, immediately left of the big blind. It acts with the least information, so it plays the tightest range."
+    },
+    {
+      "id": "pos-co",
+      "category": "Positions",
+      "front": "What does \"CO\" mean?",
+      "back": "Cutoff — the seat directly to the right of the button. A late position and the second-best seat, so it opens a wide range of hands."
+    },
+    {
+      "id": "pos-btn",
+      "category": "Positions",
+      "front": "What does \"BTN\" mean?",
+      "back": "Button — the dealer seat. The best position at the table: it acts last on every postflop street, so it plays the widest range."
+    },
+    {
+      "id": "pos-blinds",
+      "category": "Positions",
+      "front": "What are the \"blinds\" (SB and BB)?",
+      "back": "Small blind and big blind — the two seats left of the button forced to post bets before cards are dealt. They act last preflop but first postflop, which makes them awkward to play."
+    },
+    {
+      "id": "pos-in-position",
+      "category": "Positions",
+      "front": "What does it mean to be \"in position\" (IP)?",
+      "back": "You act after your opponent on every postflop street — you see what they do before you decide. That information edge is a large, persistent advantage."
+    },
+    {
+      "id": "pos-out-of-position",
+      "category": "Positions",
+      "front": "What does \"out of position\" (OOP) mean?",
+      "back": "You act before your opponent postflop, giving away information first. You need a stronger range to play profitably out of position."
+    },
+    {
+      "id": "pos-btn-best",
+      "category": "Positions",
+      "front": "Why is the Button the most profitable seat?",
+      "back": "Because it always acts last postflop — maximum information on every street — so you can play more hands and value-bet or bluff more accurately."
+    },
+    {
+      "id": "pos-6max-order",
+      "category": "Positions",
+      "front": "Name the 6-max positions in order of action.",
+      "back": "UTG, MP (a.k.a. LoJack/HiJack), CO, BTN, SB, BB. Action moves clockwise; the earlier the seat, the tighter it should play."
+    },
+    {
+      "id": "pre-rfi",
+      "category": "Preflop",
+      "front": "What does \"RFI\" mean?",
+      "back": "Raise First In — you are the first player to voluntarily enter the pot, and you do it by raising rather than calling. Open-raising, not limping, is the standard."
+    },
+    {
+      "id": "pre-position-range",
+      "category": "Preflop",
+      "front": "Why does your position set your opening range?",
+      "back": "Later positions have fewer players left to act and act last postflop, so they can profitably open many more hands. Early position must stay tight."
+    },
+    {
+      "id": "pre-open-raise",
+      "category": "Preflop",
+      "front": "What is an \"open-raise\"?",
+      "back": "The first voluntary raise into a pot no one has entered yet. A standard size is about 2–3 big blinds (often 2.5bb online)."
+    },
+    {
+      "id": "pre-3bet",
+      "category": "Preflop",
+      "front": "What is a \"3-bet\"?",
+      "back": "The third bet in a preflop sequence: the big blind is bet 1, an open-raise is bet 2, and a re-raise over that is the 3-bet. Made with strong value hands and some bluffs."
+    },
+    {
+      "id": "pre-raise-not-limp",
+      "category": "Preflop",
+      "front": "Why raise instead of limp (just calling the big blind)?",
+      "back": "Raising builds the pot with your good hands, seizes the initiative, and can win the pot immediately when everyone folds. Limping surrenders all of that."
+    },
+    {
+      "id": "pre-vpip",
+      "category": "Preflop",
+      "front": "What does \"VPIP\" measure?",
+      "back": "Voluntarily Put money In Pot — the percentage of hands you choose to play. A core tightness stat; solid 6-max regulars sit around 20–25%."
+    },
+    {
+      "id": "math-pot-odds",
+      "category": "Math",
+      "front": "What are \"pot odds\"?",
+      "back": "The price of a call: the amount you must call relative to the total pot after you call. They tell you the minimum equity your hand needs to call profitably."
+    },
+    {
+      "id": "math-pot-odds-percent",
+      "category": "Math",
+      "front": "How do you turn pot odds into a required equity %?",
+      "back": "Required equity = (amount to call) ÷ (pot size after your call). Example: call 50 into a pot that becomes 200 → 50/200 = 25% equity needed."
+    },
+    {
+      "id": "math-out",
+      "category": "Math",
+      "front": "What is an \"out\"?",
+      "back": "A card still in the deck that improves your hand to a likely winner. Counting your outs is how you estimate your chance to improve."
+    },
+    {
+      "id": "math-flush-outs",
+      "category": "Math",
+      "front": "How many outs does a flush draw have?",
+      "back": "9. You hold two of a suit and two are on the board; nine of the remaining thirteen cards of that suit complete the flush."
+    },
+    {
+      "id": "math-oesd-outs",
+      "category": "Math",
+      "front": "How many outs does an open-ended straight draw have?",
+      "back": "8. Either of two ranks completes the straight, and there are four cards of each rank (4 + 4 = 8)."
+    },
+    {
+      "id": "math-gutshot-outs",
+      "category": "Math",
+      "front": "How many outs does a gutshot (inside straight draw) have?",
+      "back": "4. Only one rank fills the gap in the middle of the straight, and there are four cards of that rank."
+    },
+    {
+      "id": "math-rule-2-4",
+      "category": "Math",
+      "front": "What is the \"Rule of 2 and 4\"?",
+      "back": "A quick equity estimate: multiply your outs by 2 for one card to come, or by 4 for two cards (flop through river). E.g. a 9-out flush draw ≈ 18% on the turn, ≈ 36% by the river."
+    },
+    {
+      "id": "math-flush-draw-equity",
+      "category": "Math",
+      "front": "With a flush draw on the flop, roughly what is your equity by the river?",
+      "back": "About 36% (9 outs × 4). So against a single bet you can often call profitably when the pot is laying you better than roughly 2-to-1."
+    },
+    {
+      "id": "math-equity-vs-odds",
+      "category": "Math",
+      "front": "Why compare your equity to the pot odds?",
+      "back": "If your hand's equity is greater than the equity the pot odds demand, calling is profitable in the long run. That single comparison is the whole call/fold decision."
+    },
+    {
+      "id": "board-dry",
+      "category": "Board Texture",
+      "front": "What is a \"dry\" board?",
+      "back": "A disconnected board with few draws (e.g. K♠ 7♦ 2♣). Few hands connect with it, so the preflop raiser can bet small and often."
+    },
+    {
+      "id": "board-wet",
+      "category": "Board Texture",
+      "front": "What is a \"wet\" (draw-heavy) board?",
+      "back": "A connected and/or suited board offering many straight and flush draws (e.g. 9♥ 8♥ 6♠). Ranges collide, so bets tend to be larger to charge those draws."
+    },
+    {
+      "id": "board-paired",
+      "category": "Board Texture",
+      "front": "What is a \"paired\" board?",
+      "back": "A board that itself contains a pair (e.g. Q♣ Q♦ 4♠). It lowers the chance anyone holds trips and changes which full houses and quads are possible."
+    },
+    {
+      "id": "board-monotone",
+      "category": "Board Texture",
+      "front": "What is a \"monotone\" board?",
+      "back": "A flop of three cards of the same suit (e.g. J♠ 8♠ 3♠). Anyone with one card of that suit has a flush draw, and a made flush is already possible."
+    },
+    {
+      "id": "board-texture-sizing",
+      "category": "Board Texture",
+      "front": "Why does board texture affect your bet sizing?",
+      "back": "On dry boards few hands can continue, so small bets do the job; on wet boards you charge draws and protect your equity with larger bets. Texture drives the size."
+    },
+    {
+      "id": "board-connected",
+      "category": "Board Texture",
+      "front": "What is a \"connected\" board?",
+      "back": "A board with cards close in rank (e.g. 7 8 9) that makes straights likely. It favors the range holding more suited connectors and small pairs."
+    },
+    {
+      "id": "rank-order",
+      "category": "Hand Rankings",
+      "front": "List the poker hands from weakest to strongest.",
+      "back": "High card, pair, two pair, three of a kind, straight, flush, full house, four of a kind, straight flush (royal flush is the top straight flush)."
+    },
+    {
+      "id": "rank-flush-vs-straight",
+      "category": "Hand Rankings",
+      "front": "Does a flush beat a straight?",
+      "back": "Yes. A flush (five cards of one suit) beats a straight (five in sequence). A full house then beats the flush."
+    },
+    {
+      "id": "rank-fullhouse-flush-straight",
+      "category": "Hand Rankings",
+      "front": "Rank these from best to worst: flush, straight, full house.",
+      "back": "Full house > flush > straight. The full house beats the flush, which beats the straight."
+    },
+    {
+      "id": "rank-beats-straight",
+      "category": "Hand Rankings",
+      "front": "What beats a straight?",
+      "back": "A flush, a full house, four of a kind, and a straight flush — in that ascending order."
+    },
+    {
+      "id": "rank-set-vs-two-pair",
+      "category": "Hand Rankings",
+      "front": "Which is stronger: two pair or three of a kind?",
+      "back": "Three of a kind (a set or trips) beats two pair."
+    },
+    {
+      "id": "rank-nuts",
+      "category": "Hand Rankings",
+      "front": "What are \"the nuts\"?",
+      "back": "The best possible hand on a given board. If you hold the nuts, no opponent's hand can beat you at that moment."
+    },
+    {
+      "id": "bank-buyins",
+      "category": "Bankroll",
+      "front": "How many buy-ins should a cash-game bankroll be?",
+      "back": "At least 20–30+ buy-ins for the stake you play, so normal downswings can't bust you. Example: 30 × $200 = a $6,000 roll for $1/$2."
+    },
+    {
+      "id": "bank-why-buyins",
+      "category": "Bankroll",
+      "front": "Why keep 20–30+ buy-ins?",
+      "back": "Poker has heavy short-term variance. A deep enough roll lets your long-term edge play out without going broke during an inevitable downswing."
+    },
+    {
+      "id": "bank-management",
+      "category": "Bankroll",
+      "front": "What is \"bankroll management\"?",
+      "back": "Playing stakes small enough relative to your money that variance can't ruin you — and moving down when your roll shrinks. It's discipline, not ego."
+    },
+    {
+      "id": "bank-risk-capital",
+      "category": "Bankroll",
+      "front": "Should your poker bankroll be money you need for living expenses?",
+      "back": "No. A bankroll is dedicated risk capital, kept separate from rent and bills. Only ever play with money you can afford to lose."
+    }
+  ]
+}

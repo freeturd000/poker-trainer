@@ -11,7 +11,8 @@
     "test:board": "node src/modules/board-reader/board-reader.test.mjs",
     "test:postflop": "node src/modules/postflop-trainer/postflop-trainer.test.mjs",
     "test:sim": "node src/modules/simulator/simulator.test.mjs",
-    "test:bots": "node src/modules/simulator/bots.test.mjs"
+    "test:bots": "node src/modules/simulator/bots.test.mjs",
+    "test:concept": "node src/modules/concept-deck/concept-deck.test.mjs"
   },
   "dependencies": {
     "pokersolver": "^2.1.4",

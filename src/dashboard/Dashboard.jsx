@@ -6,7 +6,9 @@
 // only from the shared /store — it owns no trainer logic of its own.
 
 import { useState } from 'react'
-import { getProgress, getLeaks, recordActiveDays, getDayStreak } from '../store'
+import { getProgress, getLeaks, recordActiveDays, getDayStreak, getSchedule } from '../store'
+import conceptDeck from '../data/concept-cards.json'
+import { countQueue } from '../modules/concept-deck/session.js'
 
 // The modules that exist today. `view` is the App nav id used to launch each one.
 const MODULES = [
@@ -15,6 +17,7 @@ const MODULES = [
   { id: 'board-reader', view: 'board', name: 'Board Reader', blurb: 'Texture, what beats you & range reads' },
   { id: 'postflop-trainer', view: 'postflop', name: 'Postflop Trainer', blurb: 'C-bets, facing bets & sizing (heuristic lines)' },
   { id: 'simulator', view: 'simulator', name: 'Simulator', blurb: 'Play full hands vs bots · hands played & win rate' },
+  { id: 'concept-deck', view: 'concept', name: 'Concept Deck', blurb: 'Spaced-repetition review · cards due nightly' },
 ]
 
 // ⚠️ READINESS FORMULA — FLAG FOR REVIEW (CLAUDE.md §5).
@@ -29,6 +32,12 @@ const MODULES = [
 // the Postflop Trainer landed: range .40 / odds .25 / board .15 / postflop .20 —
 // preflop still leads; postflop gets .20 because it's where real edges live, but
 // it's an advanced skill so it sits below the preflop foundation. Was .5/.3/.2.)
+//
+// The Concept Deck (Module 6) is DELIBERATELY absent from READINESS_WEIGHTS, so it
+// contributes 0 (weight defaults to `?? 0`) and the reviewed formula is untouched.
+// Rationale: its grading is SELF-RATED recall, not objective correctness, so folding
+// it into the readiness number would let self-scoring inflate it. It still shows a
+// tile (recall %, reviews, cards due) — it just doesn't move readiness.
 const CONFIDENCE_TARGET = 50
 const READINESS_WEIGHTS = {
   'range-trainer': 0.4,
@@ -91,6 +100,7 @@ export default function Dashboard({ onNavigate }) {
       leaks: getLeaks().slice(0, 5),
       streak: getDayStreak(Date.now()),
       readiness: computeReadiness(progress),
+      conceptDue: countQueue(conceptDeck.cards, getSchedule(), Date.now()).due,
     }
   })
 
@@ -143,7 +153,13 @@ export default function Dashboard({ onNavigate }) {
         <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-emerald-300">Modules</h2>
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {MODULES.map((m) => (
-            <ModuleTile key={m.id} module={m} progress={data.progress[m.id]} onNavigate={onNavigate} />
+            <ModuleTile
+              key={m.id}
+              module={m}
+              progress={data.progress[m.id]}
+              onNavigate={onNavigate}
+              badge={m.id === 'concept-deck' && data.conceptDue > 0 ? `${data.conceptDue} due` : null}
+            />
           ))}
         </div>
 
@@ -183,7 +199,7 @@ export default function Dashboard({ onNavigate }) {
   )
 }
 
-function ModuleTile({ module, progress, onNavigate }) {
+function ModuleTile({ module, progress, onNavigate, badge = null }) {
   const started = progress.attempts > 0
 
   return (
@@ -191,7 +207,14 @@ function ModuleTile({ module, progress, onNavigate }) {
       onClick={() => onNavigate(module.view)}
       className="flex flex-col rounded-2xl bg-white/95 p-5 text-left shadow-lg transition hover:bg-white"
     >
-      <div className="text-lg font-bold text-emerald-900">{module.name}</div>
+      <div className="flex items-center justify-between gap-2">
+        <div className="text-lg font-bold text-emerald-900">{module.name}</div>
+        {badge && (
+          <span className="shrink-0 rounded-full bg-emerald-600 px-2.5 py-0.5 text-xs font-semibold text-white">
+            {badge}
+          </span>
+        )}
+      </div>
       <div className="text-xs text-gray-500">{module.blurb}</div>
 
       {started ? (
