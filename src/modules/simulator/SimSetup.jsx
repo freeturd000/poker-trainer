@@ -24,6 +24,7 @@ export default function SimSetup({ onStart, session }) {
   const [blindIdx, setBlindIdx] = useState(0)
   const [depthBB, setDepthBB] = useState(100)
   const [mode, setMode] = useState('auto') // 'auto' = bots act on a timer; 'step' = manual advance
+  const [coach, setCoach] = useState(false) // plain-English guidance at each decision (default off)
 
   const setArch = (i, val) => setArches((a) => a.map((x, k) => (k === i ? val : x)))
 
@@ -37,6 +38,7 @@ export default function SimSetup({ onStart, session }) {
       stack: depthBB * bb,
       depthBB,
       mode,
+      coach,
     })
   }
 
@@ -123,6 +125,23 @@ export default function SimSetup({ onStart, session }) {
               {mode === 'auto'
                 ? 'Bots act automatically on a short timer.'
                 : 'Bots and each dealt street pause for a "Next" click so you can read every step.'}
+            </p>
+          </Field>
+
+          {/* Coach mode */}
+          <Field label="Coach mode">
+            <div className="flex gap-2">
+              <Chip active={!coach} onClick={() => setCoach(false)}>
+                Off
+              </Chip>
+              <Chip active={coach} onClick={() => setCoach(true)}>
+                On
+              </Chip>
+            </div>
+            <p className="mt-1 text-xs text-gray-500">
+              {coach
+                ? 'Plain-English coaching: reads opponents’ actions, suggests your play, and recaps each hand. Great paired with Step through.'
+                : 'A guided tutorial with beginner-friendly explanations at every decision. Off by default.'}
             </p>
           </Field>
 

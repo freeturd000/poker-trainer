@@ -18,6 +18,8 @@ import { recordAttempt } from '../../store'
 import SimSetup from './SimSetup.jsx'
 import SimTable from './SimTable.jsx'
 import SimControls from './SimControls.jsx'
+import CoachPanel from './CoachPanel.jsx'
+import { adviseHero, explainBotAction, recapResult } from './coach.js'
 import { evaluateHand } from '../../engine/evaluator.js'
 
 const HERO = 0
@@ -63,7 +65,7 @@ export default function Simulator() {
   const [seatStacks, setSeatStacks] = useState(null) // carried between hands
   const [session, setSession] = useState({ hands: 0, heroNet: 0 })
 
-  const botsRef = useRef({ fnBySeat: {}, nameBySeat: {} })
+  const botsRef = useRef({ fnBySeat: {}, nameBySeat: {}, archBySeat: {} })
   const handStartRef = useRef(null) // stacks at the start of the current hand
   const recordedRef = useRef(false)
   const timerRef = useRef(null)
@@ -76,13 +78,15 @@ export default function Simulator() {
     // Resolve each opponent's archetype (turning 'random' into a concrete one).
     const fnBySeat = {}
     const nameBySeat = {}
+    const archBySeat = {} // seat -> bot id ('nit'|'station'|'tag'), for coach reads
     config.archetypes.forEach((arch, i) => {
       const seat = i + 1
       const pick = arch === 'random' ? BOT_NAMES[Math.floor(Math.random() * BOT_NAMES.length)] : arch
       fnBySeat[seat] = resolveBot(pick)
       nameBySeat[seat] = LABEL[pick] ?? pick
+      archBySeat[seat] = pick
     })
-    botsRef.current = { fnBySeat, nameBySeat }
+    botsRef.current = { fnBySeat, nameBySeat, archBySeat }
 
     const n = config.opponents + 1
     const stacks = Array.from({ length: n }, () => config.stack)
@@ -134,7 +138,7 @@ export default function Simulator() {
     const street = state.street
     const next = applyAction(state, action)
     setLastBySeat((m) => ({ ...m, [seat]: { text, street } }))
-    setLastActed({ seat, text, street })
+    setLastActed({ seat, text, street, type: action.type })
     setState(next)
     if (cfg.mode !== 'step') setShownBoardLen(next.board.length)
   }
@@ -234,6 +238,50 @@ export default function Simulator() {
   const pausePoint = pausePointFor({ stepMode, complete, pendingReveal, toAct: view.toAct, nextStreet, lastActed })
   const stepHint = lastActed ? `${labelForSeat(lastActed.seat)} ${lastActed.text.toLowerCase()}` : null
 
+  // ── Coach mode (optional): plain-English guidance at each decision point ─────
+  // Hooks off the same signals as the pause points: hero's turn → a suggestion,
+  // an opponent's action → a read on it, hand over → a recap. All text comes from
+  // ./coach.js, which reuses the range/postflop/board-reader analysis modules.
+  const coachOn = Boolean(cfg.coach)
+  const coachContent = coachOn ? coachContentFor() : null
+
+  function coachContentFor() {
+    try {
+      if (complete) {
+        return { kind: 'result', ...recapResult({ view, heroSeat: HERO, nameBySeat: botsRef.current.nameBySeat }) }
+      }
+      if (heroLegal) {
+        const hero = view.players[HERO]
+        const toCall = Math.max(0, view.currentBet - hero.streetCommitted)
+        // The current aggressor (a non-hero seat matching the high bet), used to
+        // pick the right BB-defense line preflop.
+        const raiser = view.players.find(
+          (p) => p.seat !== HERO && p.streetCommitted === view.currentBet && view.currentBet > cfg.bb,
+        )
+        const advice = adviseHero({
+          hole: hero.holeCards,
+          board: view.board,
+          position: hero.position,
+          street: view.street,
+          currentBet: view.currentBet,
+          bb: cfg.bb,
+          pot: view.pot,
+          toCall,
+          isBB: hero.position === 'BB',
+          raiserPos: raiser?.position,
+        })
+        return { kind: 'advice', ...advice }
+      }
+      if (lastActed && lastActed.seat !== HERO) {
+        const text = explainBotAction(botsRef.current.archBySeat[lastActed.seat], { type: lastActed.type })
+        return text ? { kind: 'bot', text } : null
+      }
+    } catch (e) {
+      console.error('coach content failed', e) // never let coaching break the table
+    }
+    return null
+  }
+
   return (
     <div className="flex min-h-screen flex-col items-center bg-emerald-800 p-4">
       <div className="w-full max-w-3xl">
@@ -265,6 +313,7 @@ export default function Simulator() {
         />
 
         <div className="mt-4">
+          {coachOn && <CoachPanel content={coachContent} />}
           {pausePoint?.kind === 'deal' ? (
             <StepPanel label={`Deal the ${nextStreet}`} hint={stepHint} onNext={dealNextStreet} onEnd={endSession} />
           ) : pausePoint?.kind === 'bot-turn' ? (
