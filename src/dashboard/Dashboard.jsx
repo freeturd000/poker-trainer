@@ -14,6 +14,7 @@ const MODULES = [
   { id: 'odds-trainer', view: 'odds', name: 'Odds Trainer', blurb: 'Pot odds, outs & call/fold verdicts' },
   { id: 'board-reader', view: 'board', name: 'Board Reader', blurb: 'Texture, what beats you & range reads' },
   { id: 'postflop-trainer', view: 'postflop', name: 'Postflop Trainer', blurb: 'C-bets, facing bets & sizing (heuristic lines)' },
+  { id: 'simulator', view: 'simulator', name: 'Simulator', blurb: 'Play full hands vs bots · hands played & win rate' },
 ]
 
 // ⚠️ READINESS FORMULA — FLAG FOR REVIEW (CLAUDE.md §5).

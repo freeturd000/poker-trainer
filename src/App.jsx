@@ -8,6 +8,7 @@ import RangeTrainer from './modules/range-trainer/RangeTrainer.jsx'
 import OddsTrainer from './modules/odds-trainer/OddsTrainer.jsx'
 import BoardReader from './modules/board-reader/BoardReader.jsx'
 import PostflopTrainer from './modules/postflop-trainer/PostflopTrainer.jsx'
+import Simulator from './modules/simulator/Simulator.jsx'
 
 const VIEWS = [
   { id: 'dashboard', label: 'Dashboard' },
@@ -15,6 +16,7 @@ const VIEWS = [
   { id: 'odds', label: 'Odds Trainer' },
   { id: 'board', label: 'Board Reader' },
   { id: 'postflop', label: 'Postflop Trainer' },
+  { id: 'simulator', label: 'Simulator' },
 ]
 
 export default function App() {
@@ -43,6 +45,7 @@ export default function App() {
       {view === 'odds' && <OddsTrainer />}
       {view === 'board' && <BoardReader />}
       {view === 'postflop' && <PostflopTrainer />}
+      {view === 'simulator' && <Simulator />}
     </div>
   )
 }
