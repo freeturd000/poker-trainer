@@ -10,6 +10,7 @@ import BoardReader from './modules/board-reader/BoardReader.jsx'
 import PostflopTrainer from './modules/postflop-trainer/PostflopTrainer.jsx'
 import Simulator from './modules/simulator/Simulator.jsx'
 import ConceptDeck from './modules/concept-deck/ConceptDeck.jsx'
+import LiveToolkit from './modules/live-toolkit/LiveToolkit.jsx'
 
 const VIEWS = [
   { id: 'dashboard', label: 'Dashboard' },
@@ -19,6 +20,7 @@ const VIEWS = [
   { id: 'postflop', label: 'Postflop Trainer' },
   { id: 'simulator', label: 'Simulator' },
   { id: 'concept', label: 'Concept Deck' },
+  { id: 'live', label: 'Live Toolkit' },
 ]
 
 export default function App() {
@@ -49,6 +51,7 @@ export default function App() {
       {view === 'postflop' && <PostflopTrainer />}
       {view === 'simulator' && <Simulator />}
       {view === 'concept' && <ConceptDeck />}
+      {view === 'live' && <LiveToolkit />}
     </div>
   )
 }

@@ -1,0 +1,142 @@
+{
+  "_comment": "⚠️ ETIQUETTE/MECHANICS CONTENT — FLAG FOR REVIEW (CLAUDE.md §4 Module 7). Static, beginner-friendly reference for live in-person play. Structure: sections[] each with { id, title, items[] }, and each item { id, term, body }. `id`s are stable keys. To expand, append items or sections. Some rules VARY BY ROOM/JURISDICTION — those ids are listed in _reviewFlags below for the human to verify against local room rules.",
+  "_reviewFlags": [
+    "single-chip-rule",
+    "posting",
+    "straddle",
+    "show-one-show-all",
+    "cash-plays"
+  ],
+  "version": 1,
+  "sections": [
+    {
+      "id": "acting-betting",
+      "title": "Acting & Betting",
+      "items": [
+        {
+          "id": "act-in-turn",
+          "term": "Act in turn",
+          "body": "Wait for the players before you to act, then act. Acting out of turn (early) gives away information and can be penalized — at minimum the dealer will back up to you and the premature action may be held against you. Watch the action and know when it's on you."
+        },
+        {
+          "id": "string-bet",
+          "term": "String bet (and how to avoid one)",
+          "body": "A string bet is a raise made in more than one motion without announcing it — e.g. you put out chips to call, then reach back to your stack for more. The dealer will rule it a CALL, killing your raise. Avoid it two ways: (1) announce your action first — say \"raise\" before you touch chips (verbal is binding), or (2) bring all your chips out in a single, clean motion."
+        },
+        {
+          "id": "verbal-binding",
+          "term": "Verbal declarations are binding",
+          "body": "If it's your turn and you clearly say \"fold\", \"call\", \"raise\", \"check\", or \"all-in\", you're held to it — even before any chips move. Only say what you intend to do, and only when it's your turn."
+        },
+        {
+          "id": "min-raise",
+          "term": "Minimum raise rule",
+          "body": "A raise must be at least as big as the previous bet or raise. Example: someone bets $10; a raise must be to at least $20 (you must raise BY at least the last bet/raise amount, $10 here). You can always raise more, up to your whole stack (all-in) in no-limit."
+        },
+        {
+          "id": "single-chip-rule",
+          "term": "Single oversized chip = a call",
+          "body": "If there's a bet to you and you put out ONE chip bigger than the bet without saying \"raise\", it's a CALL, not a raise — the dealer makes change. To raise with a big chip, announce \"raise\" first, or put out the correct number of chips. (This is the common rule in most rooms; confirm locally.)"
+        },
+        {
+          "id": "check",
+          "term": "Checking",
+          "body": "When there's no bet in front of you, you can \"check\" to pass the action without putting money in — tap the table with your hand or say \"check\". You keep your cards and stay in the hand."
+        }
+      ]
+    },
+    {
+      "id": "physical-mechanics",
+      "title": "Physical Mechanics",
+      "items": [
+        {
+          "id": "posting",
+          "term": "Posting when you sit down",
+          "body": "\"Posting\" means putting in a blind bet. When you first sit at a cash table you can usually either post an amount equal to the big blind to be dealt in right away, or wait for the big blind to come around to you and enter for free. Ask the dealer; house rules vary."
+        },
+        {
+          "id": "straddle",
+          "term": "Straddle",
+          "body": "An optional, voluntary blind — usually double the big blind — posted by the player directly to the left of the big blind, before cards are dealt. It's \"live\": it acts like a bigger blind and gives that player the last action preflop. Not every room or game allows it, and rules vary — ask before you straddle."
+        },
+        {
+          "id": "chip-handling",
+          "term": "Chip handling",
+          "body": "Keep your chips in neat, visible stacks with big denominations showing — hiding your high-value chips behind stacks of low ones (\"going south\" or hiding chips) is not allowed. When you bet, place chips in a stack in front of you; don't \"splash the pot\" by tossing them into the middle, which makes bets hard to verify."
+        },
+        {
+          "id": "protect-hand",
+          "term": "Protect your hand",
+          "body": "Keep your two cards on the table and set a chip or a small card protector on top of them. If your hand isn't protected and the dealer accidentally sweeps it into the muck, it's dead and you have no recourse — so protecting it matters."
+        },
+        {
+          "id": "cards-on-table",
+          "term": "Keep cards on the table",
+          "body": "Never take your cards off the table or hold them in your lap. To look at them, keep them flat on the felt and lift the corners with your hands cupped over them. Cards that leave the table can be ruled dead."
+        }
+      ]
+    },
+    {
+      "id": "money-tipping",
+      "title": "Money & Tipping",
+      "items": [
+        {
+          "id": "table-stakes",
+          "term": "Table stakes",
+          "body": "You can only wager the chips you have on the table at the START of a hand. You can't add money or reach into your pocket mid-hand. If you run out, you're all-in for what you had, and a side pot forms for the others."
+        },
+        {
+          "id": "cash-plays",
+          "term": "Cash on the table",
+          "body": "In many rooms, cash (often $100 bills) \"plays\" — it counts at face value like chips. Some rooms don't allow it. Ask the dealer what plays before assuming your bills are in action."
+        },
+        {
+          "id": "tipping",
+          "term": "Tipping the dealer",
+          "body": "It's customary to tip the dealer a small amount — often $1 or so — when you win a pot, and to tip when you rack up after a winning session. Tipping is optional but standard live etiquette and part of the dealer's income."
+        },
+        {
+          "id": "rake",
+          "term": "The rake",
+          "body": "The house takes a small cut of most pots (the \"rake\") to run the game — it's removed automatically by the dealer, and it's separate from any tip. Just be aware pots are slightly smaller than they look after the rake comes out."
+        }
+      ]
+    },
+    {
+      "id": "table-etiquette",
+      "title": "General Table Etiquette",
+      "items": [
+        {
+          "id": "no-slow-roll",
+          "term": "Never slow-roll",
+          "body": "At showdown, if you know you have the winning hand, turn it over promptly. Deliberately pausing to let your opponent think they won before revealing the nuts (a \"slow roll\") is considered the rudest move in poker. Don't do it."
+        },
+        {
+          "id": "one-player-per-hand",
+          "term": "One player to a hand",
+          "body": "Play your own cards. Don't ask for or give advice on a hand that's in progress, and don't show your cards to a friend while you're still in the pot. It's your decision alone."
+        },
+        {
+          "id": "no-talking-live-hand",
+          "term": "Don't discuss a live hand",
+          "body": "Even after you've folded, don't talk about the board, the possible hands, or what you would have had while the hand is still being played. It can unfairly influence the players still in it."
+        },
+        {
+          "id": "muck-cleanly",
+          "term": "Showdown order & mucking",
+          "body": "At showdown the last player who bet or raised shows first; if everyone checked, the first player left of the dealer shows first. If you're beaten you can \"muck\" (fold face-down without showing). Slide your cards to the dealer cleanly."
+        },
+        {
+          "id": "show-one-show-all",
+          "term": "Show one, show all",
+          "body": "If you show your cards to even one player at the table (e.g. flashing a bluff), any other player can ask to see them too, and the dealer will show everyone. So don't reveal your hand unless you're fine with the whole table seeing it. (Enforcement varies by room.)"
+        },
+        {
+          "id": "be-ready",
+          "term": "Be ready to act",
+          "body": "Pay attention so the game keeps moving. Know roughly what you'll do before it's your turn, don't stall unnecessarily, and keep your phone/distractions from holding up the table."
+        }
+      ]
+    }
+  ]
+}
