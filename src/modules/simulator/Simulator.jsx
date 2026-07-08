@@ -24,12 +24,42 @@ const HERO = 0
 const BOT_STEP_MS = 900 // pause between bot actions so the human can follow
 const LABEL = { nit: 'Nit', station: 'Station', tag: 'TAG' }
 
+// Board size after each street is dealt → the street's name. Used by step-through
+// mode to reveal the board one street at a time and to label the "deal" button.
+const STREET_BY_BOARD = { 3: 'flop', 4: 'turn', 5: 'river' }
+
+// Given how many board cards are currently shown and how many the engine has
+// actually dealt, return how many to show after the next single "deal" step —
+// i.e. the next street boundary (3/4/5), so an all-in runout still reveals the
+// flop, turn, and river as separate steps.
+function nextRevealLen(shown, dealt) {
+  for (const m of [3, 4, 5]) if (m > shown && m <= dealt) return m
+  return dealt
+}
+
+/**
+ * COACH HOOK — the single, cleanly-typed description of *why* the table is paused
+ * in step-through mode. A later "coach mode" can read this at each pause to
+ * comment on the spot ("the game just paused after action X"); nothing consumes
+ * the `kind: 'deal' | 'bot-turn' | 'hero-turn'` field beyond button labels today.
+ * Returns null in auto-play (no discrete pauses) and at hand end (the result
+ * panel takes over).
+ */
+function pausePointFor({ stepMode, complete, pendingReveal, toAct, nextStreet, lastActed }) {
+  if (!stepMode || complete) return null
+  if (pendingReveal) return { kind: 'deal', nextStreet, lastActed }
+  if (toAct === HERO) return { kind: 'hero-turn', lastActed }
+  return { kind: 'bot-turn', seat: toAct, lastActed }
+}
+
 export default function Simulator() {
   const [phase, setPhase] = useState('setup')
   const [cfg, setCfg] = useState(null)
   const [state, setState] = useState(null)
   const [buttonIndex, setButtonIndex] = useState(0)
   const [lastBySeat, setLastBySeat] = useState({}) // seat -> { text, street }
+  const [lastActed, setLastActed] = useState(null) // { seat, text, street } most recent action
+  const [shownBoardLen, setShownBoardLen] = useState(0) // board cards revealed to the UI (step-through)
   const [seatStacks, setSeatStacks] = useState(null) // carried between hands
   const [session, setSession] = useState({ hands: 0, heroNet: 0 })
 
@@ -77,6 +107,8 @@ export default function Simulator() {
     handStartRef.current = stacks
     recordedRef.current = false
     setLastBySeat({})
+    setLastActed(null)
+    setShownBoardLen(0)
     setState(hand)
   }
 
@@ -94,9 +126,17 @@ export default function Simulator() {
   }
 
   // ── Apply an action (hero or bot) + record it in the per-seat feed ─────────
+  // In step-through mode we deliberately do NOT bump `shownBoardLen` here even
+  // though `applyAction` may have dealt the next street: the board is revealed by
+  // a separate `dealNextStreet` step so each event is its own click.
   function commitAction(action, seat) {
-    setLastBySeat((m) => ({ ...m, [seat]: { text: describeAction(action), street: state.street } }))
-    setState((s) => applyAction(s, action))
+    const text = describeAction(action)
+    const street = state.street
+    const next = applyAction(state, action)
+    setLastBySeat((m) => ({ ...m, [seat]: { text, street } }))
+    setLastActed({ seat, text, street })
+    setState(next)
+    if (cfg.mode !== 'step') setShownBoardLen(next.board.length)
   }
 
   function heroAct(action) {
@@ -104,9 +144,31 @@ export default function Simulator() {
     commitAction(action, HERO)
   }
 
-  // ── Auto-step the bots ────────────────────────────────────────────────────
-  useEffect(() => {
+  // ── Step-through advance: take the single next bot action ──────────────────
+  function stepBot() {
     if (!state || state.complete) return
+    const seat = state.toActIndex
+    if (seat === HERO) return
+    let action
+    try {
+      action = botActionFor(state, botsRef.current.fnBySeat[seat], cfg.bb)
+    } catch (e) {
+      console.error('bot decision failed', e)
+      return
+    }
+    commitAction(action, seat)
+  }
+
+  // ── Step-through advance: reveal the next dealt street (flop/turn/river) ────
+  function dealNextStreet() {
+    const dealt = state.board.length
+    setShownBoardLen((cur) => nextRevealLen(cur, dealt))
+    setLastActed(null) // a fresh street: clear the "just acted" highlight
+  }
+
+  // ── Auto-step the bots (auto-play mode only) ───────────────────────────────
+  useEffect(() => {
+    if (!state || state.complete || cfg?.mode === 'step') return
     const seat = state.toActIndex
     if (seat === HERO) return // wait for the human
 
@@ -157,6 +219,21 @@ export default function Simulator() {
   const heroLegal =
     !complete && view.toAct === HERO ? getLegalActions(state).actions : null
 
+  const labelForSeat = (seat) =>
+    seat === HERO ? 'You' : botsRef.current.nameBySeat[seat] ?? `Seat ${seat}`
+
+  // Step-through state: how much of the board to reveal, and whether the next
+  // click is a "deal the street" step vs an action step.
+  const stepMode = cfg.mode === 'step'
+  const visibleBoardLen = stepMode ? shownBoardLen : view.board.length
+  const pendingReveal = stepMode && shownBoardLen < view.board.length
+  const nextStreet = STREET_BY_BOARD[nextRevealLen(shownBoardLen, view.board.length)]
+  const justActed = stepMode && lastActed ? { seat: lastActed.seat, text: lastActed.text } : null
+  // The single pause-point descriptor; drives the step panel today and is the
+  // surface a future coach mode reads. Null in auto-play and at hand end.
+  const pausePoint = pausePointFor({ stepMode, complete, pendingReveal, toAct: view.toAct, nextStreet, lastActed })
+  const stepHint = lastActed ? `${labelForSeat(lastActed.seat)} ${lastActed.text.toLowerCase()}` : null
+
   return (
     <div className="flex min-h-screen flex-col items-center bg-emerald-800 p-4">
       <div className="w-full max-w-3xl">
@@ -182,10 +259,22 @@ export default function Simulator() {
           buttonIndex={buttonIndex}
           lastBySeat={bubbles}
           botNames={botsRef.current.nameBySeat}
+          visibleBoardLen={visibleBoardLen}
+          justActed={justActed}
+          stepMode={stepMode}
         />
 
         <div className="mt-4">
-          {complete ? (
+          {pausePoint?.kind === 'deal' ? (
+            <StepPanel label={`Deal the ${nextStreet}`} hint={stepHint} onNext={dealNextStreet} onEnd={endSession} />
+          ) : pausePoint?.kind === 'bot-turn' ? (
+            <StepPanel
+              label={`Next — ${labelForSeat(pausePoint.seat)} to act`}
+              hint={stepHint}
+              onNext={stepBot}
+              onEnd={endSession}
+            />
+          ) : complete ? (
             <ResultPanel
               view={view}
               nameBySeat={botsRef.current.nameBySeat}
@@ -206,6 +295,34 @@ export default function Simulator() {
             </div>
           )}
         </div>
+      </div>
+    </div>
+  )
+}
+
+// Step-through pause panel: shows the most recent action and advances exactly one
+// event (a single bot action, or dealing the next street) per click.
+function StepPanel({ label, hint, onNext, onEnd }) {
+  return (
+    <div className="rounded-2xl bg-emerald-950/70 p-4 text-center shadow-lg">
+      {hint && (
+        <div className="mb-2 text-sm text-emerald-200">
+          Last: <span className="font-semibold text-white">{hint}</span>
+        </div>
+      )}
+      <div className="flex justify-center gap-3">
+        <button
+          onClick={onNext}
+          className="rounded-xl bg-sky-600 px-6 py-2.5 text-sm font-bold text-white shadow hover:bg-sky-500"
+        >
+          {label}
+        </button>
+        <button
+          onClick={onEnd}
+          className="rounded-xl bg-emerald-800 px-5 py-2.5 text-sm font-bold text-emerald-100 shadow hover:bg-emerald-700"
+        >
+          End session
+        </button>
       </div>
     </div>
   )

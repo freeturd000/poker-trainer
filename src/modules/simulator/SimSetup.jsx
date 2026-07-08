@@ -23,6 +23,7 @@ export default function SimSetup({ onStart, session }) {
   const [arches, setArches] = useState(['tag', 'station', 'random', 'random', 'random'])
   const [blindIdx, setBlindIdx] = useState(0)
   const [depthBB, setDepthBB] = useState(100)
+  const [mode, setMode] = useState('auto') // 'auto' = bots act on a timer; 'step' = manual advance
 
   const setArch = (i, val) => setArches((a) => a.map((x, k) => (k === i ? val : x)))
 
@@ -35,6 +36,7 @@ export default function SimSetup({ onStart, session }) {
       bb,
       stack: depthBB * bb,
       depthBB,
+      mode,
     })
   }
 
@@ -105,6 +107,23 @@ export default function SimSetup({ onStart, session }) {
                 </Chip>
               ))}
             </div>
+          </Field>
+
+          {/* Advance mode */}
+          <Field label="How the action advances">
+            <div className="flex gap-2">
+              <Chip active={mode === 'auto'} onClick={() => setMode('auto')}>
+                Auto-play
+              </Chip>
+              <Chip active={mode === 'step'} onClick={() => setMode('step')}>
+                Step through
+              </Chip>
+            </div>
+            <p className="mt-1 text-xs text-gray-500">
+              {mode === 'auto'
+                ? 'Bots act automatically on a short timer.'
+                : 'Bots and each dealt street pause for a "Next" click so you can read every step.'}
+            </p>
           </Field>
 
           {/* Depth */}
