@@ -21,6 +21,10 @@ export {
   potTotal,
 } from './handEngine.js'
 
+// Rule-based bot opponents + the headless bot-vs-bot driver (Module 5, part 2).
+export { nit, station, tag, BOTS, BOT_NAMES, resolveBot } from './bots.js'
+export { playHand, isLegalAction } from './playHand.js'
+
 // Lower-level pieces, exposed for reuse and direct testing.
 export { computeSidePots, splitPot } from './pot.js'
 export {
