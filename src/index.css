@@ -1,3 +1,90 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ── Base ──────────────────────────────────────────────────────────────────
+   The green felt background lives on the document so there's never a white
+   flash on overscroll, and every screen inherits one consistent surface. */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-emerald-800 text-emerald-50 antialiased;
+  }
+}
+
+/* ── Shared design system ────────────────────────────────────────────────────
+   One source of truth for the visual vocabulary repeated across every module —
+   headings, panels, buttons, and the setup toggle chips. Modules reference these
+   semantic classes instead of re-declaring the same utility strings, so the look
+   stays cohesive and future tweaks happen in one place. Layout/spacing that is
+   genuinely local to a screen stays inline in that module. */
+@layer components {
+  /* Page frame: full-height felt with consistent padding. `pt-screen-center`
+     also vertically centers a single focused column (the drill trainers);
+     plain `.pt-screen` top-aligns for scrolling, list-heavy views (dashboard,
+     live toolkit, simulator). */
+  .pt-screen {
+    @apply flex min-h-screen flex-col items-center bg-emerald-800 px-4 py-6 sm:px-6;
+  }
+  .pt-screen-center {
+    @apply justify-center;
+  }
+  /* The centered content rail so nothing stretches too wide on desktop. */
+  .pt-rail {
+    @apply w-full max-w-2xl;
+  }
+
+  /* Typography */
+  .pt-title {
+    @apply text-2xl font-bold text-white sm:text-3xl;
+  }
+  .pt-subtitle {
+    @apply text-sm text-emerald-100;
+  }
+  .pt-eyebrow {
+    @apply text-xs font-semibold uppercase tracking-wide text-emerald-300;
+  }
+
+  /* Panels — the two surfaces used everywhere. Padding stays at the call site
+     (p-4 / p-5) so density can vary; only the shape/colour/shadow is shared. */
+  .pt-card {
+    @apply rounded-2xl bg-white/95 shadow-lg;
+  }
+  .pt-card-dark {
+    @apply rounded-2xl bg-emerald-950/40 shadow-lg;
+  }
+
+  /* Buttons. `.pt-btn` is the shared shape; pair it with a colour modifier. */
+  .pt-btn {
+    @apply rounded-xl px-6 py-3 font-semibold shadow transition;
+  }
+  .pt-btn-light {
+    @apply bg-white text-emerald-900 hover:bg-emerald-50;
+  }
+  .pt-btn-green {
+    @apply bg-emerald-600 text-white hover:bg-emerald-500;
+  }
+
+  /* Setup selector chips (mode / seat / drill toggles across the trainers). */
+  .pt-toggle {
+    @apply rounded-lg px-4 py-2 text-sm font-semibold shadow transition;
+  }
+  .pt-toggle-on {
+    @apply bg-white text-emerald-900;
+  }
+  .pt-toggle-off {
+    @apply bg-emerald-700 text-emerald-50 hover:bg-emerald-600;
+  }
+
+  /* Utility: hide the scrollbar on the horizontally-scrollable mobile nav
+     without disabling scrolling. */
+  .pt-no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .pt-no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}

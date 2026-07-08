@@ -121,8 +121,8 @@ export default function ConceptDeck() {
     const sessionSize = counts.due + newThisSession
     return (
       <Shell>
-        <h1 className="text-2xl font-bold text-white">Concept Deck</h1>
-        <p className="text-emerald-100">Spaced-repetition review of the core poker concepts</p>
+        <h1 className="pt-title">Concept Deck</h1>
+        <p className="pt-subtitle">Spaced-repetition review of the core poker concepts</p>
 
         <div className="mt-6 grid w-full max-w-sm grid-cols-2 gap-3">
           <CountTile value={counts.due} label="Due now" tone="text-white" />
@@ -136,10 +136,7 @@ export default function ConceptDeck() {
           </p>
         ) : (
           <>
-            <button
-              onClick={start}
-              className="mt-6 rounded-xl bg-white px-8 py-3 font-semibold text-emerald-900 shadow hover:bg-emerald-50"
-            >
+            <button onClick={start} className="mt-6 pt-btn pt-btn-light">
               Start review · {sessionSize} card{sessionSize === 1 ? '' : 's'}
             </button>
             <p className="mt-2 text-xs text-emerald-300">
@@ -191,22 +188,22 @@ export default function ConceptDeck() {
     const recallPct = stats.reviewed ? (100 * stats.recalled) / stats.reviewed : 0
     return (
       <Shell>
-        <h1 className="text-2xl font-bold text-white">Review complete</h1>
+        <h1 className="pt-title">Review complete</h1>
         {stats.reviewed === 0 ? (
-          <div className="mt-4 max-w-xs rounded-xl bg-white/95 p-5 text-center text-sm text-emerald-800 shadow-lg">
+          <div className="mt-4 max-w-xs pt-card p-5 text-center text-sm text-emerald-800">
             Nothing was due — you're caught up. New reviews unlock as cards come due over the next
             days. 🎉
           </div>
         ) : (
           <>
-            <div className="mt-4 rounded-xl bg-white/95 p-5 text-center shadow-lg">
+            <div className="mt-4 pt-card p-5 text-center">
               <div className="text-4xl font-bold text-emerald-700">{recallPct.toFixed(0)}%</div>
               <div className="text-sm text-gray-600">
                 recalled {stats.recalled}/{stats.reviewed} · lifetime {lifetime.accuracy.toFixed(1)}%
               </div>
             </div>
 
-            <div className="mt-4 w-full max-w-sm rounded-xl bg-white/95 p-4 shadow-lg">
+            <div className="mt-4 w-full max-w-sm pt-card p-4">
               <div className="text-sm font-semibold text-gray-800">Ratings this session</div>
               <ul className="mt-2 space-y-1 text-sm text-gray-700">
                 {RATING_BUTTONS.map((b) => (
@@ -220,10 +217,7 @@ export default function ConceptDeck() {
           </>
         )}
 
-        <button
-          onClick={() => setPhase('setup')}
-          className="mt-6 rounded-xl bg-white px-6 py-3 font-semibold text-emerald-900 shadow hover:bg-emerald-50"
-        >
+        <button onClick={() => setPhase('setup')} className="mt-6 pt-btn pt-btn-light">
           Done
         </button>
       </Shell>
@@ -241,7 +235,7 @@ export default function ConceptDeck() {
         </span>
       </div>
 
-      <div className="mt-4 flex min-h-[14rem] w-full max-w-md flex-col items-center justify-center rounded-2xl bg-white/95 p-6 text-center shadow-lg">
+      <div className="mt-4 flex min-h-[14rem] w-full max-w-md flex-col items-center justify-center pt-card p-6 text-center">
         <div className="text-xs font-semibold uppercase tracking-wide text-emerald-500">
           {current.card.category}
         </div>
@@ -255,10 +249,7 @@ export default function ConceptDeck() {
       </div>
 
       {!revealed ? (
-        <button
-          onClick={() => setRevealed(true)}
-          className="mt-6 rounded-xl bg-white px-8 py-3 font-semibold text-emerald-900 shadow hover:bg-emerald-50"
-        >
+        <button onClick={() => setRevealed(true)} className="mt-6 pt-btn pt-btn-light">
           Show answer
         </button>
       ) : (
@@ -286,7 +277,7 @@ export default function ConceptDeck() {
 
 function CountTile({ value, label, tone }) {
   return (
-    <div className="flex flex-col items-center rounded-2xl bg-emerald-950/40 p-4 text-center shadow-lg">
+    <div className="flex flex-col items-center pt-card-dark p-4 text-center">
       <span className={`text-3xl font-bold tabular-nums ${tone}`}>{value}</span>
       <span className="mt-1 text-xs uppercase tracking-wide text-emerald-300">{label}</span>
     </div>
@@ -295,9 +286,5 @@ function CountTile({ value, label, tone }) {
 
 // Shared page frame (matches the other trainers).
 function Shell({ children }) {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-emerald-800 p-6">
-      {children}
-    </div>
-  )
+  return <div className="pt-screen pt-screen-center">{children}</div>
 }

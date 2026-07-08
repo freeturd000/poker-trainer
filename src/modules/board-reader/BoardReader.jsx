@@ -110,8 +110,8 @@ export default function BoardReader() {
   if (phase === 'setup') {
     return (
       <Shell>
-        <h1 className="text-2xl font-bold text-white">Board Texture &amp; Hand Reading</h1>
-        <p className="text-emerald-100">Read the board — texture, what beats you, and range advantage</p>
+        <h1 className="pt-title">Board Texture &amp; Hand Reading</h1>
+        <p className="pt-subtitle">Read the board — texture, what beats you, and range advantage</p>
         <p className="mt-1 max-w-md text-center text-xs text-emerald-300">
           Texture &amp; range reads are graded on documented heuristics (not a solver). “What beats
           you” is exact.
@@ -125,9 +125,7 @@ export default function BoardReader() {
               <button
                 key={opt.label}
                 onClick={() => setDrill(opt.value)}
-                className={`rounded-lg px-4 py-2 text-sm font-semibold shadow transition ${
-                  active ? 'bg-white text-emerald-900' : 'bg-emerald-700 text-emerald-50 hover:bg-emerald-600'
-                }`}
+                className={`pt-toggle ${active ? 'pt-toggle-on' : 'pt-toggle-off'}`}
               >
                 {opt.label}
               </button>
@@ -141,7 +139,7 @@ export default function BoardReader() {
             <button
               key={len}
               onClick={() => start(len)}
-              className="rounded-xl bg-white px-6 py-3 font-semibold text-emerald-900 shadow hover:bg-emerald-50"
+              className="pt-btn pt-btn-light"
             >
               {len} spots
             </button>
@@ -187,15 +185,15 @@ export default function BoardReader() {
   if (phase === 'summary') {
     return (
       <Shell>
-        <h1 className="text-2xl font-bold text-white">Session complete</h1>
-        <div className="mt-4 rounded-xl bg-white/95 p-5 text-center shadow-lg">
+        <h1 className="pt-title">Session complete</h1>
+        <div className="mt-4 pt-card p-5 text-center">
           <div className="text-4xl font-bold text-emerald-700">{sessionAcc.toFixed(0)}%</div>
           <div className="text-sm text-gray-600">
             {stats.correct}/{stats.answered} correct · lifetime {lifetime.toFixed(1)}%
           </div>
         </div>
 
-        <div className="mt-4 w-full max-w-sm rounded-xl bg-white/95 p-4 shadow-lg">
+        <div className="mt-4 w-full max-w-sm pt-card p-4">
           <div className="text-sm font-semibold text-gray-800">Weakest drills this session</div>
           {worstMisses.length === 0 ? (
             <div className="mt-1 text-sm text-emerald-700">No misses — clean session! 🎉</div>
@@ -213,7 +211,7 @@ export default function BoardReader() {
 
         <button
           onClick={() => setPhase('setup')}
-          className="mt-6 rounded-xl bg-white px-6 py-3 font-semibold text-emerald-900 shadow hover:bg-emerald-50"
+          className="mt-6 pt-btn pt-btn-light"
         >
           New session
         </button>
@@ -334,12 +332,12 @@ function renderInput(spot, { selected, toggle, submit }) {
       { value: 'caller', label: 'Caller' },
     ]
     return (
-      <div className="flex justify-center gap-3">
+      <div className="flex flex-wrap justify-center gap-3">
         {OPTIONS.map((o) => (
           <button
             key={o.value}
             onClick={() => submit(o.value)}
-            className="rounded-xl bg-emerald-500 px-6 py-3 text-lg font-bold text-white shadow hover:bg-emerald-400"
+            className="rounded-xl bg-emerald-500 px-6 py-3 text-lg font-bold text-white shadow transition hover:bg-emerald-400"
           >
             {o.label}
           </button>
@@ -359,8 +357,8 @@ function renderInput(spot, { selected, toggle, submit }) {
             <button
               key={opt}
               onClick={() => toggle(opt)}
-              className={`rounded-lg px-4 py-2 text-sm font-semibold shadow transition ${
-                active ? 'bg-white text-emerald-900 ring-2 ring-emerald-300' : 'bg-emerald-700 text-emerald-50 hover:bg-emerald-600'
+              className={`pt-toggle ${
+                active ? 'pt-toggle-on ring-2 ring-emerald-300' : 'pt-toggle-off'
               }`}
             >
               {opt}
@@ -393,9 +391,5 @@ function BoardRow({ cards }) {
 
 // Shared page frame (matches the other trainers).
 function Shell({ children }) {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-emerald-800 p-6">
-      {children}
-    </div>
-  )
+  return <div className="pt-screen pt-screen-center">{children}</div>
 }

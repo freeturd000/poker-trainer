@@ -21,7 +21,7 @@ export default function EtiquetteReference() {
       {reference.sections.map((section) => {
         const isCollapsed = collapsed[section.id]
         return (
-          <div key={section.id} className="overflow-hidden rounded-2xl bg-white/95 shadow-lg">
+          <div key={section.id} className="overflow-hidden pt-card">
             <button
               onClick={() => toggle(section.id)}
               className="flex w-full items-center justify-between bg-emerald-700 px-5 py-3 text-left"

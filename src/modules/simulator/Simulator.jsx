@@ -350,9 +350,9 @@ export default function Simulator() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-emerald-800 p-4">
+    <div className="pt-screen overflow-x-hidden">
       <div className="w-full max-w-3xl">
-        <div className="mb-3 flex items-center justify-between">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <div className="text-sm text-emerald-200">
             <span className="rounded bg-amber-400/90 px-2 py-0.5 text-xs font-bold text-emerald-950">
               PRACTICE

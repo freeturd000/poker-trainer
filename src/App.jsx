@@ -12,37 +12,54 @@ import Simulator from './modules/simulator/Simulator.jsx'
 import ConceptDeck from './modules/concept-deck/ConceptDeck.jsx'
 import LiveToolkit from './modules/live-toolkit/LiveToolkit.jsx'
 
+// Concise tab labels keep the 8-item bar scannable and let it fit a phone width.
+// Dashboard leads (home), then the trainers in build order, then the tools.
 const VIEWS = [
   { id: 'dashboard', label: 'Dashboard' },
-  { id: 'range', label: 'Range Trainer' },
-  { id: 'odds', label: 'Odds Trainer' },
-  { id: 'board', label: 'Board Reader' },
-  { id: 'postflop', label: 'Postflop Trainer' },
+  { id: 'range', label: 'Range' },
+  { id: 'odds', label: 'Odds' },
+  { id: 'board', label: 'Board' },
+  { id: 'postflop', label: 'Postflop' },
   { id: 'simulator', label: 'Simulator' },
-  { id: 'concept', label: 'Concept Deck' },
-  { id: 'live', label: 'Live Toolkit' },
+  { id: 'concept', label: 'Concept' },
+  { id: 'live', label: 'Live' },
 ]
 
 export default function App() {
   const [view, setView] = useState('dashboard')
 
   return (
-    <div className="bg-emerald-800">
-      <nav className="flex justify-center gap-2 bg-emerald-950 px-4 py-2">
-        {VIEWS.map((v) => (
+    <div className="min-h-screen bg-emerald-800">
+      {/* Sticky top bar: brand doubles as a home shortcut; the tab row scrolls
+          horizontally on a phone and wraps/centers from `sm` up. */}
+      <header className="sticky top-0 z-20 border-b border-emerald-950/60 bg-emerald-950/95 backdrop-blur">
+        <div className="mx-auto flex max-w-5xl items-center gap-2 px-3 py-2 sm:px-4">
           <button
-            key={v.id}
-            onClick={() => setView(v.id)}
-            className={`rounded-lg px-4 py-1.5 text-sm font-semibold transition ${
-              view === v.id
-                ? 'bg-white text-emerald-900'
-                : 'bg-emerald-800 text-emerald-100 hover:bg-emerald-700'
-            }`}
+            onClick={() => setView('dashboard')}
+            className="flex shrink-0 items-center gap-1.5 pr-1 text-sm font-bold text-white"
+            aria-label="Poker Trainer home"
           >
-            {v.label}
+            <span className="text-lg leading-none text-emerald-400">♠</span>
+            <span className="hidden sm:inline">Poker Trainer</span>
           </button>
-        ))}
-      </nav>
+          <nav className="pt-no-scrollbar flex flex-1 items-center gap-1 overflow-x-auto sm:flex-wrap sm:justify-end">
+            {VIEWS.map((v) => (
+              <button
+                key={v.id}
+                onClick={() => setView(v.id)}
+                aria-current={view === v.id ? 'page' : undefined}
+                className={`shrink-0 rounded-lg px-3 py-1.5 text-sm font-semibold transition ${
+                  view === v.id
+                    ? 'bg-white text-emerald-900 shadow'
+                    : 'text-emerald-100 hover:bg-emerald-800/70'
+                }`}
+              >
+                {v.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </header>
 
       {view === 'dashboard' && <Dashboard onNavigate={setView} />}
       {view === 'range' && <RangeTrainer />}

@@ -56,7 +56,7 @@ export default function BankrollManager() {
   return (
     <div className="flex flex-col gap-6">
       {/* Set bankroll */}
-      <div className="rounded-2xl bg-white/95 p-5 shadow-lg">
+      <div className="pt-card p-5">
         <div className="text-sm font-semibold text-gray-800">Current bankroll</div>
         <div className="mt-3 flex flex-wrap items-end gap-3">
           <label className="flex flex-col gap-1">
@@ -99,7 +99,7 @@ export default function BankrollManager() {
       </div>
 
       {/* Headline recommendation */}
-      <div className="rounded-2xl bg-emerald-950/40 p-5 text-center shadow-lg">
+      <div className="pt-card-dark p-5 text-center">
         <div className="text-sm font-semibold uppercase tracking-wide text-emerald-300">
           Rolled for
         </div>
@@ -132,7 +132,7 @@ export default function BankrollManager() {
       </div>
 
       {/* Per-stake guide */}
-      <div className="rounded-2xl bg-white/95 p-4 shadow-lg">
+      <div className="pt-card p-4">
         <div className="mb-2 px-1 text-sm font-semibold text-gray-800">Stakes guide</div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

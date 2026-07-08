@@ -135,8 +135,8 @@ export default function RangeTrainer() {
   if (phase === 'setup') {
     return (
       <Shell>
-        <h1 className="text-2xl font-bold text-white">Preflop Range Trainer</h1>
-        <p className="text-emerald-100">
+        <h1 className="pt-title">Preflop Range Trainer</h1>
+        <p className="pt-subtitle">
           6-max cash · {MODE_OPTIONS.find((m) => m.id === mode).blurb}
         </p>
 
@@ -148,11 +148,7 @@ export default function RangeTrainer() {
               <button
                 key={opt.id}
                 onClick={() => setMode(opt.id)}
-                className={`rounded-lg px-4 py-2 text-sm font-semibold shadow transition ${
-                  active
-                    ? 'bg-white text-emerald-900'
-                    : 'bg-emerald-700 text-emerald-50 hover:bg-emerald-600'
-                }`}
+                className={`pt-toggle ${active ? 'pt-toggle-on' : 'pt-toggle-off'}`}
               >
                 {opt.label}
               </button>
@@ -170,11 +166,7 @@ export default function RangeTrainer() {
               <button
                 key={opt.label}
                 onClick={() => setSeat(opt.value)}
-                className={`rounded-lg px-4 py-2 text-sm font-semibold shadow transition ${
-                  active
-                    ? 'bg-white text-emerald-900'
-                    : 'bg-emerald-700 text-emerald-50 hover:bg-emerald-600'
-                }`}
+                className={`pt-toggle ${active ? 'pt-toggle-on' : 'pt-toggle-off'}`}
               >
                 {opt.label}
               </button>
@@ -188,7 +180,7 @@ export default function RangeTrainer() {
             <button
               key={len}
               onClick={() => start(len)}
-              className="rounded-xl bg-white px-6 py-3 font-semibold text-emerald-900 shadow hover:bg-emerald-50"
+              className="pt-btn pt-btn-light"
             >
               {len} hands
             </button>
@@ -233,15 +225,15 @@ export default function RangeTrainer() {
   if (phase === 'summary') {
     return (
       <Shell>
-        <h1 className="text-2xl font-bold text-white">Session complete</h1>
-        <div className="mt-4 rounded-xl bg-white/95 p-5 text-center shadow-lg">
+        <h1 className="pt-title">Session complete</h1>
+        <div className="mt-4 pt-card p-5 text-center">
           <div className="text-4xl font-bold text-emerald-700">{sessionAcc.toFixed(0)}%</div>
           <div className="text-sm text-gray-600">
             {stats.correct}/{stats.answered} correct · lifetime {lifetime.toFixed(1)}%
           </div>
         </div>
 
-        <div className="mt-4 w-full max-w-sm rounded-xl bg-white/95 p-4 shadow-lg">
+        <div className="mt-4 w-full max-w-sm pt-card p-4">
           <div className="text-sm font-semibold text-gray-800">Worst spots this session</div>
           {worstLeaks.length === 0 ? (
             <div className="mt-1 text-sm text-emerald-700">No misses — clean session! 🎉</div>
@@ -261,7 +253,7 @@ export default function RangeTrainer() {
 
         <button
           onClick={() => setPhase('setup')}
-          className="mt-6 rounded-xl bg-white px-6 py-3 font-semibold text-emerald-900 shadow hover:bg-emerald-50"
+          className="mt-6 pt-btn pt-btn-light"
         >
           New session
         </button>
@@ -306,12 +298,12 @@ export default function RangeTrainer() {
       </div>
 
       {!selection ? (
-        <div className="mt-8 flex gap-4">
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
           {ACTIONS[mode].map((a) => (
             <button
               key={a.id}
               onClick={() => answer(a.id)}
-              className={`rounded-xl px-8 py-3 text-lg font-bold text-white shadow ${TONE_CLASS[a.tone]}`}
+              className={`rounded-xl px-7 py-3 text-lg font-bold text-white shadow transition ${TONE_CLASS[a.tone]}`}
             >
               {a.label}
             </button>
@@ -334,10 +326,7 @@ export default function RangeTrainer() {
             </div>
             {!result.correct && <div className="mt-1 text-sm text-gray-700">{result.why}</div>}
           </div>
-          <button
-            onClick={next}
-            className="rounded-xl bg-white px-8 py-3 font-semibold text-emerald-900 shadow hover:bg-emerald-50"
-          >
+          <button onClick={next} className="pt-btn pt-btn-light">
             {stats.answered >= length ? 'See summary' : 'Next hand'}
           </button>
         </div>
@@ -348,9 +337,5 @@ export default function RangeTrainer() {
 
 // Shared page frame for the trainer's three phases.
 function Shell({ children }) {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-emerald-800 p-6">
-      {children}
-    </div>
-  )
+  return <div className="pt-screen pt-screen-center">{children}</div>
 }

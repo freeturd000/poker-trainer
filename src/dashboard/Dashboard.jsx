@@ -133,16 +133,16 @@ export default function Dashboard({ onNavigate }) {
   const band = readinessBand(data.readiness)
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-emerald-800 p-6">
-      <div className="w-full max-w-2xl">
+    <div className="pt-screen">
+      <div className="pt-rail">
         <header className="mb-6 text-center">
-          <h1 className="text-3xl font-bold text-white">Poker Trainer</h1>
+          <h1 className="pt-title">Poker Trainer</h1>
           <p className="mt-1 text-sm text-emerald-200">Your nightly drill dashboard</p>
         </header>
 
         {/* Readiness + streak */}
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl bg-emerald-950/40 p-5 shadow-lg sm:col-span-2">
+          <div className="pt-card-dark p-5 sm:col-span-2">
             <div className="flex items-baseline justify-between">
               <span className="text-sm font-semibold uppercase tracking-wide text-emerald-300">
                 Table readiness
@@ -163,7 +163,7 @@ export default function Dashboard({ onNavigate }) {
             </p>
           </div>
 
-          <div className="flex flex-col items-center justify-center rounded-2xl bg-emerald-950/40 p-5 text-center shadow-lg">
+          <div className="flex flex-col items-center justify-center pt-card-dark p-5 text-center">
             <span className="text-4xl">{data.streak > 0 ? '🔥' : '🌙'}</span>
             <span className="mt-1 text-3xl font-bold tabular-nums text-white">{data.streak}</span>
             <span className="text-xs uppercase tracking-wide text-emerald-300">
@@ -192,7 +192,7 @@ export default function Dashboard({ onNavigate }) {
 
         {/* Top leaks */}
         <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-emerald-300">Top leaks</h2>
-        <div className="rounded-2xl bg-white/95 p-4 shadow-lg">
+        <div className="pt-card p-4">
           {data.leaks.length === 0 ? (
             <p className="py-4 text-center text-sm text-emerald-700">
               No leaks logged yet — play a session and your weakest spots will surface here. 🎯
@@ -232,7 +232,7 @@ function ModuleTile({ module, progress, onNavigate, badge = null, summary = null
   return (
     <button
       onClick={() => onNavigate(module.view)}
-      className="flex flex-col rounded-2xl bg-white/95 p-5 text-left shadow-lg transition hover:bg-white"
+      className="flex flex-col pt-card p-5 text-left transition hover:bg-white"
     >
       <div className="flex items-center justify-between gap-2">
         <div className="text-lg font-bold text-emerald-900">{module.name}</div>

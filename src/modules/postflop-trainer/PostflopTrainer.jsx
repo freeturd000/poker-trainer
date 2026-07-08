@@ -106,8 +106,8 @@ export default function PostflopTrainer() {
   if (phase === 'setup') {
     return (
       <Shell>
-        <h1 className="text-2xl font-bold text-white">Postflop Decision Trainer</h1>
-        <p className="text-emerald-100">C-bets, facing bets & sizing — solid default lines</p>
+        <h1 className="pt-title">Postflop Decision Trainer</h1>
+        <p className="pt-subtitle">C-bets, facing bets & sizing — solid default lines</p>
         <p className="mt-1 text-xs uppercase tracking-wide text-amber-300">{DISCLAIMER}</p>
 
         <p className="mt-6 text-sm text-emerald-200">Choose a drill:</p>
@@ -118,11 +118,7 @@ export default function PostflopTrainer() {
               <button
                 key={opt.label}
                 onClick={() => setDrill(opt.value)}
-                className={`rounded-lg px-4 py-2 text-sm font-semibold shadow transition ${
-                  active
-                    ? 'bg-white text-emerald-900'
-                    : 'bg-emerald-700 text-emerald-50 hover:bg-emerald-600'
-                }`}
+                className={`pt-toggle ${active ? 'pt-toggle-on' : 'pt-toggle-off'}`}
               >
                 {opt.label}
               </button>
@@ -136,7 +132,7 @@ export default function PostflopTrainer() {
             <button
               key={len}
               onClick={() => start(len)}
-              className="rounded-xl bg-white px-6 py-3 font-semibold text-emerald-900 shadow hover:bg-emerald-50"
+              className="pt-btn pt-btn-light"
             >
               {len} spots
             </button>
@@ -182,15 +178,15 @@ export default function PostflopTrainer() {
   if (phase === 'summary') {
     return (
       <Shell>
-        <h1 className="text-2xl font-bold text-white">Session complete</h1>
-        <div className="mt-4 rounded-xl bg-white/95 p-5 text-center shadow-lg">
+        <h1 className="pt-title">Session complete</h1>
+        <div className="mt-4 pt-card p-5 text-center">
           <div className="text-4xl font-bold text-emerald-700">{sessionAcc.toFixed(0)}%</div>
           <div className="text-sm text-gray-600">
             {stats.correct}/{stats.answered} correct · lifetime {lifetime.toFixed(1)}%
           </div>
         </div>
 
-        <div className="mt-4 w-full max-w-sm rounded-xl bg-white/95 p-4 shadow-lg">
+        <div className="mt-4 w-full max-w-sm pt-card p-4">
           <div className="text-sm font-semibold text-gray-800">Weakest drills this session</div>
           {worstMisses.length === 0 ? (
             <div className="mt-1 text-sm text-emerald-700">No misses — clean session! 🎉</div>
@@ -208,7 +204,7 @@ export default function PostflopTrainer() {
 
         <button
           onClick={() => setPhase('setup')}
-          className="mt-6 rounded-xl bg-white px-6 py-3 font-semibold text-emerald-900 shadow hover:bg-emerald-50"
+          className="mt-6 pt-btn pt-btn-light"
         >
           New session
         </button>
@@ -378,9 +374,5 @@ function HandAndBoard({ hole, board, boardLabel }) {
 
 // Shared page frame (matches the other trainers).
 function Shell({ children }) {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-emerald-800 p-6">
-      {children}
-    </div>
-  )
+  return <div className="pt-screen pt-screen-center">{children}</div>
 }

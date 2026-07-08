@@ -43,10 +43,10 @@ export default function SimSetup({ onStart, session }) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-emerald-800 p-6">
+    <div className="pt-screen">
       <div className="w-full max-w-xl">
         <header className="mb-4 text-center">
-          <h1 className="text-3xl font-bold text-white">Local Play Simulator</h1>
+          <h1 className="pt-title">Local Play Simulator</h1>
           <p className="mt-1 text-sm text-emerald-200">
             Play full hands against rule-based bots to drill mechanics, flow, and sizing.
           </p>
@@ -66,7 +66,7 @@ export default function SimSetup({ onStart, session }) {
           </div>
         )}
 
-        <div className="space-y-4 rounded-2xl bg-white/95 p-5 shadow-lg">
+        <div className="space-y-4 pt-card p-5">
           {/* Opponents */}
           <Field label="Opponents">
             <div className="flex gap-2">

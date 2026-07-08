@@ -108,8 +108,8 @@ export default function OddsTrainer() {
   if (phase === 'setup') {
     return (
       <Shell>
-        <h1 className="text-2xl font-bold text-white">Pot Odds &amp; Equity Trainer</h1>
-        <p className="text-emerald-100">Table math — pot odds, outs, and the call/fold verdict</p>
+        <h1 className="pt-title">Pot Odds &amp; Equity Trainer</h1>
+        <p className="pt-subtitle">Table math — pot odds, outs, and the call/fold verdict</p>
 
         <p className="mt-6 text-sm text-emerald-200">Choose a drill:</p>
         <div className="mt-2 flex flex-wrap justify-center gap-2">
@@ -119,11 +119,7 @@ export default function OddsTrainer() {
               <button
                 key={opt.label}
                 onClick={() => setDrill(opt.value)}
-                className={`rounded-lg px-4 py-2 text-sm font-semibold shadow transition ${
-                  active
-                    ? 'bg-white text-emerald-900'
-                    : 'bg-emerald-700 text-emerald-50 hover:bg-emerald-600'
-                }`}
+                className={`pt-toggle ${active ? 'pt-toggle-on' : 'pt-toggle-off'}`}
               >
                 {opt.label}
               </button>
@@ -137,7 +133,7 @@ export default function OddsTrainer() {
             <button
               key={len}
               onClick={() => start(len)}
-              className="rounded-xl bg-white px-6 py-3 font-semibold text-emerald-900 shadow hover:bg-emerald-50"
+              className="pt-btn pt-btn-light"
             >
               {len} spots
             </button>
@@ -183,15 +179,15 @@ export default function OddsTrainer() {
   if (phase === 'summary') {
     return (
       <Shell>
-        <h1 className="text-2xl font-bold text-white">Session complete</h1>
-        <div className="mt-4 rounded-xl bg-white/95 p-5 text-center shadow-lg">
+        <h1 className="pt-title">Session complete</h1>
+        <div className="mt-4 pt-card p-5 text-center">
           <div className="text-4xl font-bold text-emerald-700">{sessionAcc.toFixed(0)}%</div>
           <div className="text-sm text-gray-600">
             {stats.correct}/{stats.answered} correct · lifetime {lifetime.toFixed(1)}%
           </div>
         </div>
 
-        <div className="mt-4 w-full max-w-sm rounded-xl bg-white/95 p-4 shadow-lg">
+        <div className="mt-4 w-full max-w-sm pt-card p-4">
           <div className="text-sm font-semibold text-gray-800">Weakest drills this session</div>
           {worstMisses.length === 0 ? (
             <div className="mt-1 text-sm text-emerald-700">No misses — clean session! 🎉</div>
@@ -209,7 +205,7 @@ export default function OddsTrainer() {
 
         <button
           onClick={() => setPhase('setup')}
-          className="mt-6 rounded-xl bg-white px-6 py-3 font-semibold text-emerald-900 shadow hover:bg-emerald-50"
+          className="mt-6 pt-btn pt-btn-light"
         >
           New session
         </button>
@@ -333,16 +329,16 @@ function renderPrompt(spot) {
 function renderInput(spot, { input, setInput, submitNumber, submit }) {
   if (spot.type === 'combined') {
     return (
-      <div className="flex justify-center gap-4">
+      <div className="flex flex-wrap justify-center gap-3">
         <button
           onClick={() => submit('call')}
-          className="rounded-xl bg-emerald-500 px-8 py-3 text-lg font-bold text-white shadow hover:bg-emerald-400"
+          className="rounded-xl bg-emerald-500 px-7 py-3 text-lg font-bold text-white shadow transition hover:bg-emerald-400"
         >
           Call
         </button>
         <button
           onClick={() => submit('fold')}
-          className="rounded-xl bg-rose-500 px-8 py-3 text-lg font-bold text-white shadow hover:bg-rose-400"
+          className="rounded-xl bg-rose-500 px-7 py-3 text-lg font-bold text-white shadow transition hover:bg-rose-400"
         >
           Fold
         </button>
@@ -401,9 +397,5 @@ function BoardAndHand({ hole, board }) {
 
 // Shared page frame (matches the Range Trainer).
 function Shell({ children }) {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-emerald-800 p-6">
-      {children}
-    </div>
-  )
+  return <div className="pt-screen pt-screen-center">{children}</div>
 }

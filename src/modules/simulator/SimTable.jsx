@@ -59,7 +59,7 @@ export default function SimTable({
     visibleBoardLen == null ? view.board : view.board.slice(0, visibleBoardLen)
 
   return (
-    <div className="relative mx-auto h-[560px] w-full max-w-3xl">
+    <div className="relative mx-auto h-[440px] w-full max-w-3xl sm:h-[560px]">
       {/* Felt oval */}
       <div className="absolute inset-x-[4%] inset-y-[8%] rounded-[50%] bg-emerald-700 shadow-2xl ring-4 ring-emerald-900/50" />
       <div className="pointer-events-none absolute inset-x-[7%] inset-y-[12%] rounded-[50%] ring-2 ring-emerald-500/20" />
@@ -140,7 +140,7 @@ function Seat({ p, label, isHero, isButton, isTurn, stepMode, reveal, won, board
 
   return (
     <div
-      className={`relative w-36 rounded-2xl p-2.5 text-center shadow-lg transition ${
+      className={`relative w-24 rounded-2xl p-2 text-center shadow-lg transition sm:w-36 sm:p-2.5 ${
         folded ? 'bg-emerald-900/40 opacity-50' : 'bg-emerald-950/80'
       } ${ring}`}
     >

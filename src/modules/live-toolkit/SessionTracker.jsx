@@ -100,7 +100,7 @@ export default function SessionTracker() {
   return (
     <div className="flex flex-col gap-6">
       {/* Lifetime summary */}
-      <div className="rounded-2xl bg-emerald-950/40 p-5 shadow-lg">
+      <div className="pt-card-dark p-5">
         <div className="text-sm font-semibold uppercase tracking-wide text-emerald-300">
           Lifetime
         </div>
@@ -129,7 +129,7 @@ export default function SessionTracker() {
       </div>
 
       {/* Add / edit form */}
-      <div className="rounded-2xl bg-white/95 p-5 shadow-lg">
+      <div className="pt-card p-5">
         <div className="text-sm font-semibold text-gray-800">
           {editingId ? 'Edit session' : 'Log a session'}
         </div>
@@ -216,7 +216,7 @@ export default function SessionTracker() {
 
       {/* Session list */}
       {sessions.length > 0 && (
-        <div className="rounded-2xl bg-white/95 p-4 shadow-lg">
+        <div className="pt-card p-4">
           <div className="mb-1 px-1 text-sm font-semibold text-gray-800">
             Sessions ({sessions.length})
           </div>
