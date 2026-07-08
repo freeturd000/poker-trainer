@@ -4,6 +4,7 @@
 
 import { useState } from 'react'
 import Dashboard from './dashboard/Dashboard.jsx'
+import Learn from './modules/learn/Learn.jsx'
 import RangeTrainer from './modules/range-trainer/RangeTrainer.jsx'
 import OddsTrainer from './modules/odds-trainer/OddsTrainer.jsx'
 import BoardReader from './modules/board-reader/BoardReader.jsx'
@@ -16,6 +17,7 @@ import LiveToolkit from './modules/live-toolkit/LiveToolkit.jsx'
 // Dashboard leads (home), then the trainers in build order, then the tools.
 const VIEWS = [
   { id: 'dashboard', label: 'Dashboard' },
+  { id: 'learn', label: 'Learn' },
   { id: 'range', label: 'Range' },
   { id: 'odds', label: 'Odds' },
   { id: 'board', label: 'Board' },
@@ -62,6 +64,7 @@ export default function App() {
       </header>
 
       {view === 'dashboard' && <Dashboard onNavigate={setView} />}
+      {view === 'learn' && <Learn onNavigate={setView} />}
       {view === 'range' && <RangeTrainer />}
       {view === 'odds' && <OddsTrainer />}
       {view === 'board' && <BoardReader />}

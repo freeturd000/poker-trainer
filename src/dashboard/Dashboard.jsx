@@ -175,6 +175,23 @@ export default function Dashboard({ onNavigate }) {
           </div>
         </div>
 
+        {/* Learn entry point — theory to pair with the drills. Not a drill itself
+            (no accuracy/attempts), so it sits apart from the module tiles and
+            doesn't feed readiness. */}
+        <button
+          onClick={() => onNavigate('learn')}
+          className="mb-6 flex w-full items-center gap-4 pt-card-dark p-5 text-left transition hover:bg-emerald-950/60"
+        >
+          <span className="text-3xl" aria-hidden="true">📖</span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-lg font-bold text-white">Learn</span>
+            <span className="block text-sm text-emerald-200">
+              The guided six-phase path — read the theory behind each trainer.
+            </span>
+          </span>
+          <span className="shrink-0 text-xl text-emerald-400" aria-hidden="true">›</span>
+        </button>
+
         {/* Module tiles */}
         <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-emerald-300">Modules</h2>
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
