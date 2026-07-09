@@ -314,11 +314,61 @@ export const PHASES = [
       { view: 'concept', label: 'Concept Deck' },
     ],
     sections: [
-      { heading: 'Why reps beat reading', body: [] },
-      { heading: 'Using the Simulator to drill mechanics', body: [] },
-      { heading: 'Spaced repetition and the Concept Deck', body: [] },
-      { heading: 'Reviewing your leaks', body: [] },
-      { heading: 'Building a nightly study routine', body: [] },
+      {
+        heading: 'Why reps beat reading',
+        body: [
+          `You have now read the fundamentals — ranges, pot odds, board texture, postflop lines. Here is the uncomfortable truth: reading them is not the same as knowing them. Poker skill lives in your reflexes, and reflexes are built by repetition, not by understanding something once.`,
+          `At a real table you do not have time to reason it all out from scratch. The pot is there, it is your turn, and you have seconds to act. What you want is for the right answer to just appear — "that is a fold," "that is a call," "I need about 25% here." That instant recall only comes from doing the same decisions many, many times until they are automatic.`,
+          `So this phase is not a new skill to learn. It is about the process of turning everything you have read into instinct through volume — lots of repetitions, done regularly. Knowledge that stays in your head does not win pots; knowledge drilled into your hands does.`,
+        ],
+      },
+      {
+        heading: 'How to use this app to improve',
+        body: [
+          `Each part of this app trains a different piece, and they are meant to be used together. Here is what to lean on and roughly in what order.`,
+          `Start with the Range Trainer, every session. Preflop is the foundation — the decision you face most and the one that prevents the most mistakes — so drilling your opening ranges and big-blind defense is the single highest-value habit. Then rotate through the Odds Trainer (the table math), the Board Reader (reading textures and ranges), and the Postflop Trainer (default lines for betting and facing bets) to round out the skills.`,
+          `When you want to put it all together, open the Simulator and play full hands against the bots — it is where isolated skills become real decisions in sequence. Use the Concept Deck to lock ideas into long-term memory (more on it below), and check the Dashboard to see your accuracy climb, find your weak spots, and keep your streak alive.`,
+        ],
+      },
+      {
+        heading: 'Deliberate practice: work your leaks',
+        body: [
+          `There is a difference between practice and deliberate practice. Practice is doing reps. Deliberate practice is aiming those reps at the exact things you are worst at — and it improves you far faster.`,
+          `A "leak" is a specific spot you keep getting wrong — say, over-folding the big blind against a button raise, or misjudging a wet board. The natural temptation is to drill what you are already good at, because it feels nice to be right. Resist it. The fastest gains come from the spots that make you wince.`,
+          `The app is built to help here. The trainers use "leak weighting" — spots you miss are served to you more often until you fix them — so simply doing the reps steers you toward your weaknesses automatically. The Dashboard goes further: it lists your top leaks, each with a one-tap button that drops you straight into drilling that spot, so you can attack a weakness directly. A good drill is to pick one leak — one seat, one kind of spot — and grind it until the right answer is automatic, then move to the next.`,
+        ],
+      },
+      {
+        heading: 'Reviewing your play in the Simulator',
+        body: [
+          `Doing reps builds speed, but reviewing your reps builds understanding — and you want both. It is not enough to know what the right play was; you want to know why, because the "why" is what transfers to the next hand that is a little different.`,
+          `The Simulator has a Coach, or Learning mode, for exactly this. As you play, it explains each spot in plain English — what an opponent's action suggests, what it would do on your turn and the reason behind it, and a short recap with a lesson at showdown. It is advisory only; you still make every decision yourself, but you get a tutor's read alongside it.`,
+          `The Simulator also keeps a hand-history log of the hands you have played, so you can look back at how a hand actually went instead of relying on memory. Replaying a hand you lost and asking "was my decision wrong, or did I just get unlucky?" is one of the most valuable habits in poker — and it leads straight into the right mindset, below.`,
+        ],
+      },
+      {
+        heading: 'Build the habit: small and nightly',
+        body: [
+          `The people who improve are not the ones who binge for six hours once a month. They are the ones who do a little, often. Twenty focused minutes most nights will beat a rare marathon every time, because spacing your reps out is how memory actually sticks — which is also the whole idea behind the Concept Deck.`,
+          `The Concept Deck is a flashcard system with spaced repetition: it shows you a concept, you rate how well you knew it, and it schedules each card to come back right before you would forget it. Cards you find hard resurface soon; cards you have mastered space out over days and weeks. A few minutes on it per session quietly locks the fundamentals into long-term memory.`,
+          `To anchor the habit, the Dashboard tracks a nightly streak — the number of days in a row you have practiced. It sounds small, but "don't break the streak" is a genuinely powerful motivator. Aim to open the app and do something every evening, even if it is just a short range session. Consistency compounds.`,
+        ],
+      },
+      {
+        heading: 'A realistic mindset: decisions, not results',
+        body: [
+          `Two things to make peace with early, because they trip up almost every beginner.`,
+          `First, improvement is gradual. You will not feel dramatically better after one night — you will feel better after a month of nights. The accuracy numbers on the Dashboard are there precisely so you can see the slow climb that day-to-day play hides. Trust the curve.`,
+          `Second, poker has "variance" — short-term luck. The cards are random, so you can play a hand perfectly and still lose it, or play badly and win. Over a single session, even a long one, luck can swamp skill entirely. This is why you must judge yourself on your decisions, not your results: ask "did I make the right choice with the information I had?" not "did I win the pot?" Good decisions win over time even when they lose tonight. Chasing results — changing a correct play because it lost once — is how good players turn into bad ones.`,
+        ],
+      },
+      {
+        heading: 'How to practice this: a simple nightly loop',
+        body: [
+          `Pull it together into a routine you can actually keep. A solid nightly loop looks like this: a few minutes of the Concept Deck to warm up and review, a Range Trainer session as your daily foundation, then one other trainer — Odds, Board, or Postflop — picking whichever the Dashboard says is your weakest. Finish with a few hands in the Simulator with Coach mode on to see it all in motion.`,
+          `Before you close the app, glance at the Dashboard: check your streak ticked up, note your top leak, and you will know exactly where to start tomorrow. Keep that loop going, judge yourself on decisions, and the improvement takes care of itself. Tap "Simulator" or "Concept Deck" above to start tonight.`,
+        ],
+      },
     ],
   },
   {
