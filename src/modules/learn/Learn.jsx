@@ -12,6 +12,18 @@
 
 import { useState } from 'react'
 import { PHASES, getPhase } from './phases.js'
+import PositionDiagram from './PositionDiagram.jsx'
+import RangeGridVisual from './RangeGridVisual.jsx'
+import HandRankings from './HandRankings.jsx'
+
+// Registry of inline visuals a phase section can render. phases.js references these
+// by string name (keeping that file plain data), and the article renderer looks the
+// component up here and drops it in after the section's prose.
+const VISUALS = {
+  PositionDiagram,
+  RangeGridVisual,
+  HandRankings,
+}
 
 export default function Learn({ onNavigate }) {
   // Local sub-route: null = the phase index, otherwise the open phase id. Kept
@@ -105,20 +117,22 @@ function PhaseArticle({ phase, onBack, onNavigate }) {
           </header>
 
           <div className="space-y-8">
-            {phase.sections.map((s, i) => (
-              <section key={i}>
-                <h2 className="text-lg font-bold text-emerald-900">{s.heading}</h2>
-                {s.body.length > 0 ? (
-                  s.body.map((para, j) => (
-                    <p key={j} className="mt-3 text-base leading-relaxed text-gray-700">
-                      {para}
-                    </p>
-                  ))
-                ) : (
-                  <p className="mt-2 text-sm italic text-gray-400">Content coming soon.</p>
-                )}
-              </section>
-            ))}
+            {phase.sections.map((s, i) => {
+              const Visual = s.visual ? VISUALS[s.visual] : null
+              return (
+                <section key={i}>
+                  <h2 className="text-lg font-bold text-emerald-900">{s.heading}</h2>
+                  {s.body.length > 0
+                    ? s.body.map((para, j) => (
+                        <p key={j} className="mt-3 text-base leading-relaxed text-gray-700">
+                          {para}
+                        </p>
+                      ))
+                    : !Visual && <p className="mt-2 text-sm italic text-gray-400">Content coming soon.</p>}
+                  {Visual && <Visual />}
+                </section>
+              )
+            })}
           </div>
         </article>
 

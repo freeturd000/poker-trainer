@@ -30,7 +30,9 @@ export const PHASES = [
           `"Preflop" means the very first betting round — before any community cards are dealt. You are looking at just your two private cards (called your "hole cards") and deciding whether to play the hand at all. Every hand of poker starts here, which makes this the one decision you face more than any other.`,
           `Because preflop happens on every single hand, getting it right has a bigger effect on your results than any fancy move later on. If you consistently enter pots with the right hands from the right seats, you avoid the expensive trouble that beginners get into on the flop, turn, and river — where mistakes are harder to see and cost more.`,
           `That is why preflop discipline is the highest-return thing a new player can learn. It is not flashy, but it is the foundation everything else sits on. Master this phase and you will already play better than most people you sit down against.`,
+          `One thing to have at your fingertips before any of this: the ranking of hands, best to worst. Whichever five cards make the strongest hand wins the pot. Here is the full ladder for reference — you will use it every hand.`,
         ],
+        visual: 'HandRankings',
       },
       {
         heading: 'Position: who acts last, and why it wins',
@@ -47,6 +49,7 @@ export const PHASES = [
           `A few of those need defining. The "button" (BTN) marks the nominal dealer and is the best seat at the table, because it acts last on every betting round after the flop. The "small blind" (SB) and "big blind" (BB) are the two seats to the button's left; they are forced to put chips in before any cards are dealt (the "blinds"), which is what gives everyone something to compete for. "UTG" stands for "under the gun" — the first player to act and therefore the earliest, most disadvantaged seat.`,
           `The guiding principle for all of preflop is tight-early, wide-late. Early seats (UTG, HJ) have many players still to act behind them, so any hand you play is more likely to run into a strong hand — you stay tight and play only premium holdings. Late seats (CO, BTN) have few or no players left to act, so you can profitably play a much wider range of hands. The button is the widest of all.`,
         ],
+        visual: 'PositionDiagram',
       },
       {
         heading: 'RFI: what "raise first in" means',
@@ -63,7 +66,9 @@ export const PHASES = [
           `Here is the layout. The diagonal running from the top-left corner to the bottom-right is every "pocket pair" (two cards of the same rank, like two kings, written "KK"). The triangle above the diagonal is the "suited" hands — two cards of the same suit, written with a lower-case "s", like "AKs" (ace-king suited). The triangle below the diagonal is the "offsuit" hands — different suits, written with an "o", like "AKo" (ace-king offsuit). Suited hands are stronger than their offsuit versions because they can make flushes.`,
           `On an RFI chart, each square is simply in the range or not: a highlighted square means "raise this hand," and a blank square means "fold it." That is what "raise or fold" means here — when it is folded to you, those are your only two choices, and the chart tells you which is which. To read it, find your hand's square (pairs on the diagonal, suited up-and-right, offsuit down-and-left) and check whether it is in the raising range.`,
           `The Range Trainer does not make you stare at the whole grid — it drills you on it one square at a time. It deals you a single hand from a given seat and asks for your decision, which is really just asking, "is this square in the range or not?" Do that a few hundred times and the grid ends up memorised without your ever having to look at it.`,
+          `Here is the live chart to explore. Switch between seats and watch the raising range widen from UTG to the button, or tap any hand to see which seats open it — this is the exact chart the Range Trainer grades you against.`,
         ],
+        visual: 'RangeGridVisual',
       },
       {
         heading: 'Open-raising by seat: tight early, wide late',
