@@ -105,12 +105,66 @@ export const PHASES = [
     description: 'The table math — is this call profitable? Learn to answer instantly.',
     trainers: [{ view: 'odds', label: 'Odds Trainer' }],
     sections: [
-      { heading: 'Pot odds: the price of a call', body: [] },
-      { heading: 'Counting your outs', body: [] },
-      { heading: 'The Rule of 2 and 4', body: [] },
-      { heading: 'Turning outs into equity', body: [] },
-      { heading: 'Putting it together: the call/fold verdict', body: [] },
-      { heading: 'Implied odds (a first look)', body: [] },
+      {
+        heading: 'What "equity" means',
+        body: [
+          `First, one word for the thing everyone is fighting over: the "pot" is all the chips that have been bet on a hand, sitting in the middle. Whoever wins the hand takes the pot. Every decision in this phase is really the same question — is it worth putting more chips in to try to win that pot?`,
+          `"Equity" is your share of the pot right now, written as a percentage: your chance to win the hand if all the remaining cards were dealt out. If you would win 3 times out of every 10 in a given spot, your equity is 30%. That is it — equity is just "how often do I win from here."`,
+          `Equity is the "what I have" number. The whole skill in this phase is estimating your equity quickly and comparing it to the price you are being asked to pay to keep playing. Get good at that comparison and you will never again be lost on whether a call is a good one.`,
+        ],
+      },
+      {
+        heading: 'Counting your outs',
+        body: [
+          `When your hand is not yet good but could become the best hand with one more card, you have a "draw." An "out" is a specific card still to come that turns your hand into the likely winner. Counting your outs is how you turn a draw into an equity estimate.`,
+          `To count outs, work out exactly which cards make your hand, then count how many of them are still unseen (you can see your two cards and the board; everything else is unknown). Three draws come up constantly, and their out counts are worth memorising:`,
+          `Flush draw = 9 outs. A "flush" is five cards of the same suit; a flush draw is when you have four of them and need a fifth. Example: you hold 9♥ 6♥ and the board is K♥ 4♥ 2♠. You can see four hearts, and a deck has thirteen of each suit, so 13 − 4 = 9 hearts are left to complete your flush.`,
+          `Open-ended straight draw = 8 outs. A "straight" is five cards in a row (like 5-6-7-8-9). "Open-ended" means you have four in a row and can complete it at either end. Example: you hold 6 5 and the board has 7 8 — now any 4 or any 9 makes your straight. There are four 4s and four 9s in the deck, so 4 + 4 = 8 outs.`,
+          `Gutshot (inside straight draw) = 4 outs. This is a straight draw missing a card in the middle, so only one rank completes it. Example: you hold 9 8 with 6 5 on the board — only a 7 fills 9-8-7-6-5. There are four 7s, so 4 outs.`,
+          `A few more the trainer will show you: two "overcards" (two cards both higher than anything on the board) is 6 outs, a pocket pair hoping to make three-of-a-kind (a "set") is 2 outs, and big combination draws — a flush draw plus an open-ended draw — can be 15. One catch when you combine draws: do not double-count a card that helps both, which is why a flush-plus-straight draw is 15 outs, not 17.`,
+        ],
+      },
+      {
+        heading: 'The Rule of 2 and 4',
+        body: [
+          `Once you have an out count, the "Rule of 2 and 4" turns it into an equity estimate in one step of mental math — no fractions, no calculator.`,
+          `If there is one card still to come (you are on the turn, waiting on the river), multiply your outs by 2. If there are two cards still to come (you are on the flop, with the turn and river to come), multiply your outs by 4. The result is roughly your percentage chance to hit.`,
+          `Worked examples. A flush draw (9 outs) on the flop: 9 × 4 = 36% (the true figure is about 35% — close enough). That same flush draw on the turn, one card to come: 9 × 2 = 18%. An open-ended straight draw (8 outs) on the flop: 8 × 4 = 32%. A gutshot (4 outs) on the turn: 4 × 2 = 8%.`,
+          `Remember it is an estimate, not an exact figure. The ×4 version runs a little high for very large draws (15 outs × 4 = 60%, where the true number is closer to 54%), but it is more than accurate enough to make the right decision at the table.`,
+        ],
+      },
+      {
+        heading: 'Pot odds: the price of a call',
+        body: [
+          `Equity is "what you have." "Pot odds" are "what you need" — the price you are being offered to call. When an opponent bets and the action is on you, the pot already holds their bet; you have to decide whether the amount you must call is worth the size of the pot you would win.`,
+          `The break-even rule is simple: you call some amount to win what is already in the pot, and your required equity is that call divided by the total. Put plainly — you call $X to win the $Y that is now in the pot, so you need to win at least X ÷ (X + Y) of the time. That fraction is the minimum equity that makes calling worthwhile.`,
+          `You do not have to run that division every time, because a few bet sizes cover most spots. Measuring the bet against the pot before the bet: if your opponent bets about a third of the pot, you need roughly 20% equity to call; if they bet half the pot, you need about 25%; if they bet the full pot, you need about 33%.`,
+          `Where do those come from? The bigger the bet relative to the pot, the worse the price, so the more equity you need. Take the full-pot case: say $50 is in the pot and your opponent bets $50. Now the pot holds $100 and it costs you $50 to call — you are risking $50 to win that $100, which works out to 50 ÷ (50 + 100), about 33%. The half-pot and third-pot numbers come out the same way. (A three-quarter-pot bet lands around 30%, and a bet bigger than the pot needs more still.)`,
+        ],
+      },
+      {
+        heading: 'Putting it together: the call/fold verdict',
+        body: [
+          `Now combine the two numbers. Estimate what you HAVE (your equity, from your outs via the Rule of 2 and 4) and what you NEED (your pot odds, from the bet size). Then compare: if you have more than you need, call; if you have less, fold. That single comparison is the heart of every drawing decision in poker.`,
+          `A full example, start to finish. You hold two hearts and the flop brings two more hearts — a flush draw, 9 outs. Two cards are still to come, so 9 × 4 = 36% equity: that is what you have. Your opponent bets half the pot, so you need about 25%: that is what you need. 36% is more than 25%, so you call.`,
+          `Now flip it. You have a gutshot (4 outs) on the turn, one card to come, so 4 × 2 = 8% equity. Your opponent bets the full pot, so you need about 33%. 8% is far less than 33% — an easy fold. This is exactly the verdict the Odds Trainer states for you: "You need 33%, you have 8% — fold."`,
+        ],
+      },
+      {
+        heading: 'What you do NOT need to do',
+        body: [
+          `If the math has you worried, relax — you never compute exact percentages at a real table. There is no calculator, no long division, no memorising equity charts.`,
+          `What you actually do takes a couple of seconds: glance at the board and count your outs, multiply by 2 or 4, eyeball the bet against the pot to get the price you need, and compare the two. Estimate, then compare — that is the entire process.`,
+          `And close is good enough. Most of the time the gap between what you have and what you need is wide enough that rough numbers point to the same answer as perfect ones. The math only gets tight in a few borderline spots, and even there, estimate-and-compare will not steer you far wrong.`,
+        ],
+      },
+      {
+        heading: 'How to practice this',
+        body: [
+          `The Odds Trainer drills these skills one at a time, so each becomes automatic. It has four modes that map exactly onto this phase: Pot Odds (given a bet, state the equity you need), Outs (given a hand and board, count them), Rule of 2 & 4 (turn an out count into an equity estimate), and Combined Verdict (a full spot — call or fold).`,
+          `Start with Outs and the Rule of 2 & 4 until counting and multiplying feel effortless, then move to Pot Odds, and finish on the Combined Verdict, which ties it all together. A handful of each every night and the table math stops being something you calculate and starts being something you just see. Tap "Odds Trainer" above to begin.`,
+        ],
+      },
     ],
   },
   {
