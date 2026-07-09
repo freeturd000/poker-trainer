@@ -378,12 +378,64 @@ export const PHASES = [
     description: 'Etiquette, mechanics, and bankroll — so your first live session feels natural.',
     trainers: [{ view: 'live', label: 'Live Toolkit' }],
     sections: [
-      { heading: 'How a live table actually runs', body: [] },
-      { heading: 'Etiquette: acting in turn, string bets, min-raises', body: [] },
-      { heading: 'Chip handling, posting & straddling', body: [] },
-      { heading: 'Bankroll management for live cash', body: [] },
-      { heading: 'Tracking sessions and win rate', body: [] },
-      { heading: 'Your first Vegas trip: a checklist', body: [] },
+      {
+        heading: "What's different about live poker",
+        body: [
+          `You have built the skills. Now the setting changes: instead of a screen, you are at a physical table in a casino, with a dealer, real chips, and eight other people. This phase is about crossing that bridge — getting ready for live $1/$2 or $1/$3 cash, the lowest common in-person stakes and the right place to start.`,
+          `Three things feel different live. It is much slower — you might see 25 to 30 hands an hour, versus hundreds online — so patience becomes a real skill. It is in person, so there are actual people to read and be read by. And there are physical mechanics and etiquette — how you handle chips, how you make a bet, how you behave at the table — that simply do not exist on a screen.`,
+          `Here is the reassuring part: the poker itself is identical. Every range, pot-odds calculation, board read, and postflop line you have drilled works exactly the same live as online — the fundamentals transfer completely. What is new is only the wrapper around them: the mechanics and the manners. Learn that wrapper and your first session will feel natural instead of nerve-wracking.`,
+        ],
+      },
+      {
+        heading: 'Bankroll discipline: play within your roll',
+        body: [
+          `Your "bankroll" is the money you have set aside specifically for poker — separate from rent, bills, and everyday life. It is not the cash in your pocket tonight; it is a dedicated fund you play from and never dip into for anything else.`,
+          `The core rule for live cash: a "buy-in" is the amount you sit down with, standardly 100 big blinds. At $1/$2 the big blind is $2, so a buy-in is about $200; at $1/$3 it is about $300. Then keep enough buy-ins in your roll to survive bad luck: at least 20 buy-ins for a stake as a minimum, and 30 or more to be comfortable. For $1/$2 that means roughly $4,000 minimum and $6,000 comfortable; for $1/$3, about $6,000 and $9,000.`,
+          `Why so much? Because "variance" — short-term luck — is real and swingy. Even a genuinely winning player goes through losing stretches of many buy-ins; that is normal, not a sign you are bad. A big enough roll means an ordinary downswing cannot bust you. Too small a roll, and bad luck alone can end your poker before your skill ever gets to matter.`,
+          `Hold this framing firmly: live poker is a craft with strict money rules, not an income plan. Do not sit down expecting it to pay your bills, and never reload with money you cannot afford to lose. Play the stake your roll covers, move up only when the roll says you can, and the whole thing stays fun and sustainable. The Live Toolkit's Bankroll tab does this math for you — enter your roll and it tells you which stakes you are comfortably rolled for, at the minimum edge, or under-rolled for, using exactly these thresholds.`,
+        ],
+      },
+      {
+        heading: 'Table mechanics and etiquette',
+        body: [
+          `A dealer runs the game. A disc called the "button" marks the dealer position and moves one seat clockwise each hand; the two players to its left post the small and big blinds. You simply play your position exactly as you learned in Phase 1 — the button is still the button.`,
+          `Act in turn. Wait for the players before you to act, then act — going early ("out of turn") gives away information and can be penalized, so watch the action and know when it is on you. And know that verbal declarations are binding: if you say "raise," "call," or "fold" in turn, you are held to it. Use that to your advantage by announcing your action out loud.`,
+          `The classic beginner mistake is a "string bet" — putting chips out for a raise in more than one motion (say, chips to call, then reaching back for more). The dealer will rule it a call and kill your raise. Avoid it two ways: announce "raise" before you touch a chip (verbal is binding), or bring all your chips out in one clean motion. A related rule: if you put out a single oversized chip (bigger than the bet) without saying "raise," it counts as a call and the dealer makes change — so announce "raise" first if that is what you mean.`,
+          `A few more table manners. Protect your hand — keep your two cards on the table with a chip on top; an unprotected hand the dealer accidentally sweeps into the "muck" (the discard pile) is dead, with no recourse. Keep your chips in neat, visible stacks, and place bets in front of you rather than tossing them into the middle ("splashing the pot"). It is customary to tip the dealer a small amount — often about a dollar — when you win a pot and when you leave after a winning session; it is part of their income. And be aware of the "rake," the small cut the house takes from most pots to run the game.`,
+          `One caveat matters more than any single rule: house rules vary by room. Whether you can "straddle" (post an optional extra blind for last action preflop), how "posting" works when you first sit down, the single-oversized-chip rule, whether "show one, show all" is enforced, and even whether cash on the table plays — all of these differ from casino to casino. When you are not sure, just ask the dealer or the floor. There is zero shame in it; a careful question marks you as a considerate player, not a clueless one, and every dealer would rather answer than untangle a misunderstanding.`,
+        ],
+      },
+      {
+        heading: 'Your first live session',
+        body: [
+          `Keep it simple and set yourself up to succeed. Pick a low-stakes game — $1/$2 or $1/$3 is exactly right — and buy in for a full stack (100 big blinds) so you can play properly and win a full stack when you make a big hand. Do not short-buy for less; it just handcuffs you.`,
+          `Play tight-aggressive and lean on your preflop foundation from Phase 1: play solid ranges, fold the junk, and when you do play, bet and raise rather than call. Live low-stakes games are often loose and passive — full of players who limp in and call too much — so straightforward, disciplined, aggressive poker is genuinely profitable there. You do not need fancy plays; you need to keep doing the fundamentals you have drilled.`,
+          `Do not be intimidated. Everyone at the table was new once, the regulars are not as scary as they look, and you have very likely studied the game more than most $1/$2 players ever will. Take your time on decisions — live poker is slow and you are allowed to think. A few extra seconds to count your outs or recall a range is completely normal; never rush a decision just because you feel watched. Your first session, it is perfectly fine to be quiet, watch closely, focus on clean mechanics, and let the reps build your comfort.`,
+        ],
+      },
+      {
+        heading: 'Track your play',
+        body: [
+          `If you want to know whether you are actually a winning player, you have to track your results — because memory lies. A couple of big wins feel like proof you are crushing, while the quiet losing nights fade from memory. Only a record tells the truth.`,
+          `Log every session: your buy-in, your cash-out, and the hours you played. Over time that gives you two numbers that matter — your true net profit and your hourly rate (dollars won per hour) — which together are the real scoreboard. One session tells you almost nothing, because variance dominates the short run; but dozens of sessions start to reveal your genuine win rate, and that is what tells you whether to move up, keep grinding, or study more.`,
+          `The Live Toolkit's Sessions tab is built for exactly this. Enter each session's buy-in, cash-out, and hours, and it computes your net profit, hourly rate, win rate, and biggest results automatically — so your progress is a fact you can see, not a feeling you have to trust.`,
+        ],
+      },
+      {
+        heading: 'A healthy, realistic mindset',
+        body: [
+          `Play within your roll, every time. The bankroll rules above are not optional suggestions — they are what keep poker a fun, sustainable hobby instead of a way to lose money you actually need. Discipline off the felt is what buys you freedom on it.`,
+          `Treat poker as a skill you are honing, and play sober and rested. The entire edge comes from making clear, correct decisions; alcohol and "tilt" (emotional, reckless play after a bad beat) quietly wreck exactly that. Protect your decision-making and you protect your results.`,
+          `And remember that results come over the long run. You can play a flawless session and still lose, or a sloppy one and win — over a single night, luck can completely swamp skill. So judge yourself on your decisions, not one evening's outcome, just as you learned in Phase 5. Keep making good choices and the money follows over months, not hours. A night at $1/$2 is entertainment and practice for a craft you are building — not a paycheck. Go in to enjoy the game and play well, and treat the winnings as the long-run byproduct of doing that.`,
+        ],
+      },
+      {
+        heading: 'How to practice this',
+        body: [
+          `Two things get you ready. First, put in reps in the Simulator before you go — playing full hands against the bots makes the flow of a live hand (the betting rounds, the sizing, the showdown) second nature, so at the table you can spend your attention on the people and the etiquette instead of the mechanics. Keep sharpening the fundamentals between sessions too, especially the Range Trainer, since live reps are slow and precious.`,
+          `Second, lean on the Live Toolkit. Use the Bankroll tab to confirm you are rolled for your stake before you sit, the Etiquette reference to review the mechanics before you walk in (and to look up anything that surprised you afterward), and the Sessions tab to log every session and watch your real results build over time. Then go sit down, play within your roll, take your time, and enjoy it — you are ready. Tap "Live Toolkit" above.`,
+        ],
+      },
     ],
   },
 ]
