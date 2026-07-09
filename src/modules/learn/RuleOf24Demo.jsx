@@ -25,23 +25,23 @@ export default function RuleOf24Demo() {
   const estimate = outs * multiplier
 
   return (
-    <div className="not-prose mt-4 rounded-xl border border-gray-200 bg-gray-50 p-4">
+    <div className="not-prose mt-4 rounded-xl border border-line bg-surface-sunken-soft p-4">
       {/* Outs stepper */}
       <div className="flex items-center justify-between gap-3">
-        <div className="text-xs font-semibold uppercase tracking-wide text-gray-400">Outs</div>
+        <div className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Outs</div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setOuts((o) => Math.max(1, o - 1))}
             aria-label="Fewer outs"
-            className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-lg font-bold text-emerald-700 transition hover:bg-emerald-100"
+            className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-inset text-lg font-bold text-accent-text transition hover:bg-accent-soft"
           >
             −
           </button>
-          <div className="min-w-[2.5rem] text-center font-mono text-xl font-bold text-emerald-900">{outs}</div>
+          <div className="min-w-[2.5rem] text-center font-mono text-xl font-bold text-ink-heading">{outs}</div>
           <button
             onClick={() => setOuts((o) => Math.min(20, o + 1))}
             aria-label="More outs"
-            className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-lg font-bold text-emerald-700 transition hover:bg-emerald-100"
+            className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-inset text-lg font-bold text-accent-text transition hover:bg-accent-soft"
           >
             +
           </button>
@@ -55,7 +55,7 @@ export default function RuleOf24Demo() {
             key={p.label}
             onClick={() => setOuts(p.outs)}
             className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-              outs === p.outs ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+              outs === p.outs ? 'bg-accent text-onfelt' : 'bg-surface-inset text-accent-text hover:bg-accent-soft'
             }`}
           >
             {p.label} ({p.outs})
@@ -65,12 +65,12 @@ export default function RuleOf24Demo() {
 
       {/* Cards-to-come toggle */}
       <div className="mt-4">
-        <div className="text-xs font-semibold uppercase tracking-wide text-gray-400">Cards to come</div>
+        <div className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Cards to come</div>
         <div className="mt-1.5 flex gap-1.5">
           <button
             onClick={() => setCardsToCome(2)}
             className={`flex-1 rounded-lg px-2 py-2 text-sm font-semibold transition ${
-              cardsToCome === 2 ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+              cardsToCome === 2 ? 'bg-accent text-onfelt' : 'bg-surface-inset text-accent-text hover:bg-accent-soft'
             }`}
           >
             Two (flop → river) ×4
@@ -78,7 +78,7 @@ export default function RuleOf24Demo() {
           <button
             onClick={() => setCardsToCome(1)}
             className={`flex-1 rounded-lg px-2 py-2 text-sm font-semibold transition ${
-              cardsToCome === 1 ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+              cardsToCome === 1 ? 'bg-accent text-onfelt' : 'bg-surface-inset text-accent-text hover:bg-accent-soft'
             }`}
           >
             One (turn → river) ×2
@@ -87,12 +87,12 @@ export default function RuleOf24Demo() {
       </div>
 
       {/* Live estimate */}
-      <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-center">
-        <div className="font-mono text-lg text-emerald-700">
+      <div className="mt-4 rounded-lg border border-line bg-surface-inset p-4 text-center">
+        <div className="font-mono text-lg text-accent-text">
           {outs} × {multiplier} ={' '}
-          <span className="text-2xl font-bold text-emerald-800">≈ {estimate}%</span>
+          <span className="text-2xl font-bold text-accent-text">≈ {estimate}%</span>
         </div>
-        <div className="mt-1 text-xs text-emerald-600">estimated chance to hit your draw</div>
+        <div className="mt-1 text-xs text-accent-text">estimated chance to hit your draw</div>
       </div>
     </div>
   )

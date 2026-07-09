@@ -353,15 +353,15 @@ export default function Simulator() {
     <div className="pt-screen overflow-x-hidden">
       <div className="w-full max-w-3xl">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <div className="text-sm text-emerald-200">
-            <span className="rounded bg-amber-400/90 px-2 py-0.5 text-xs font-bold text-emerald-950">
+          <div className="text-sm text-onfelt-2">
+            <span className="rounded bg-gold/90 px-2 py-0.5 text-xs font-bold text-felt-deep">
               PRACTICE
             </span>{' '}
             Blinds {cfg.sb}/{cfg.bb} · {view.street}
           </div>
-          <div className="text-sm text-emerald-100">
+          <div className="text-sm text-onfelt-2">
             Session: <span className="font-bold">{session.hands}</span> hands · net{' '}
-            <span className={session.heroNet >= 0 ? 'text-emerald-300' : 'text-rose-300'}>
+            <span className={session.heroNet >= 0 ? 'text-onfelt-3' : 'text-danger'}>
               {session.heroNet >= 0 ? '+' : ''}
               {session.heroNet}
             </span>
@@ -406,7 +406,7 @@ export default function Simulator() {
               onAct={heroAct}
             />
           ) : (
-            <div className="rounded-2xl bg-emerald-950/50 p-4 text-center text-sm text-emerald-200">
+            <div className="rounded-2xl bg-panel/50 p-4 text-center text-sm text-onfelt-2">
               Waiting on the bots…
             </div>
           )}
@@ -422,22 +422,22 @@ export default function Simulator() {
 // event (a single bot action, or dealing the next street) per click.
 function StepPanel({ label, hint, onNext, onEnd }) {
   return (
-    <div className="rounded-2xl bg-emerald-950/70 p-4 text-center shadow-lg">
+    <div className="rounded-2xl bg-panel/70 p-4 text-center shadow-lg">
       {hint && (
-        <div className="mb-2 text-sm text-emerald-200">
-          Last: <span className="font-semibold text-white">{hint}</span>
+        <div className="mb-2 text-sm text-onfelt-2">
+          Last: <span className="font-semibold text-onfelt">{hint}</span>
         </div>
       )}
       <div className="flex justify-center gap-3">
         <button
           onClick={onNext}
-          className="rounded-xl bg-sky-600 px-6 py-2.5 text-sm font-bold text-white shadow hover:bg-sky-500"
+          className="rounded-xl bg-info px-6 py-2.5 text-sm font-bold text-onfelt shadow hover:bg-info"
         >
           {label}
         </button>
         <button
           onClick={onEnd}
-          className="rounded-xl bg-emerald-800 px-5 py-2.5 text-sm font-bold text-emerald-100 shadow hover:bg-emerald-700"
+          className="rounded-xl bg-felt px-5 py-2.5 text-sm font-bold text-onfelt-2 shadow hover:bg-felt-rail"
         >
           End session
         </button>
@@ -464,28 +464,28 @@ function ResultPanel({ view, nameBySeat, heroDelta, onNext, onEnd }) {
   }
 
   return (
-    <div className="rounded-2xl bg-emerald-950/70 p-4 text-center shadow-lg">
+    <div className="rounded-2xl bg-panel/70 p-4 text-center shadow-lg">
       <div className="mb-2 space-y-0.5">
         {winners.map((w) => (
-          <div key={w.index} className="text-base font-bold text-yellow-200">
+          <div key={w.index} className="text-base font-bold text-gold-text">
             {line(w)}
           </div>
         ))}
       </div>
-      <div className={`mb-3 text-sm font-semibold ${heroDelta >= 0 ? 'text-emerald-300' : 'text-rose-300'}`}>
+      <div className={`mb-3 text-sm font-semibold ${heroDelta >= 0 ? 'text-onfelt-3' : 'text-danger'}`}>
         This hand: {heroDelta >= 0 ? '+' : ''}
         {heroDelta}
       </div>
       <div className="flex justify-center gap-3">
         <button
           onClick={onNext}
-          className="rounded-xl bg-emerald-600 px-6 py-2.5 text-sm font-bold text-white shadow hover:bg-emerald-500"
+          className="rounded-xl bg-accent px-6 py-2.5 text-sm font-bold text-onfelt shadow hover:bg-accent-hover"
         >
           Next hand
         </button>
         <button
           onClick={onEnd}
-          className="rounded-xl bg-emerald-800 px-6 py-2.5 text-sm font-bold text-emerald-100 shadow hover:bg-emerald-700"
+          className="rounded-xl bg-felt px-6 py-2.5 text-sm font-bold text-onfelt-2 shadow hover:bg-felt-rail"
         >
           End session
         </button>

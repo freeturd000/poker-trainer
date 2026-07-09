@@ -36,17 +36,17 @@ export default function SimControls({ legal, pot, currentBet, onAct }) {
   ]
 
   return (
-    <div className="rounded-2xl bg-emerald-950/60 p-4 shadow-lg">
-      <div className="mb-1 text-center text-xs font-semibold uppercase tracking-wide text-emerald-300">
+    <div className="rounded-2xl bg-panel/60 p-4 shadow-lg">
+      <div className="mb-1 text-center text-xs font-semibold uppercase tracking-wide text-onfelt-3">
         Your action
       </div>
 
       {/* Bet / raise sizing */}
       {aggr && (
-        <div className="mb-3 rounded-xl bg-emerald-900/60 p-3">
-          <div className="mb-2 flex items-center justify-between text-sm text-emerald-100">
+        <div className="mb-3 rounded-xl bg-panel/60 p-3">
+          <div className="mb-2 flex items-center justify-between text-sm text-onfelt-2">
             <span>{isRaise ? 'Raise to' : 'Bet'}</span>
-            <span className="text-lg font-bold tabular-nums text-white">{to}</span>
+            <span className="text-lg font-bold tabular-nums text-onfelt">{to}</span>
           </div>
           <input
             type="range"
@@ -55,25 +55,25 @@ export default function SimControls({ legal, pot, currentBet, onAct }) {
             step={1}
             value={to}
             onChange={(e) => setTo(Number(e.target.value))}
-            className="w-full accent-amber-400"
+            className="w-full accent-gold"
           />
           <div className="mt-2 flex flex-wrap gap-1.5">
             {FRACTIONS.map(([label, frac]) => (
               <button
                 key={label}
                 onClick={() => setTo(sizeFor(frac))}
-                className="rounded-md bg-emerald-800 px-2.5 py-1 text-xs font-semibold text-emerald-100 hover:bg-emerald-700"
+                className="rounded-md bg-felt px-2.5 py-1 text-xs font-semibold text-onfelt-2 hover:bg-felt-rail"
               >
                 {label}
               </button>
             ))}
             <button
               onClick={() => setTo(aggr.max)}
-              className="rounded-md bg-emerald-800 px-2.5 py-1 text-xs font-semibold text-emerald-100 hover:bg-emerald-700"
+              className="rounded-md bg-felt px-2.5 py-1 text-xs font-semibold text-onfelt-2 hover:bg-felt-rail"
             >
               All-in
             </button>
-            <div className="ml-auto self-center text-[11px] text-emerald-400">
+            <div className="ml-auto self-center text-[11px] text-onfelt-4">
               min {aggr.min} · max {aggr.max}
             </div>
           </div>
@@ -108,16 +108,16 @@ export default function SimControls({ legal, pot, currentBet, onAct }) {
 }
 
 const TONES = {
-  rose: 'bg-rose-600 hover:bg-rose-500',
-  sky: 'bg-sky-600 hover:bg-sky-500',
-  amber: 'bg-amber-500 hover:bg-amber-400 text-emerald-950',
+  rose: 'bg-danger hover:bg-danger-solid',
+  sky: 'bg-info hover:bg-info',
+  amber: 'bg-gold hover:bg-gold text-felt-deep',
 }
 
 function Btn({ children, onClick, tone }) {
   return (
     <button
       onClick={onClick}
-      className={`rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow transition ${TONES[tone]}`}
+      className={`rounded-xl px-5 py-2.5 text-sm font-bold text-onfelt shadow transition ${TONES[tone]}`}
     >
       {children}
     </button>

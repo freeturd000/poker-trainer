@@ -61,24 +61,24 @@ export default function SimTable({
   return (
     <div className="relative mx-auto h-[440px] w-full max-w-3xl sm:h-[560px]">
       {/* Felt oval */}
-      <div className="absolute inset-x-[4%] inset-y-[8%] rounded-[50%] bg-emerald-700 shadow-2xl ring-4 ring-emerald-900/50" />
-      <div className="pointer-events-none absolute inset-x-[7%] inset-y-[12%] rounded-[50%] ring-2 ring-emerald-500/20" />
+      <div className="absolute inset-x-[4%] inset-y-[8%] rounded-[50%] bg-felt-rail shadow-2xl ring-4 ring-line-felt/50" />
+      <div className="pointer-events-none absolute inset-x-[7%] inset-y-[12%] rounded-[50%] ring-2 ring-accent/20" />
 
       {/* Centre of the felt: pot + community board */}
       <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-3">
-        <div className="rounded-full bg-emerald-950/70 px-5 py-1.5 text-center">
-          <span className="text-xs uppercase tracking-wide text-emerald-300">Pot</span>{' '}
-          <span className="text-lg font-bold tabular-nums text-white">{view.pot}</span>
+        <div className="rounded-full bg-panel/70 px-5 py-1.5 text-center">
+          <span className="text-xs uppercase tracking-wide text-onfelt-3">Pot</span>{' '}
+          <span className="text-lg font-bold tabular-nums text-onfelt">{view.pot}</span>
         </div>
         <div className="flex min-h-[5rem] items-center gap-2">
           {shownBoard.length === 0 ? (
-            <span className="text-sm italic text-emerald-200/70">— board dealt as streets go —</span>
+            <span className="text-sm italic text-onfelt-2">— board dealt as streets go —</span>
           ) : (
             shownBoard.map((c) => <Card key={c} card={c} size="md" />)
           )}
         </div>
         {isShowdown && view.pots.length > 1 && (
-          <div className="text-[11px] text-emerald-200">
+          <div className="text-[11px] text-onfelt-2">
             {view.pots.map((pot, i) => (
               <span key={i} className="mx-1">
                 {i === 0 ? 'Main' : `Side ${i}`}: {pot.amount}
@@ -129,31 +129,33 @@ function Seat({ p, label, isHero, isButton, isTurn, stepMode, reveal, won, board
       ? evaluateHand(p.holeCards, board).descr
       : null
 
-  // Ring priority: winner (yellow) > current actor (amber) > just-acted (sky).
+  // Ring priority: winner (gold) > current actor (gold) > just-acted (blue).
+  // Winner and current-actor never coincide (one is post-showdown, the other
+  // mid-hand), so they can share the gold highlight.
   const ring = won
-    ? 'ring-4 ring-yellow-300'
+    ? 'ring-4 ring-gold'
     : isTurn
-      ? 'ring-4 ring-amber-400'
+      ? 'ring-4 ring-gold'
       : justActed
-        ? 'ring-4 ring-sky-400'
-        : 'ring-1 ring-emerald-900/50'
+        ? 'ring-4 ring-info-bright'
+        : 'ring-1 ring-line-felt/50'
 
   return (
     <div
       className={`relative w-24 rounded-2xl p-2 text-center shadow-lg transition sm:w-36 sm:p-2.5 ${
-        folded ? 'bg-emerald-900/40 opacity-50' : 'bg-emerald-950/80'
+        folded ? 'bg-panel/40 opacity-50' : 'bg-panel/80'
       } ${ring}`}
     >
       {/* Button chip */}
       {isButton && (
-        <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs font-bold text-emerald-900 shadow">
+        <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-onfelt text-xs font-bold text-felt-deep shadow">
           D
         </span>
       )}
 
       <div className="flex items-center justify-center gap-2">
-        <span className="text-sm font-bold text-white">{label}</span>
-        <span className="rounded bg-emerald-800 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-emerald-200">
+        <span className="text-sm font-bold text-onfelt">{label}</span>
+        <span className="rounded bg-felt-rail px-1.5 py-0.5 text-[10px] font-semibold uppercase text-onfelt-2">
           {p.position}
         </span>
       </div>
@@ -176,26 +178,26 @@ function Seat({ p, label, isHero, isButton, isTurn, stepMode, reveal, won, board
         )}
       </div>
 
-      <div className="mt-1 text-xs font-semibold text-emerald-200">
-        Stack <span className="tabular-nums text-white">{p.stack}</span>
-        {p.status === 'allin' && <span className="ml-1 text-amber-300">· all-in</span>}
+      <div className="mt-1 text-xs font-semibold text-onfelt-2">
+        Stack <span className="tabular-nums text-onfelt">{p.stack}</span>
+        {p.status === 'allin' && <span className="ml-1 text-gold-text">· all-in</span>}
       </div>
 
-      {descr && <div className="mt-0.5 truncate text-[10px] text-yellow-200">{descr}</div>}
+      {descr && <div className="mt-0.5 truncate text-[10px] text-gold-text">{descr}</div>}
 
       {/* Most-recent action bubble (brightened when it's the just-acted seat) */}
       {lastAction && !folded && (
         <div
-          className={`mt-1 rounded-full px-2 py-0.5 text-[11px] font-semibold text-white ${
-            justActed ? 'bg-sky-500 shadow' : 'bg-emerald-800/80'
+          className={`mt-1 rounded-full px-2 py-0.5 text-[11px] font-semibold text-onfelt ${
+            justActed ? 'bg-info shadow' : 'bg-panel/80'
           }`}
         >
           {lastAction}
         </div>
       )}
-      {folded && <div className="mt-1 text-[11px] font-semibold text-emerald-300/70">Folded</div>}
+      {folded && <div className="mt-1 text-[11px] font-semibold text-onfelt-3/70">Folded</div>}
       {isTurn && (
-        <div className="mt-1 text-[11px] font-semibold text-amber-300">
+        <div className="mt-1 text-[11px] font-semibold text-gold-text">
           {isHero ? 'Your turn' : stepMode ? 'to act' : 'thinking…'}
         </div>
       )}

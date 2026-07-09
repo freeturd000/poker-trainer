@@ -18,8 +18,8 @@ function CardToken({ card }) {
   const { rank, suit } = parseCard(card)
   return (
     <span
-      className={`inline-block rounded bg-white/95 px-1 text-[11px] font-bold leading-5 ${
-        RED_SUITS.has(suit) ? 'text-red-600' : 'text-gray-900'
+      className={`inline-block rounded bg-card-face px-1 text-[11px] font-bold leading-5 ${
+        RED_SUITS.has(suit) ? 'text-card-red' : 'text-card-ink'
       }`}
     >
       {rank}
@@ -39,13 +39,13 @@ const Cards = ({ cards }) =>
 
 // One hand, rendered as a small card: summary header + street lines + result.
 function HandBlock({ h }) {
-  const netCls = h.net == null ? 'text-emerald-300' : h.net >= 0 ? 'text-emerald-300' : 'text-rose-300'
+  const netCls = h.net == null ? 'text-onfelt-3' : h.net >= 0 ? 'text-onfelt-3' : 'text-danger'
   return (
-    <div className="rounded-xl bg-emerald-950/60 p-3 ring-1 ring-emerald-900/50">
+    <div className="rounded-xl bg-panel/60 p-3 ring-1 ring-line-felt/50">
       <div className="mb-1.5 flex items-center justify-between gap-2">
-        <div className="text-xs font-bold text-emerald-100">
+        <div className="text-xs font-bold text-onfelt-2">
           {h.live ? 'Current hand' : `Hand #${h.handNo}`}
-          <span className="ml-2 font-normal text-emerald-300/80">
+          <span className="ml-2 font-normal text-onfelt-3/80">
             Blinds {h.blinds.sb}/{h.blinds.bb} · Button: {h.buttonLabel}
           </span>
         </div>
@@ -57,25 +57,25 @@ function HandBlock({ h }) {
         )}
       </div>
 
-      <div className="mb-1 text-[11px] text-emerald-300/90">
+      <div className="mb-1 text-[11px] text-onfelt-3/90">
         Your cards:
         <Cards cards={h.heroCards} />
-        <span className="ml-2 text-emerald-400/70">{h.postsLine}</span>
+        <span className="ml-2 text-onfelt-4/70">{h.postsLine}</span>
       </div>
 
       <div className="space-y-0.5">
         {h.streets.map((s, i) => (
-          <div key={i} className="text-[12px] leading-snug text-emerald-100">
-            <span className="font-semibold text-emerald-200">{s.label}</span>
+          <div key={i} className="text-[12px] leading-snug text-onfelt-2">
+            <span className="font-semibold text-onfelt-2">{s.label}</span>
             <Cards cards={s.cards} />
-            {s.line && <span className="text-emerald-400/60">: </span>}
+            {s.line && <span className="text-onfelt-4/60">: </span>}
             {s.line}
           </div>
         ))}
       </div>
 
       {h.reveals.length > 0 && (
-        <div className="mt-1 text-[11px] text-emerald-300/80">
+        <div className="mt-1 text-[11px] text-onfelt-3/80">
           {h.reveals.map((r, i) => (
             <span key={i} className="mr-3">
               {r.name} ({r.position})
@@ -87,9 +87,9 @@ function HandBlock({ h }) {
       )}
 
       {h.resultLines.length > 0 && (
-        <div className="mt-1.5 space-y-0.5 border-t border-emerald-800/60 pt-1.5">
+        <div className="mt-1.5 space-y-0.5 border-t border-line-felt/60 pt-1.5">
           {h.resultLines.map((line, i) => (
-            <div key={i} className="text-[12px] font-semibold text-yellow-200">
+            <div key={i} className="text-[12px] font-semibold text-gold-text">
               {line}
             </div>
           ))}
@@ -110,24 +110,24 @@ export default function HandHistoryPanel({ current, past, onClear }) {
   const count = past.length
 
   return (
-    <div className="mt-4 overflow-hidden rounded-2xl bg-emerald-950/40 ring-1 ring-emerald-900/50">
+    <div className="mt-4 overflow-hidden rounded-2xl bg-panel/40 ring-1 ring-line-felt/50">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between px-4 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-emerald-900/40"
+        className="flex w-full items-center justify-between px-4 py-2.5 text-sm font-semibold text-onfelt-2 hover:bg-panel/40"
       >
         <span>
           Hand history
-          <span className="ml-2 text-xs font-normal text-emerald-300/80">
+          <span className="ml-2 text-xs font-normal text-onfelt-3/80">
             {count} saved{current ? ' · 1 in progress' : ''}
           </span>
         </span>
-        <span className={`text-emerald-300 transition-transform ${open ? 'rotate-180' : ''}`}>▾</span>
+        <span className={`text-onfelt-3 transition-transform ${open ? 'rotate-180' : ''}`}>▾</span>
       </button>
 
       {open && (
-        <div className="border-t border-emerald-900/60 p-3">
+        <div className="border-t border-line-felt/60 p-3">
           {!current && count === 0 ? (
-            <div className="py-4 text-center text-sm text-emerald-300/70">
+            <div className="py-4 text-center text-sm text-onfelt-3/70">
               No hands yet — play one and it'll show up here.
             </div>
           ) : (
@@ -142,7 +142,7 @@ export default function HandHistoryPanel({ current, past, onClear }) {
                 <div className="mt-2 text-right">
                   <button
                     onClick={onClear}
-                    className="text-[11px] font-semibold text-emerald-400/80 hover:text-rose-300"
+                    className="text-[11px] font-semibold text-onfelt-4/80 hover:text-danger"
                   >
                     Clear saved hands
                   </button>

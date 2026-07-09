@@ -59,7 +59,7 @@ export default function RangeGridVisual() {
   }, [selected, data])
 
   return (
-    <div className="not-prose mt-4 rounded-xl border border-gray-200 bg-gray-50 p-3 sm:p-4">
+    <div className="not-prose mt-4 rounded-xl border border-line bg-surface-sunken-soft p-3 sm:p-4">
       {/* Position tabs */}
       <div className="flex gap-1.5">
         {POS.map((p) => (
@@ -67,7 +67,7 @@ export default function RangeGridVisual() {
             key={p}
             onClick={() => setPos(p)}
             className={`flex-1 rounded-lg px-1 py-2 text-sm font-semibold transition ${
-              p === pos ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+              p === pos ? 'bg-accent text-onfelt' : 'bg-surface-inset text-accent-text hover:bg-accent-soft'
             }`}
           >
             {p}
@@ -76,8 +76,8 @@ export default function RangeGridVisual() {
       </div>
 
       <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-        <p className="text-sm text-gray-500">{POS_DESC[pos]}</p>
-        <p className="text-sm font-semibold text-emerald-600">opens {cur.pct}% of hands</p>
+        <p className="text-sm text-ink-muted">{POS_DESC[pos]}</p>
+        <p className="text-sm font-semibold text-accent-text">opens {cur.pct}% of hands</p>
       </div>
 
       {/* 13×13 grid — inline template since Tailwind ships no `grid-cols-13`. */}
@@ -92,8 +92,8 @@ export default function RangeGridVisual() {
                 key={`${r}-${c}`}
                 onClick={() => setSelected(hand)}
                 className={`flex aspect-square items-center justify-center rounded-[3px] font-mono font-medium leading-none text-[clamp(7px,1.9vw,11px)] transition ${
-                  isRaise ? 'bg-emerald-600 text-emerald-50' : 'bg-gray-100 text-gray-400'
-                } ${isSel ? 'ring-2 ring-amber-400 ring-inset' : ''}`}
+                  isRaise ? 'bg-accent text-onfelt' : 'bg-surface-sunken text-ink-muted'
+                } ${isSel ? 'ring-2 ring-gold ring-inset' : ''}`}
               >
                 {hand}
               </button>
@@ -103,34 +103,34 @@ export default function RangeGridVisual() {
       </div>
 
       {/* Readout */}
-      <div className="mt-3 flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3">
-        <span className="min-w-[2.5rem] font-mono text-lg font-bold text-emerald-900">
+      <div className="mt-3 flex items-center gap-3 rounded-lg border border-line bg-surface p-3">
+        <span className="min-w-[2.5rem] font-mono text-lg font-bold text-ink-heading">
           {selected ?? '—'}
         </span>
-        <span className="text-sm leading-snug text-gray-600">
+        <span className="text-sm leading-snug text-ink-body">
           {!selected ? (
             'Tap any hand to see which seats open it.'
           ) : opensInfo.opens.length === 0 ? (
             'Fold from every seat — below the opening threshold.'
           ) : opensInfo.opens.length === POS.length ? (
             <>
-              <b className="font-semibold text-emerald-700">Raise from every seat</b> — a core hand you always open.
+              <b className="font-semibold text-accent-text">Raise from every seat</b> — a core hand you always open.
             </>
           ) : (
             <>
-              Opens from <b className="font-semibold text-emerald-700">{opensInfo.opens.join(', ')}</b>. Folded from the earlier seats.
+              Opens from <b className="font-semibold text-accent-text">{opensInfo.opens.join(', ')}</b>. Folded from the earlier seats.
             </>
           )}
         </span>
       </div>
 
       {/* Legend */}
-      <div className="mt-3 flex gap-4 text-xs text-gray-500">
+      <div className="mt-3 flex gap-4 text-xs text-ink-muted">
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block h-3 w-3 rounded-sm bg-emerald-600" /> Raise (open)
+          <span className="inline-block h-3 w-3 rounded-sm bg-accent" /> Raise (open)
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block h-3 w-3 rounded-sm border border-gray-300 bg-gray-100" /> Fold
+          <span className="inline-block h-3 w-3 rounded-sm border border-line-strong bg-surface-sunken" /> Fold
         </span>
       </div>
     </div>

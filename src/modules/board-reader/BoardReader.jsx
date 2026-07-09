@@ -112,12 +112,12 @@ export default function BoardReader() {
       <Shell>
         <h1 className="pt-title">Board Texture &amp; Hand Reading</h1>
         <p className="pt-subtitle">Read the board — texture, what beats you, and range advantage</p>
-        <p className="mt-1 max-w-md text-center text-xs text-emerald-300">
+        <p className="mt-1 max-w-md text-center text-xs text-onfelt-3">
           Texture &amp; range reads are graded on documented heuristics (not a solver). “What beats
           you” is exact.
         </p>
 
-        <p className="mt-6 text-sm text-emerald-200">Choose a drill:</p>
+        <p className="mt-6 text-sm text-onfelt-2">Choose a drill:</p>
         <div className="mt-2 flex flex-wrap justify-center gap-2">
           {DRILL_OPTIONS.map((opt) => {
             const active = drill === opt.value
@@ -133,7 +133,7 @@ export default function BoardReader() {
           })}
         </div>
 
-        <p className="mt-6 text-sm text-emerald-200">Choose a session length:</p>
+        <p className="mt-6 text-sm text-onfelt-2">Choose a session length:</p>
         <div className="mt-2 flex flex-wrap justify-center gap-3">
           {SESSION_LENGTHS.map((len) => (
             <button
@@ -147,29 +147,29 @@ export default function BoardReader() {
         </div>
 
         <div className="mt-6 flex flex-col items-center gap-1">
-          <p className="text-xs text-emerald-300">Lifetime accuracy: {lifetime.toFixed(1)}%</p>
+          <p className="text-xs text-onfelt-3">Lifetime accuracy: {lifetime.toFixed(1)}%</p>
           {!confirmingReset ? (
             <button
               onClick={() => setConfirmingReset(true)}
-              className="text-xs text-emerald-400 underline underline-offset-2 hover:text-emerald-200"
+              className="text-xs text-onfelt-4 underline underline-offset-2 hover:text-onfelt-2"
             >
               Reset lifetime stats
             </button>
           ) : (
-            <div className="mt-1 flex flex-col items-center gap-2 rounded-lg bg-emerald-950/40 px-4 py-3">
-              <p className="max-w-xs text-center text-xs text-emerald-100">
+            <div className="mt-1 flex flex-col items-center gap-2 rounded-lg bg-panel/40 px-4 py-3">
+              <p className="max-w-xs text-center text-xs text-onfelt-2">
                 This clears all saved progress and leaks for the board reader — are you sure?
               </p>
               <div className="flex gap-2">
                 <button
                   onClick={confirmReset}
-                  className="rounded-lg bg-rose-500 px-3 py-1.5 text-xs font-semibold text-white shadow hover:bg-rose-400"
+                  className="rounded-lg bg-danger-solid px-3 py-1.5 text-xs font-semibold text-onfelt shadow hover:bg-danger-hover"
                 >
                   Yes, reset
                 </button>
                 <button
                   onClick={() => setConfirmingReset(false)}
-                  className="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-emerald-900 shadow hover:bg-emerald-50"
+                  className="rounded-lg bg-surface px-3 py-1.5 text-xs font-semibold text-ink-heading shadow hover:bg-surface-inset"
                 >
                   Cancel
                 </button>
@@ -187,22 +187,22 @@ export default function BoardReader() {
       <Shell>
         <h1 className="pt-title">Session complete</h1>
         <div className="mt-4 pt-card p-5 text-center">
-          <div className="text-4xl font-bold text-emerald-700">{sessionAcc.toFixed(0)}%</div>
-          <div className="text-sm text-gray-600">
+          <div className="text-4xl font-bold text-accent-text">{sessionAcc.toFixed(0)}%</div>
+          <div className="text-sm text-ink-body">
             {stats.correct}/{stats.answered} correct · lifetime {lifetime.toFixed(1)}%
           </div>
         </div>
 
         <div className="mt-4 w-full max-w-sm pt-card p-4">
-          <div className="text-sm font-semibold text-gray-800">Weakest drills this session</div>
+          <div className="text-sm font-semibold text-ink">Weakest drills this session</div>
           {worstMisses.length === 0 ? (
-            <div className="mt-1 text-sm text-emerald-700">No misses — clean session! 🎉</div>
+            <div className="mt-1 text-sm text-accent-text">No misses — clean session! 🎉</div>
           ) : (
-            <ul className="mt-2 space-y-1 text-sm text-gray-700">
+            <ul className="mt-2 space-y-1 text-sm text-ink-body">
               {worstMisses.map((m) => (
                 <li key={m.type} className="flex justify-between">
                   <span>{TYPE_LABEL[m.type]}</span>
-                  <span className="tabular-nums text-red-600">×{m.count}</span>
+                  <span className="tabular-nums text-danger">×{m.count}</span>
                 </li>
               ))}
             </ul>
@@ -223,7 +223,7 @@ export default function BoardReader() {
   const spotNo = Math.min(stats.answered + (result ? 0 : 1), length)
   return (
     <Shell>
-      <div className="flex w-full max-w-md items-center justify-between text-sm text-emerald-100">
+      <div className="flex w-full max-w-md items-center justify-between text-sm text-onfelt-2">
         <span>
           Spot {spotNo} / {length}
         </span>
@@ -233,13 +233,13 @@ export default function BoardReader() {
       </div>
 
       {generating || !spot ? (
-        <div className="mt-16 text-emerald-100">Dealing…</div>
+        <div className="mt-16 text-onfelt-2">Dealing…</div>
       ) : (
         <>
-          <div className="mt-4 flex items-center gap-2 text-xs uppercase tracking-wide text-emerald-300">
+          <div className="mt-4 flex items-center gap-2 text-xs uppercase tracking-wide text-onfelt-3">
             {TYPE_LABEL[spot.type]}
             {HEURISTIC_TYPES.has(spot.type) && (
-              <span className="rounded bg-emerald-950/60 px-1.5 py-0.5 text-[10px] normal-case tracking-normal text-emerald-300">
+              <span className="rounded bg-panel/60 px-1.5 py-0.5 text-[10px] normal-case tracking-normal text-onfelt-3">
                 heuristic
               </span>
             )}
@@ -255,17 +255,17 @@ export default function BoardReader() {
             <div className="mt-6 flex w-full max-w-md flex-col items-center gap-3">
               <div
                 className={`w-full rounded-xl p-4 text-center shadow-lg ${
-                  result.correct ? 'bg-emerald-50' : 'bg-rose-50'
+                  result.correct ? 'bg-surface-inset' : 'bg-danger-soft'
                 }`}
               >
-                <div className={`text-lg font-bold ${result.correct ? 'text-emerald-700' : 'text-rose-700'}`}>
+                <div className={`text-lg font-bold ${result.correct ? 'text-accent-text' : 'text-danger-text'}`}>
                   {result.correct ? 'Correct' : 'Incorrect'} — {result.correctText}
                 </div>
-                <div className="mt-1 text-sm text-gray-700">{result.explain}</div>
+                <div className="mt-1 text-sm text-ink-body">{result.explain}</div>
               </div>
               <button
                 onClick={next}
-                className="rounded-xl bg-white px-8 py-3 font-semibold text-emerald-900 shadow hover:bg-emerald-50"
+                className="rounded-xl bg-surface px-8 py-3 font-semibold text-ink-heading shadow hover:bg-surface-inset"
               >
                 {stats.answered >= length ? 'See summary' : 'Next spot'}
               </button>
@@ -283,18 +283,18 @@ function renderPrompt(spot) {
   switch (spot.type) {
     case 'texture':
       return (
-        <div className="flex flex-col items-center gap-4 rounded-xl bg-emerald-950/40 p-5">
+        <div className="flex flex-col items-center gap-4 rounded-xl bg-panel/40 p-5">
           <BoardRow cards={spot.board} />
-          <div className="text-center text-sm text-emerald-100">
+          <div className="text-center text-sm text-onfelt-2">
             Select every texture tag that applies.
           </div>
         </div>
       )
     case 'whatbeats':
       return (
-        <div className="flex flex-col items-center gap-4 rounded-xl bg-emerald-950/40 p-5">
+        <div className="flex flex-col items-center gap-4 rounded-xl bg-panel/40 p-5">
           <div className="flex flex-col items-center gap-1">
-            <span className="text-xs uppercase tracking-wide text-emerald-300">Your hand</span>
+            <span className="text-xs uppercase tracking-wide text-onfelt-3">Your hand</span>
             <div className="flex gap-2">
               {spot.hole.map((c) => (
                 <Card key={c} card={c} size="md" />
@@ -302,19 +302,19 @@ function renderPrompt(spot) {
             </div>
           </div>
           <BoardRow cards={spot.board} />
-          <div className="text-center text-sm text-emerald-100">
+          <div className="text-center text-sm text-onfelt-2">
             Which hand classes could an opponent hold that <strong>beat you</strong>?
           </div>
         </div>
       )
     case 'range':
       return (
-        <div className="flex flex-col items-center gap-4 rounded-xl bg-emerald-950/40 p-5">
-          <div className="rounded-lg bg-emerald-900/60 px-3 py-1.5 text-sm font-semibold text-emerald-100">
+        <div className="flex flex-col items-center gap-4 rounded-xl bg-panel/40 p-5">
+          <div className="rounded-lg bg-panel/60 px-3 py-1.5 text-sm font-semibold text-onfelt-2">
             {spot.scenario.text}
           </div>
           <BoardRow cards={spot.flop} />
-          <div className="text-center text-sm text-emerald-100">Whose range does this flop favor?</div>
+          <div className="text-center text-sm text-onfelt-2">Whose range does this flop favor?</div>
         </div>
       )
     default:
@@ -337,7 +337,7 @@ function renderInput(spot, { selected, toggle, submit }) {
           <button
             key={o.value}
             onClick={() => submit(o.value)}
-            className="rounded-xl bg-emerald-500 px-6 py-3 text-lg font-bold text-white shadow transition hover:bg-emerald-400"
+            className="rounded-xl bg-accent-hover px-6 py-3 text-lg font-bold text-onfelt shadow transition hover:bg-accent-bright"
           >
             {o.label}
           </button>
@@ -358,7 +358,7 @@ function renderInput(spot, { selected, toggle, submit }) {
               key={opt}
               onClick={() => toggle(opt)}
               className={`pt-toggle ${
-                active ? 'pt-toggle-on ring-2 ring-emerald-300' : 'pt-toggle-off'
+                active ? 'pt-toggle-on ring-2 ring-accent-bright' : 'pt-toggle-off'
               }`}
             >
               {opt}
@@ -368,7 +368,7 @@ function renderInput(spot, { selected, toggle, submit }) {
       </div>
       <button
         onClick={() => submit(selected)}
-        className="rounded-xl bg-emerald-500 px-8 py-3 font-bold text-white shadow hover:bg-emerald-400"
+        className="rounded-xl bg-accent-hover px-8 py-3 font-bold text-onfelt shadow hover:bg-accent-bright"
       >
         Submit{spot.type === 'whatbeats' && selected.length === 0 ? ' (nothing beats me)' : ''}
       </button>
@@ -379,7 +379,7 @@ function renderInput(spot, { selected, toggle, submit }) {
 function BoardRow({ cards }) {
   return (
     <div className="flex flex-col items-center gap-1">
-      <span className="text-xs uppercase tracking-wide text-emerald-300">Board</span>
+      <span className="text-xs uppercase tracking-wide text-onfelt-3">Board</span>
       <div className="flex gap-2">
         {cards.map((c) => (
           <Card key={c} card={c} size="md" />

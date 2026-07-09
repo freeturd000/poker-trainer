@@ -2,15 +2,150 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Theme tokens ────────────────────────────────────────────────────────────
+   One source of truth for every colour in the app, expressed as space-separated
+   RGB triplets so Tailwind can apply opacity modifiers (see tailwind.config.js).
+   `:root` is the LIGHT theme and matches the original look; `[data-theme="dark"]`
+   is a purpose-built dark theme (deep near-black green felt, off-white text,
+   real light card faces, accents that pop). The app defaults to dark — the theme
+   store stamps `data-theme` on <html> before paint. Nothing hard-codes a colour;
+   swapping these two blocks re-themes the whole app. */
+:root,
+:root[data-theme='light'] {
+  color-scheme: light; /* native controls (date picker, selects, scrollbars) */
+  /* Felt / chrome */
+  --felt: 6 95 70; /* emerald-800 */
+  --felt-deep: 2 44 34; /* emerald-950 */
+  --felt-rail: 4 120 87; /* emerald-700 */
+  --panel: 2 44 34; /* emerald-950, used translucent on the felt */
+
+  /* Light panel surfaces */
+  --surface: 255 255 255;
+  --surface-raised: 255 255 255;
+  --surface-inset: 236 253 245; /* emerald-50 */
+  --surface-sunken: 243 244 246; /* gray-100 */
+  --surface-sunken-soft: 249 250 251; /* gray-50 */
+  --accent-soft: 209 250 229; /* emerald-100 */
+
+  /* Text on light surfaces */
+  --ink: 31 41 55; /* gray-800 */
+  --ink-heading: 6 78 59; /* emerald-900 */
+  --ink-body: 55 65 81; /* gray-700 */
+  --ink-muted: 107 114 128; /* gray-500 */
+
+  /* Text on the felt / dark chrome */
+  --onfelt: 255 255 255;
+  --onfelt-2: 209 250 229; /* emerald-100 */
+  --onfelt-3: 110 231 183; /* emerald-300 */
+  --onfelt-4: 76 222 165; /* bright emerald — small accents/links on the felt */
+
+  /* Green accent family */
+  --accent: 4 120 87; /* emerald-700 — button fill, dark enough for white text */
+  --accent-hover: 16 185 129; /* emerald-500 */
+  --accent-bright: 52 211 153; /* emerald-400 */
+  --accent-text: 4 120 87; /* emerald-700, readable green text on white */
+
+  /* State colours */
+  --danger: 225 29 72; /* rose-600 */
+  --danger-solid: 244 63 94; /* rose-500 */
+  --danger-hover: 251 113 133; /* rose-400 */
+  --danger-soft: 255 241 242; /* rose-50 */
+  --danger-text: 190 18 60; /* rose-700 */
+  --info: 14 165 233; /* sky-500 */
+  --info-bright: 56 189 248; /* sky-400 */
+  --gold: 251 191 36; /* amber-400 */
+  --gold-soft: 254 243 199; /* amber-100 */
+  --gold-text: 252 211 77; /* amber-300, light gold for dark felt/panels */
+  --gold-ink: 146 64 14; /* amber-800, dark gold text on light gold-soft chips */
+  --special: 129 140 248; /* indigo-400 — accents/badge on the dark coach panel */
+
+  /* Poker cards — fixed across themes */
+  --card-face: 255 255 255;
+  --card-ink: 17 24 39; /* gray-900 */
+  --card-red: 220 38 38; /* red-600 */
+  --card-edge: 209 213 219; /* gray-300 */
+  --card-back: 29 78 216; /* blue-700 */
+  --card-back-edge: 30 58 138; /* blue-900 */
+  --card-back-pip: 59 130 246; /* blue-500 */
+
+  /* Borders */
+  --line: 229 231 235; /* gray-200 */
+  --line-strong: 209 213 219; /* gray-300 */
+  --line-felt: 6 78 59; /* emerald-900, used translucent on the felt */
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark; /* native controls (date picker, selects, scrollbars) */
+  /* Felt / chrome — deep near-black green */
+  --felt: 13 21 18;
+  --felt-deep: 8 13 11;
+  --felt-rail: 6 51 40; /* still clearly green so the table reads as poker */
+  --panel: 52 68 61; /* elevated; used translucent → subtle lighter patch */
+
+  /* Dark panel surfaces */
+  --surface: 26 34 31;
+  --surface-raised: 37 48 43;
+  --surface-inset: 20 28 25;
+  --surface-sunken: 18 25 22;
+  --surface-sunken-soft: 22 30 27;
+  --accent-soft: 22 48 38;
+
+  /* Text on dark surfaces */
+  --ink: 233 238 236;
+  --ink-heading: 198 246 224; /* light emerald heading, keeps the identity */
+  --ink-body: 197 206 202;
+  --ink-muted: 150 162 156;
+
+  /* Text on the felt / dark chrome */
+  --onfelt: 236 242 239;
+  --onfelt-2: 189 213 202;
+  --onfelt-3: 110 231 183; /* emerald-300 pops on near-black */
+  --onfelt-4: 52 211 153;
+
+  /* Green accent family */
+  --accent: 4 120 87; /* emerald-700 — button fill, dark enough for white text */
+  --accent-hover: 52 211 153; /* emerald-400 */
+  --accent-bright: 52 211 153;
+  --accent-text: 52 211 153; /* bright green text on dark surfaces */
+
+  /* State colours */
+  --danger: 251 113 133; /* rose-400, readable on dark */
+  --danger-solid: 244 63 94; /* rose-500 button stays vivid */
+  --danger-hover: 251 113 133;
+  --danger-soft: 60 26 33;
+  --danger-text: 253 164 175; /* light rose text */
+  --info: 14 165 233; /* sky-500 */
+  --info-bright: 56 189 248; /* sky-400 */
+  --gold: 251 191 36; /* amber-400 */
+  --gold-soft: 55 45 20;
+  --gold-text: 252 211 77; /* amber-300, light gold for dark felt/panels */
+  --gold-ink: 253 230 138; /* amber-200, light gold text on dark gold-soft chips */
+  --special: 165 180 252; /* indigo-300, brighter on dark */
+
+  /* Poker cards — kept light so they read as real cards on the dark table */
+  --card-face: 244 246 245;
+  --card-ink: 17 24 39;
+  --card-red: 220 38 38;
+  --card-edge: 96 108 103;
+  --card-back: 29 78 216;
+  --card-back-edge: 30 58 138;
+  --card-back-pip: 59 130 246;
+
+  /* Borders */
+  --line: 58 70 64;
+  --line-strong: 78 92 85;
+  --line-felt: 92 112 102; /* lighter so it shows on the near-black felt */
+}
+
 /* ── Base ──────────────────────────────────────────────────────────────────
-   The green felt background lives on the document so there's never a white
-   flash on overscroll, and every screen inherits one consistent surface. */
+   The felt background lives on the document so there's never a white flash on
+   overscroll, and every screen inherits one consistent surface. */
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-emerald-800 text-emerald-50 antialiased;
+    @apply bg-felt text-onfelt antialiased;
   }
 }
 
@@ -26,7 +161,7 @@
      plain `.pt-screen` top-aligns for scrolling, list-heavy views (dashboard,
      live toolkit, simulator). */
   .pt-screen {
-    @apply flex min-h-screen flex-col items-center bg-emerald-800 px-4 py-6 sm:px-6;
+    @apply flex min-h-screen flex-col items-center bg-felt px-4 py-6 sm:px-6;
   }
   .pt-screen-center {
     @apply justify-center;
@@ -38,22 +173,23 @@
 
   /* Typography */
   .pt-title {
-    @apply text-2xl font-bold text-white sm:text-3xl;
+    @apply text-2xl font-bold text-onfelt sm:text-3xl;
   }
   .pt-subtitle {
-    @apply text-sm text-emerald-100;
+    @apply text-sm text-onfelt-2;
   }
   .pt-eyebrow {
-    @apply text-xs font-semibold uppercase tracking-wide text-emerald-300;
+    @apply text-xs font-semibold uppercase tracking-wide text-onfelt-3;
   }
 
   /* Panels — the two surfaces used everywhere. Padding stays at the call site
      (p-4 / p-5) so density can vary; only the shape/colour/shadow is shared. */
   .pt-card {
-    @apply rounded-2xl bg-white/95 shadow-lg;
+    @apply rounded-2xl bg-surface shadow-lg;
   }
   .pt-card-dark {
-    @apply rounded-2xl bg-emerald-950/40 shadow-lg;
+    @apply rounded-2xl shadow-lg;
+    background-color: rgb(var(--panel) / 0.5);
   }
 
   /* Buttons. `.pt-btn` is the shared shape; pair it with a colour modifier. */
@@ -61,10 +197,10 @@
     @apply rounded-xl px-6 py-3 font-semibold shadow transition;
   }
   .pt-btn-light {
-    @apply bg-white text-emerald-900 hover:bg-emerald-50;
+    @apply bg-surface text-ink-heading hover:bg-surface-inset;
   }
   .pt-btn-green {
-    @apply bg-emerald-600 text-white hover:bg-emerald-500;
+    @apply bg-accent text-onfelt hover:bg-accent-hover;
   }
 
   /* Setup selector chips (mode / seat / drill toggles across the trainers). */
@@ -72,10 +208,10 @@
     @apply rounded-lg px-4 py-2 text-sm font-semibold shadow transition;
   }
   .pt-toggle-on {
-    @apply bg-white text-emerald-900;
+    @apply bg-surface text-ink-heading;
   }
   .pt-toggle-off {
-    @apply bg-emerald-700 text-emerald-50 hover:bg-emerald-600;
+    @apply bg-felt-rail text-onfelt hover:bg-accent;
   }
 
   /* Utility: hide the scrollbar on the horizontally-scrollable mobile nav

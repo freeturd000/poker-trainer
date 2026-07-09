@@ -14,7 +14,7 @@ export default function EtiquetteReference() {
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-center text-sm text-emerald-200">
+      <p className="text-center text-sm text-onfelt-2">
         The in-person basics that trip up first-timers. Skim before your first session.
       </p>
 
@@ -24,17 +24,17 @@ export default function EtiquetteReference() {
           <div key={section.id} className="overflow-hidden pt-card">
             <button
               onClick={() => toggle(section.id)}
-              className="flex w-full items-center justify-between bg-emerald-700 px-5 py-3 text-left"
+              className="flex w-full items-center justify-between bg-felt-rail px-5 py-3 text-left"
             >
-              <span className="font-bold text-white">{section.title}</span>
-              <span className="text-emerald-100">{isCollapsed ? '+' : '−'}</span>
+              <span className="font-bold text-onfelt">{section.title}</span>
+              <span className="text-onfelt-2">{isCollapsed ? '+' : '−'}</span>
             </button>
             {!isCollapsed && (
-              <dl className="divide-y divide-gray-100">
+              <dl className="divide-y divide-line">
                 {section.items.map((item) => (
                   <div key={item.id} className="px-5 py-3">
-                    <dt className="text-sm font-bold text-emerald-900">{item.term}</dt>
-                    <dd className="mt-1 text-sm leading-relaxed text-gray-700">{item.body}</dd>
+                    <dt className="text-sm font-bold text-ink-heading">{item.term}</dt>
+                    <dd className="mt-1 text-sm leading-relaxed text-ink-body">{item.body}</dd>
                   </div>
                 ))}
               </dl>
@@ -43,7 +43,7 @@ export default function EtiquetteReference() {
         )
       })}
 
-      <p className="px-2 text-center text-[11px] text-emerald-400">
+      <p className="px-2 text-center text-[11px] text-onfelt-4">
         Rules and room policies vary by casino and jurisdiction — when in doubt, ask your dealer or
         the floor. This is a primer, not the house rulebook.
       </p>

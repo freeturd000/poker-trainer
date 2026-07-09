@@ -16,3 +16,4 @@ export {
   setBankroll,
   clearLiveToolkit,
 } from './liveToolkit.js'
+export { getTheme, setTheme, applyTheme, DEFAULT_THEME } from './theme.js'

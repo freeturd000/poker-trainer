@@ -26,22 +26,22 @@ function Stepper({ label, value, onChange, step, min }) {
   const set = (v) => onChange(Math.max(min, v))
   return (
     <div className="flex-1">
-      <div className="text-xs font-semibold uppercase tracking-wide text-gray-400">{label}</div>
+      <div className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{label}</div>
       <div className="mt-1 flex items-center gap-2">
         <button
           onClick={() => set(value - step)}
           aria-label={`Decrease ${label}`}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-lg font-bold text-emerald-700 transition hover:bg-emerald-100"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-inset text-lg font-bold text-accent-text transition hover:bg-accent-soft"
         >
           −
         </button>
-        <div className="min-w-[3.5rem] flex-1 text-center font-mono text-xl font-bold text-emerald-900">
+        <div className="min-w-[3.5rem] flex-1 text-center font-mono text-xl font-bold text-ink-heading">
           ${value}
         </div>
         <button
           onClick={() => set(value + step)}
           aria-label={`Increase ${label}`}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-lg font-bold text-emerald-700 transition hover:bg-emerald-100"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-inset text-lg font-bold text-accent-text transition hover:bg-accent-soft"
         >
           +
         </button>
@@ -65,7 +65,7 @@ export default function PotOddsCalc() {
   const setFraction = (f) => setBet(Math.max(1, Math.round(pot * f)))
 
   return (
-    <div className="not-prose mt-4 rounded-xl border border-gray-200 bg-gray-50 p-4">
+    <div className="not-prose mt-4 rounded-xl border border-line bg-surface-sunken-soft p-4">
       {/* Steppers */}
       <div className="flex gap-4">
         <Stepper label="Pot (before bet)" value={pot} onChange={setPot} step={5} min={5} />
@@ -74,14 +74,14 @@ export default function PotOddsCalc() {
 
       {/* Quick bet-size presets */}
       <div className="mt-4">
-        <div className="text-xs font-semibold uppercase tracking-wide text-gray-400">Quick bet size (of pot)</div>
+        <div className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Quick bet size (of pot)</div>
         <div className="mt-1.5 flex gap-1.5">
           {SHORTCUTS.map((s, i) => (
             <button
               key={s.label}
               onClick={() => setFraction(s.frac)}
               className={`flex-1 rounded-lg py-2 text-sm font-semibold transition ${
-                i === activeIdx ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                i === activeIdx ? 'bg-accent text-onfelt' : 'bg-surface-inset text-accent-text hover:bg-accent-soft'
               }`}
             >
               {s.label}
@@ -92,26 +92,26 @@ export default function PotOddsCalc() {
 
       {/* Live result */}
       <div className="mt-4 grid grid-cols-2 gap-3">
-        <div className="rounded-lg border border-gray-200 bg-white p-3 text-center">
-          <div className="text-xs font-semibold uppercase tracking-wide text-gray-400">To call</div>
-          <div className="mt-0.5 font-mono text-2xl font-bold text-emerald-900">${call}</div>
-          <div className="mt-0.5 text-xs text-gray-500">to win the ${potNow} pot</div>
+        <div className="rounded-lg border border-line bg-surface p-3 text-center">
+          <div className="text-xs font-semibold uppercase tracking-wide text-ink-muted">To call</div>
+          <div className="mt-0.5 font-mono text-2xl font-bold text-ink-heading">${call}</div>
+          <div className="mt-0.5 text-xs text-ink-muted">to win the ${potNow} pot</div>
         </div>
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-center">
-          <div className="text-xs font-semibold uppercase tracking-wide text-emerald-500">Equity needed</div>
-          <div className="mt-0.5 font-mono text-2xl font-bold text-emerald-700">{required.toFixed(1)}%</div>
-          <div className="mt-0.5 text-xs text-emerald-600">
+        <div className="rounded-lg border border-line bg-surface-inset p-3 text-center">
+          <div className="text-xs font-semibold uppercase tracking-wide text-accent-text">Equity needed</div>
+          <div className="mt-0.5 font-mono text-2xl font-bold text-accent-text">{required.toFixed(1)}%</div>
+          <div className="mt-0.5 text-xs text-accent-text">
             {call} ÷ ({call} + {potNow})
           </div>
         </div>
       </div>
 
       {/* Shortcut readout */}
-      <p className="mt-3 text-center text-sm text-gray-600">
+      <p className="mt-3 text-center text-sm text-ink-body">
         {activeIdx >= 0 ? (
           <>
-            That’s a <b className="font-semibold text-emerald-700">{SHORTCUTS[activeIdx].label}-pot bet</b> — the
-            shortcut says <b className="font-semibold text-emerald-700">~{SHORTCUTS[activeIdx].pct}%</b>, and the exact
+            That’s a <b className="font-semibold text-accent-text">{SHORTCUTS[activeIdx].label}-pot bet</b> — the
+            shortcut says <b className="font-semibold text-accent-text">~{SHORTCUTS[activeIdx].pct}%</b>, and the exact
             figure is {required.toFixed(1)}%.
           </>
         ) : (

@@ -15,7 +15,7 @@ export function signedMoney(n) {
 
 /** Tailwind text color for a profit figure: green up, red down, neutral zero. */
 export function profitColor(n) {
-  if (n > 0) return 'text-emerald-600'
-  if (n < 0) return 'text-rose-600'
-  return 'text-gray-600'
+  if (n > 0) return 'text-accent-text'
+  if (n < 0) return 'text-danger'
+  return 'text-ink-body'
 }

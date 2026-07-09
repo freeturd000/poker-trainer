@@ -60,10 +60,10 @@ const LAYOUT = {
 const ORDER = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB']
 
 const CHIP_STYLES = {
-  in: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  out: 'bg-amber-100 text-amber-800 border-amber-200',
-  mid: 'bg-gray-100 text-gray-600 border-gray-200',
-  neutral: 'bg-gray-100 text-gray-600 border-gray-200',
+  in: 'bg-accent-soft text-accent-text border-line',
+  out: 'bg-gold-soft text-gold-ink border-gold/40',
+  mid: 'bg-surface-sunken text-ink-body border-line',
+  neutral: 'bg-surface-sunken text-ink-body border-line',
 }
 
 export default function PositionDiagram() {
@@ -71,47 +71,46 @@ export default function PositionDiagram() {
   const d = SEATS[selected]
 
   return (
-    <div className="not-prose mt-4 rounded-xl border border-gray-200 bg-gray-50 p-3 sm:p-4">
+    <div className="not-prose mt-4 rounded-xl border border-line bg-surface-sunken-soft p-3 sm:p-4">
       <svg
         viewBox="0 0 680 430"
         role="img"
         aria-label="6-max poker table with six clickable seats around the dealer button"
         className="block h-auto w-full"
       >
-        {/* Felt */}
-        <ellipse cx="340" cy="210" rx="200" ry="110" fill="#047857" stroke="#065f46" strokeWidth="2" />
-        <text x="340" y="200" textAnchor="middle" dominantBaseline="central" fontSize="15" fontWeight="600" fill="#a7f3d0">
+        {/* Felt — themed via fill/stroke token classes so it tracks light/dark. */}
+        <ellipse cx="340" cy="210" rx="200" ry="110" className="fill-felt-rail stroke-line-felt" strokeWidth="2" />
+        <text x="340" y="200" textAnchor="middle" dominantBaseline="central" fontSize="15" fontWeight="600" className="fill-onfelt-2">
           6-max table
         </text>
-        <text x="340" y="224" textAnchor="middle" dominantBaseline="central" fontSize="12" fill="#6ee7b7">
+        <text x="340" y="224" textAnchor="middle" dominantBaseline="central" fontSize="12" className="fill-onfelt-3">
           action moves clockwise
         </text>
 
         {/* Dealer button token */}
-        <circle cx="428" cy="300" r="13" fill="#fbbf24" />
-        <text x="428" y="300" textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill="#1f2937">
+        <circle cx="428" cy="300" r="13" className="fill-gold" />
+        <text x="428" y="300" textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" className="fill-felt-deep">
           D
         </text>
 
-        {/* Role labels */}
+        {/* Role labels (sit on the panel, not the felt) */}
         {ORDER.map((pos) => {
           const role = LAYOUT[pos].role
           return role ? (
-            <text key={`role-${pos}`} x={role.x} y={role.y} textAnchor="middle" fontSize="11" fill="#9ca3af">
+            <text key={`role-${pos}`} x={role.x} y={role.y} textAnchor="middle" fontSize="11" className="fill-ink-muted">
               {role.text}
             </text>
           ) : null
         })}
 
-        {/* Seats */}
+        {/* Seats — kept as light card faces (readable on the felt in both themes),
+            so their ink/edge stay fixed; the button + selection read via gold. */}
         {ORDER.map((pos) => {
           const { x, y } = LAYOUT[pos]
           const isSel = pos === selected
           const isBtn = pos === 'BTN'
-          const fill = isBtn ? '#fffbeb' : '#ffffff'
-          const stroke = isSel ? '#f59e0b' : isBtn ? '#f59e0b' : '#d1d5db'
+          const strokeCls = isSel || isBtn ? 'stroke-gold' : 'stroke-card-edge'
           const strokeW = isSel ? 3 : 1.5
-          const posColor = isBtn ? '#b45309' : '#065f46'
           const cx = x + 42
           return (
             <g
@@ -128,11 +127,11 @@ export default function PositionDiagram() {
                 }
               }}
             >
-              <rect x={x} y={y} width="84" height="50" rx="8" fill={fill} stroke={stroke} strokeWidth={strokeW} />
-              <text x={cx} y={y + 19} textAnchor="middle" dominantBaseline="central" fontSize="15" fontWeight="700" fill={posColor}>
+              <rect x={x} y={y} width="84" height="50" rx="8" className={`fill-card-face ${strokeCls}`} strokeWidth={strokeW} />
+              <text x={cx} y={y + 19} textAnchor="middle" dominantBaseline="central" fontSize="15" fontWeight="700" className="fill-card-ink">
                 {pos}
               </text>
-              <text x={cx} y={y + 36} textAnchor="middle" dominantBaseline="central" fontSize="11" fill="#6b7280">
+              <text x={cx} y={y + 36} textAnchor="middle" dominantBaseline="central" fontSize="11" className="fill-card-ink opacity-60">
                 {SEATS[pos].chips[0].toLowerCase()}
               </text>
             </g>
@@ -140,11 +139,11 @@ export default function PositionDiagram() {
         })}
       </svg>
 
-      <p className="mt-1 text-center text-xs text-gray-400">Tap any seat for the full breakdown</p>
+      <p className="mt-1 text-center text-xs text-ink-muted">Tap any seat for the full breakdown</p>
 
       {/* Detail panel */}
-      <div className="mt-2 rounded-lg border border-gray-200 bg-white p-4">
-        <p className="text-lg font-bold text-emerald-900">{d.name}</p>
+      <div className="mt-2 rounded-lg border border-line bg-surface p-4">
+        <p className="text-lg font-bold text-ink-heading">{d.name}</p>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {d.chips.map((c, i) => (
             <span
@@ -157,7 +156,7 @@ export default function PositionDiagram() {
             </span>
           ))}
         </div>
-        <p className="mt-3 text-sm leading-relaxed text-gray-600">{d.note}</p>
+        <p className="mt-3 text-sm leading-relaxed text-ink-body">{d.note}</p>
       </div>
     </div>
   )

@@ -37,9 +37,9 @@ const ACTIONS = {
 
 // Static class strings per tone so Tailwind's scanner keeps them.
 const TONE_CLASS = {
-  emerald: 'bg-emerald-500 hover:bg-emerald-400',
-  sky: 'bg-sky-500 hover:bg-sky-400',
-  rose: 'bg-rose-500 hover:bg-rose-400',
+  emerald: 'bg-accent-hover hover:bg-accent-bright',
+  sky: 'bg-info hover:bg-info-bright',
+  rose: 'bg-danger-solid hover:bg-danger-hover',
 }
 
 // Human labels for a graded action (used in the result banner).
@@ -140,7 +140,7 @@ export default function RangeTrainer() {
           6-max cash · {MODE_OPTIONS.find((m) => m.id === mode).blurb}
         </p>
 
-        <p className="mt-6 text-sm text-emerald-200">Choose a mode:</p>
+        <p className="mt-6 text-sm text-onfelt-2">Choose a mode:</p>
         <div className="mt-2 flex flex-wrap justify-center gap-2">
           {MODE_OPTIONS.map((opt) => {
             const active = mode === opt.id
@@ -156,7 +156,7 @@ export default function RangeTrainer() {
           })}
         </div>
 
-        <p className="mt-6 text-sm text-emerald-200">
+        <p className="mt-6 text-sm text-onfelt-2">
           {mode === 'bbdef' ? 'Choose a raiser to defend against:' : 'Choose a seat to drill:'}
         </p>
         <div className="mt-2 flex flex-wrap justify-center gap-2">
@@ -174,7 +174,7 @@ export default function RangeTrainer() {
           })}
         </div>
 
-        <p className="mt-6 text-sm text-emerald-200">Choose a session length:</p>
+        <p className="mt-6 text-sm text-onfelt-2">Choose a session length:</p>
         <div className="mt-2 flex flex-wrap justify-center gap-3">
           {SESSION_LENGTHS.map((len) => (
             <button
@@ -187,29 +187,29 @@ export default function RangeTrainer() {
           ))}
         </div>
         <div className="mt-6 flex flex-col items-center gap-1">
-          <p className="text-xs text-emerald-300">Lifetime accuracy: {lifetime.toFixed(1)}%</p>
+          <p className="text-xs text-onfelt-3">Lifetime accuracy: {lifetime.toFixed(1)}%</p>
           {!confirmingReset ? (
             <button
               onClick={() => setConfirmingReset(true)}
-              className="text-xs text-emerald-400 underline underline-offset-2 hover:text-emerald-200"
+              className="text-xs text-onfelt-4 underline underline-offset-2 hover:text-onfelt-2"
             >
               Reset lifetime stats
             </button>
           ) : (
-            <div className="mt-1 flex flex-col items-center gap-2 rounded-lg bg-emerald-950/40 px-4 py-3">
-              <p className="max-w-xs text-center text-xs text-emerald-100">
+            <div className="mt-1 flex flex-col items-center gap-2 rounded-lg bg-panel/40 px-4 py-3">
+              <p className="max-w-xs text-center text-xs text-onfelt-2">
                 This clears all saved progress and leaks for the range trainer — are you sure?
               </p>
               <div className="flex gap-2">
                 <button
                   onClick={confirmReset}
-                  className="rounded-lg bg-rose-500 px-3 py-1.5 text-xs font-semibold text-white shadow hover:bg-rose-400"
+                  className="rounded-lg bg-danger-solid px-3 py-1.5 text-xs font-semibold text-onfelt shadow hover:bg-danger-hover"
                 >
                   Yes, reset
                 </button>
                 <button
                   onClick={() => setConfirmingReset(false)}
-                  className="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-emerald-900 shadow hover:bg-emerald-50"
+                  className="rounded-lg bg-surface px-3 py-1.5 text-xs font-semibold text-ink-heading shadow hover:bg-surface-inset"
                 >
                   Cancel
                 </button>
@@ -227,24 +227,24 @@ export default function RangeTrainer() {
       <Shell>
         <h1 className="pt-title">Session complete</h1>
         <div className="mt-4 pt-card p-5 text-center">
-          <div className="text-4xl font-bold text-emerald-700">{sessionAcc.toFixed(0)}%</div>
-          <div className="text-sm text-gray-600">
+          <div className="text-4xl font-bold text-accent-text">{sessionAcc.toFixed(0)}%</div>
+          <div className="text-sm text-ink-body">
             {stats.correct}/{stats.answered} correct · lifetime {lifetime.toFixed(1)}%
           </div>
         </div>
 
         <div className="mt-4 w-full max-w-sm pt-card p-4">
-          <div className="text-sm font-semibold text-gray-800">Worst spots this session</div>
+          <div className="text-sm font-semibold text-ink">Worst spots this session</div>
           {worstLeaks.length === 0 ? (
-            <div className="mt-1 text-sm text-emerald-700">No misses — clean session! 🎉</div>
+            <div className="mt-1 text-sm text-accent-text">No misses — clean session! 🎉</div>
           ) : (
-            <ul className="mt-2 space-y-1 text-sm text-gray-700">
+            <ul className="mt-2 space-y-1 text-sm text-ink-body">
               {worstLeaks.map((l) => (
                 <li key={`${l.position}_${l.token}`} className="flex justify-between">
                   <span>
                     {l.position} · {l.token}
                   </span>
-                  <span className="tabular-nums text-red-600">×{l.count}</span>
+                  <span className="tabular-nums text-danger">×{l.count}</span>
                 </li>
               ))}
             </ul>
@@ -265,7 +265,7 @@ export default function RangeTrainer() {
   const handNo = Math.min(stats.answered + (selection ? 0 : 1), length)
   return (
     <Shell>
-      <div className="flex w-full max-w-md items-center justify-between text-sm text-emerald-100">
+      <div className="flex w-full max-w-md items-center justify-between text-sm text-onfelt-2">
         <span>
           Hand {handNo} / {length}
         </span>
@@ -275,13 +275,13 @@ export default function RangeTrainer() {
       </div>
 
       <div className="mt-6 flex flex-col items-center gap-1">
-        <span className="text-emerald-200 text-sm uppercase tracking-wide">
+        <span className="text-onfelt-2 text-sm uppercase tracking-wide">
           {mode === 'bbdef' ? 'You are in the BB vs an open from' : 'You are in'}
         </span>
-        <span className="rounded-lg bg-emerald-950/40 px-4 py-1 text-2xl font-bold text-white">
+        <span className="rounded-lg bg-panel/40 px-4 py-1 text-2xl font-bold text-onfelt">
           {spot.position}
         </span>
-        <span className="text-xs text-emerald-300">
+        <span className="text-xs text-onfelt-3">
           {mode === 'bbdef'
             ? seat
               ? `defending vs ${seat} · fixed this session`
@@ -303,7 +303,7 @@ export default function RangeTrainer() {
             <button
               key={a.id}
               onClick={() => answer(a.id)}
-              className={`rounded-xl px-7 py-3 text-lg font-bold text-white shadow transition ${TONE_CLASS[a.tone]}`}
+              className={`rounded-xl px-7 py-3 text-lg font-bold text-onfelt shadow transition ${TONE_CLASS[a.tone]}`}
             >
               {a.label}
             </button>
@@ -313,18 +313,18 @@ export default function RangeTrainer() {
         <div className="mt-8 flex w-full max-w-md flex-col items-center gap-3">
           <div
             className={`w-full rounded-xl p-4 text-center shadow-lg ${
-              result.correct ? 'bg-emerald-50' : 'bg-rose-50'
+              result.correct ? 'bg-surface-inset' : 'bg-danger-soft'
             }`}
           >
             <div
               className={`text-lg font-bold ${
-                result.correct ? 'text-emerald-700' : 'text-rose-700'
+                result.correct ? 'text-accent-text' : 'text-danger-text'
               }`}
             >
               {result.correct ? 'Correct' : 'Incorrect'} — {spot.token} is a{' '}
               {ACTION_LABEL[result.correctAction].toUpperCase()}
             </div>
-            {!result.correct && <div className="mt-1 text-sm text-gray-700">{result.why}</div>}
+            {!result.correct && <div className="mt-1 text-sm text-ink-body">{result.why}</div>}
           </div>
           <button onClick={next} className="pt-btn pt-btn-light">
             {stats.answered >= length ? 'See summary' : 'Next hand'}

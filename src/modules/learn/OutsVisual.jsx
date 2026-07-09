@@ -40,21 +40,21 @@ export default function OutsVisual() {
   const next = () => setIdx((i) => (i + 1) % EXAMPLES.length)
 
   return (
-    <div className="not-prose mt-4 rounded-xl border border-gray-200 bg-gray-50 p-4">
+    <div className="not-prose mt-4 rounded-xl border border-line bg-surface-sunken-soft p-4">
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-sm font-bold text-emerald-900">{info.label}</div>
-          <div className="text-xs text-gray-500">
+          <div className="text-sm font-bold text-ink-heading">{info.label}</div>
+          <div className="text-xs text-ink-muted">
             Example {idx + 1} of {EXAMPLES.length}
           </div>
         </div>
-        <span className="rounded-lg bg-emerald-600 px-3 py-1.5 text-sm font-bold text-white">{info.outs} outs</span>
+        <span className="rounded-lg bg-accent px-3 py-1.5 text-sm font-bold text-onfelt">{info.outs} outs</span>
       </div>
 
       {/* Hand + board */}
       <div className="mt-4 flex flex-col items-center gap-3">
         <div className="flex flex-col items-center gap-1">
-          <span className="text-xs uppercase tracking-wide text-gray-400">Your hand</span>
+          <span className="text-xs uppercase tracking-wide text-ink-muted">Your hand</span>
           <div className="flex gap-1.5">
             {tmpl.hole.map((c) => (
               <Card key={c} card={c} size="sm" />
@@ -62,7 +62,7 @@ export default function OutsVisual() {
           </div>
         </div>
         <div className="flex flex-col items-center gap-1">
-          <span className="text-xs uppercase tracking-wide text-gray-400">Board</span>
+          <span className="text-xs uppercase tracking-wide text-ink-muted">Board</span>
           <div className="flex gap-1.5">
             {tmpl.board.map((c) => (
               <Card key={c} card={c} size="sm" />
@@ -72,22 +72,22 @@ export default function OutsVisual() {
       </div>
 
       {/* The outs, shown explicitly */}
-      <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-3">
-        <div className="text-center text-xs font-semibold uppercase tracking-wide text-emerald-600">
+      <div className="mt-4 rounded-lg border border-line bg-surface-inset p-3">
+        <div className="text-center text-xs font-semibold uppercase tracking-wide text-accent-text">
           The {info.outs} outs — {ex.outsLabel}
         </div>
         <div className="mt-2 flex flex-wrap justify-center gap-1.5">
           {ex.outCards.map((c) => (
-            <Card key={c} card={c} size="sm" className="ring-2 ring-emerald-500 ring-offset-1 ring-offset-emerald-50" />
+            <Card key={c} card={c} size="sm" className="ring-2 ring-accent ring-offset-1 ring-offset-surface-inset" />
           ))}
         </div>
       </div>
 
-      <p className="mt-3 text-sm leading-relaxed text-gray-600">{info.why}</p>
+      <p className="mt-3 text-sm leading-relaxed text-ink-body">{info.why}</p>
 
       <button
         onClick={next}
-        className="mt-3 w-full rounded-lg bg-emerald-600 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500"
+        className="mt-3 w-full rounded-lg bg-accent py-2 text-sm font-semibold text-onfelt transition hover:bg-accent-hover"
       >
         Next example →
       </button>

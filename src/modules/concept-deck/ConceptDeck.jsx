@@ -31,10 +31,10 @@ const NEW_PER_SESSION = DEFAULT_NEW_PER_SESSION
 
 // Rating buttons, worst → best. `again` re-queues within the session (relearning).
 const RATING_BUTTONS = [
-  { key: 'again', label: 'Again', hint: 'Forgot it', className: 'bg-rose-500 hover:bg-rose-400' },
-  { key: 'hard', label: 'Hard', hint: 'Barely', className: 'bg-amber-500 hover:bg-amber-400' },
-  { key: 'good', label: 'Good', hint: 'Recalled', className: 'bg-emerald-500 hover:bg-emerald-400' },
-  { key: 'easy', label: 'Easy', hint: 'Instant', className: 'bg-sky-500 hover:bg-sky-400' },
+  { key: 'again', label: 'Again', hint: 'Forgot it', className: 'bg-danger-solid hover:bg-danger-hover' },
+  { key: 'hard', label: 'Hard', hint: 'Barely', className: 'bg-gold hover:bg-gold text-felt-deep' },
+  { key: 'good', label: 'Good', hint: 'Recalled', className: 'bg-accent-hover hover:bg-accent-bright' },
+  { key: 'easy', label: 'Easy', hint: 'Instant', className: 'bg-info hover:bg-info-bright' },
 ]
 
 const emptyStats = () => ({ reviewed: 0, recalled: 0, byRating: { again: 0, hard: 0, good: 0, easy: 0 } })
@@ -125,12 +125,12 @@ export default function ConceptDeck() {
         <p className="pt-subtitle">Spaced-repetition review of the core poker concepts</p>
 
         <div className="mt-6 grid w-full max-w-sm grid-cols-2 gap-3">
-          <CountTile value={counts.due} label="Due now" tone="text-white" />
-          <CountTile value={counts.fresh} label="New cards left" tone="text-emerald-200" />
+          <CountTile value={counts.due} label="Due now" tone="text-onfelt" />
+          <CountTile value={counts.fresh} label="New cards left" tone="text-onfelt-2" />
         </div>
 
         {nothingToDo ? (
-          <p className="mt-6 max-w-xs text-center text-sm text-emerald-200">
+          <p className="mt-6 max-w-xs text-center text-sm text-onfelt-2">
             You're all caught up — no cards due and none left to learn. Come back later as reviews
             come due. 🎉
           </p>
@@ -139,39 +139,39 @@ export default function ConceptDeck() {
             <button onClick={start} className="mt-6 pt-btn pt-btn-light">
               Start review · {sessionSize} card{sessionSize === 1 ? '' : 's'}
             </button>
-            <p className="mt-2 text-xs text-emerald-300">
+            <p className="mt-2 text-xs text-onfelt-3">
               {counts.due} due + up to {NEW_PER_SESSION} new per session
             </p>
           </>
         )}
 
         <div className="mt-8 flex flex-col items-center gap-1">
-          <p className="text-xs text-emerald-300">
+          <p className="text-xs text-onfelt-3">
             Lifetime recall: {lifetime.accuracy.toFixed(1)}% · {lifetime.attempts} reviews
           </p>
           {!confirmingReset ? (
             <button
               onClick={() => setConfirmingReset(true)}
-              className="text-xs text-emerald-400 underline underline-offset-2 hover:text-emerald-200"
+              className="text-xs text-onfelt-4 underline underline-offset-2 hover:text-onfelt-2"
             >
               Reset deck progress
             </button>
           ) : (
-            <div className="mt-1 flex flex-col items-center gap-2 rounded-lg bg-emerald-950/40 px-4 py-3">
-              <p className="max-w-xs text-center text-xs text-emerald-100">
+            <div className="mt-1 flex flex-col items-center gap-2 rounded-lg bg-panel/40 px-4 py-3">
+              <p className="max-w-xs text-center text-xs text-onfelt-2">
                 This clears every card's schedule and this deck's stats — all cards become new
                 again. Sure?
               </p>
               <div className="flex gap-2">
                 <button
                   onClick={confirmReset}
-                  className="rounded-lg bg-rose-500 px-3 py-1.5 text-xs font-semibold text-white shadow hover:bg-rose-400"
+                  className="rounded-lg bg-danger-solid px-3 py-1.5 text-xs font-semibold text-onfelt shadow hover:bg-danger-hover"
                 >
                   Yes, reset
                 </button>
                 <button
                   onClick={() => setConfirmingReset(false)}
-                  className="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-emerald-900 shadow hover:bg-emerald-50"
+                  className="rounded-lg bg-surface px-3 py-1.5 text-xs font-semibold text-ink-heading shadow hover:bg-surface-inset"
                 >
                   Cancel
                 </button>
@@ -190,26 +190,26 @@ export default function ConceptDeck() {
       <Shell>
         <h1 className="pt-title">Review complete</h1>
         {stats.reviewed === 0 ? (
-          <div className="mt-4 max-w-xs pt-card p-5 text-center text-sm text-emerald-800">
+          <div className="mt-4 max-w-xs pt-card p-5 text-center text-sm text-accent-text">
             Nothing was due — you're caught up. New reviews unlock as cards come due over the next
             days. 🎉
           </div>
         ) : (
           <>
             <div className="mt-4 pt-card p-5 text-center">
-              <div className="text-4xl font-bold text-emerald-700">{recallPct.toFixed(0)}%</div>
-              <div className="text-sm text-gray-600">
+              <div className="text-4xl font-bold text-accent-text">{recallPct.toFixed(0)}%</div>
+              <div className="text-sm text-ink-body">
                 recalled {stats.recalled}/{stats.reviewed} · lifetime {lifetime.accuracy.toFixed(1)}%
               </div>
             </div>
 
             <div className="mt-4 w-full max-w-sm pt-card p-4">
-              <div className="text-sm font-semibold text-gray-800">Ratings this session</div>
-              <ul className="mt-2 space-y-1 text-sm text-gray-700">
+              <div className="text-sm font-semibold text-ink">Ratings this session</div>
+              <ul className="mt-2 space-y-1 text-sm text-ink-body">
                 {RATING_BUTTONS.map((b) => (
                   <li key={b.key} className="flex justify-between">
                     <span>{b.label}</span>
-                    <span className="tabular-nums text-gray-600">{stats.byRating[b.key]}</span>
+                    <span className="tabular-nums text-ink-body">{stats.byRating[b.key]}</span>
                   </li>
                 ))}
               </ul>
@@ -228,7 +228,7 @@ export default function ConceptDeck() {
   const remaining = queue.length + 1 // cards left including the one on screen
   return (
     <Shell>
-      <div className="flex w-full max-w-md items-center justify-between text-sm text-emerald-100">
+      <div className="flex w-full max-w-md items-center justify-between text-sm text-onfelt-2">
         <span>{remaining} left this session</span>
         <span>
           {current.isNew ? 'New card' : 'Review'} · {current.card.category}
@@ -236,14 +236,14 @@ export default function ConceptDeck() {
       </div>
 
       <div className="mt-4 flex min-h-[14rem] w-full max-w-md flex-col items-center justify-center pt-card p-6 text-center">
-        <div className="text-xs font-semibold uppercase tracking-wide text-emerald-500">
+        <div className="text-xs font-semibold uppercase tracking-wide text-accent-text">
           {current.card.category}
         </div>
-        <div className="mt-3 text-lg font-bold text-gray-900">{current.card.front}</div>
+        <div className="mt-3 text-lg font-bold text-ink">{current.card.front}</div>
         {revealed && (
           <>
-            <div className="my-4 h-px w-2/3 bg-gray-200" />
-            <div className="text-sm leading-relaxed text-gray-700">{current.card.back}</div>
+            <div className="my-4 h-px w-2/3 bg-line" />
+            <div className="text-sm leading-relaxed text-ink-body">{current.card.back}</div>
           </>
         )}
       </div>
@@ -254,13 +254,13 @@ export default function ConceptDeck() {
         </button>
       ) : (
         <div className="mt-6 w-full max-w-md">
-          <p className="mb-2 text-center text-xs text-emerald-300">How well did you recall it?</p>
+          <p className="mb-2 text-center text-xs text-onfelt-3">How well did you recall it?</p>
           <div className="grid grid-cols-4 gap-2">
             {RATING_BUTTONS.map((b) => (
               <button
                 key={b.key}
                 onClick={() => rate(b.key)}
-                className={`flex flex-col items-center rounded-xl px-2 py-3 font-bold text-white shadow transition ${b.className}`}
+                className={`flex flex-col items-center rounded-xl px-2 py-3 font-bold text-onfelt shadow transition ${b.className}`}
               >
                 <span>{b.label}</span>
                 <span className="mt-0.5 text-[10px] font-medium opacity-90">
@@ -279,7 +279,7 @@ function CountTile({ value, label, tone }) {
   return (
     <div className="flex flex-col items-center pt-card-dark p-4 text-center">
       <span className={`text-3xl font-bold tabular-nums ${tone}`}>{value}</span>
-      <span className="mt-1 text-xs uppercase tracking-wide text-emerald-300">{label}</span>
+      <span className="mt-1 text-xs uppercase tracking-wide text-onfelt-3">{label}</span>
     </div>
   )
 }

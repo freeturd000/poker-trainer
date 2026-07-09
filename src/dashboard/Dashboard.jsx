@@ -79,11 +79,11 @@ function computeReadiness(progress) {
 
 // Qualitative band for the readiness number — keeps it honest at the low end.
 function readinessBand(score) {
-  if (score < 20) return { label: 'Just getting started', color: 'text-emerald-300' }
-  if (score < 40) return { label: 'Building fundamentals', color: 'text-emerald-200' }
-  if (score < 65) return { label: 'Getting there', color: 'text-emerald-100' }
-  if (score < 85) return { label: 'Looking solid', color: 'text-white' }
-  return { label: 'Table-ready — keep sharp', color: 'text-white' }
+  if (score < 20) return { label: 'Just getting started', color: 'text-onfelt-3' }
+  if (score < 40) return { label: 'Building fundamentals', color: 'text-onfelt-2' }
+  if (score < 65) return { label: 'Getting there', color: 'text-onfelt-2' }
+  if (score < 85) return { label: 'Looking solid', color: 'text-onfelt' }
+  return { label: 'Table-ready — keep sharp', color: 'text-onfelt' }
 }
 
 // Turn a raw leak-log entry into something readable + routable. Module is inferred
@@ -137,39 +137,39 @@ export default function Dashboard({ onNavigate }) {
       <div className="pt-rail">
         <header className="mb-6 text-center">
           <h1 className="pt-title">Poker Trainer</h1>
-          <p className="mt-1 text-sm text-emerald-200">Your nightly drill dashboard</p>
+          <p className="mt-1 text-sm text-onfelt-2">Your nightly drill dashboard</p>
         </header>
 
         {/* Readiness + streak */}
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="pt-card-dark p-5 sm:col-span-2">
             <div className="flex items-baseline justify-between">
-              <span className="text-sm font-semibold uppercase tracking-wide text-emerald-300">
+              <span className="text-sm font-semibold uppercase tracking-wide text-onfelt-3">
                 Table readiness
               </span>
               <span className={`text-3xl font-bold tabular-nums ${band.color}`}>
                 {Math.round(data.readiness)}
               </span>
             </div>
-            <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-emerald-900">
+            <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-felt-deep">
               <div
-                className="h-full rounded-full bg-emerald-400 transition-all"
+                className="h-full rounded-full bg-accent-bright transition-all"
                 style={{ width: `${Math.min(data.readiness, 100)}%` }}
               />
             </div>
             <div className={`mt-2 text-sm font-semibold ${band.color}`}>{band.label}</div>
-            <p className="mt-1 text-xs text-emerald-400">
+            <p className="mt-1 text-xs text-onfelt-4">
               A rough progress signal (range + odds accuracy, weighted by volume) — not a real-money guarantee.
             </p>
           </div>
 
           <div className="flex flex-col items-center justify-center pt-card-dark p-5 text-center">
             <span className="text-4xl">{data.streak > 0 ? '🔥' : '🌙'}</span>
-            <span className="mt-1 text-3xl font-bold tabular-nums text-white">{data.streak}</span>
-            <span className="text-xs uppercase tracking-wide text-emerald-300">
+            <span className="mt-1 text-3xl font-bold tabular-nums text-onfelt">{data.streak}</span>
+            <span className="text-xs uppercase tracking-wide text-onfelt-3">
               day{data.streak === 1 ? '' : 's'} streak
             </span>
-            <span className="mt-1 text-[11px] text-emerald-400">
+            <span className="mt-1 text-[11px] text-onfelt-4">
               {data.streak > 0 ? 'Drill tonight to keep it alive' : 'Play today to start one'}
             </span>
           </div>
@@ -180,20 +180,20 @@ export default function Dashboard({ onNavigate }) {
             doesn't feed readiness. */}
         <button
           onClick={() => onNavigate('learn')}
-          className="mb-6 flex w-full items-center gap-4 pt-card-dark p-5 text-left transition hover:bg-emerald-950/60"
+          className="mb-6 flex w-full items-center gap-4 pt-card-dark p-5 text-left transition hover:bg-panel/60"
         >
           <span className="text-3xl" aria-hidden="true">📖</span>
           <span className="min-w-0 flex-1">
-            <span className="block text-lg font-bold text-white">Learn</span>
-            <span className="block text-sm text-emerald-200">
+            <span className="block text-lg font-bold text-onfelt">Learn</span>
+            <span className="block text-sm text-onfelt-2">
               The guided six-phase path — read the theory behind each trainer.
             </span>
           </span>
-          <span className="shrink-0 text-xl text-emerald-400" aria-hidden="true">›</span>
+          <span className="shrink-0 text-xl text-onfelt-4" aria-hidden="true">›</span>
         </button>
 
         {/* Module tiles */}
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-emerald-300">Modules</h2>
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-onfelt-3">Modules</h2>
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {MODULES.map((m) => (
             <ModuleTile
@@ -208,27 +208,27 @@ export default function Dashboard({ onNavigate }) {
         </div>
 
         {/* Top leaks */}
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-emerald-300">Top leaks</h2>
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-onfelt-3">Top leaks</h2>
         <div className="pt-card p-4">
           {data.leaks.length === 0 ? (
-            <p className="py-4 text-center text-sm text-emerald-700">
+            <p className="py-4 text-center text-sm text-accent-text">
               No leaks logged yet — play a session and your weakest spots will surface here. 🎯
             </p>
           ) : (
-            <ul className="divide-y divide-gray-100">
+            <ul className="divide-y divide-line">
               {data.leaks.map((leak) => {
                 const d = describeLeak(leak)
                 return (
                   <li key={leak.tag} className="flex items-center justify-between gap-3 py-2.5">
                     <div className="min-w-0">
-                      <div className="truncate text-sm font-semibold text-gray-800">{d.text}</div>
-                      <div className="text-xs text-gray-500">
+                      <div className="truncate text-sm font-semibold text-ink">{d.text}</div>
+                      <div className="text-xs text-ink-muted">
                         {d.module} · missed ×{leak.count}
                       </div>
                     </div>
                     <button
                       onClick={() => onNavigate(d.view)}
-                      className="shrink-0 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow hover:bg-emerald-500"
+                      className="shrink-0 rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-onfelt shadow hover:bg-accent-hover"
                     >
                       Drill this
                     </button>
@@ -249,17 +249,17 @@ function ModuleTile({ module, progress, onNavigate, badge = null, summary = null
   return (
     <button
       onClick={() => onNavigate(module.view)}
-      className="flex flex-col pt-card p-5 text-left transition hover:bg-white"
+      className="flex flex-col pt-card p-5 text-left transition hover:bg-surface-raised"
     >
       <div className="flex items-center justify-between gap-2">
-        <div className="text-lg font-bold text-emerald-900">{module.name}</div>
+        <div className="text-lg font-bold text-ink-heading">{module.name}</div>
         {badge && (
-          <span className="shrink-0 rounded-full bg-emerald-600 px-2.5 py-0.5 text-xs font-semibold text-white">
+          <span className="shrink-0 rounded-full bg-accent px-2.5 py-0.5 text-xs font-semibold text-onfelt">
             {badge}
           </span>
         )}
       </div>
-      <div className="text-xs text-gray-500">{module.blurb}</div>
+      <div className="text-xs text-ink-muted">{module.blurb}</div>
 
       {module.kind === 'reference' ? (
         <ReferenceTileBody summary={summary} />
@@ -270,9 +270,9 @@ function ModuleTile({ module, progress, onNavigate, badge = null, summary = null
           <Stat value={progress.bestStreak} label="Best streak" />
         </div>
       ) : (
-        <div className="mt-4 rounded-lg bg-emerald-50 px-3 py-4 text-center">
-          <div className="text-sm font-semibold text-emerald-700">Not started</div>
-          <div className="text-xs text-emerald-600">Drill now →</div>
+        <div className="mt-4 rounded-lg bg-surface-inset px-3 py-4 text-center">
+          <div className="text-sm font-semibold text-accent-text">Not started</div>
+          <div className="text-xs text-accent-text">Drill now →</div>
         </div>
       )}
     </button>
@@ -285,14 +285,14 @@ function ReferenceTileBody({ summary }) {
   const s = summary ?? { sessions: 0, net: 0, bankroll: 0, stake: null }
   if (s.sessions === 0 && !s.bankroll) {
     return (
-      <div className="mt-4 rounded-lg bg-emerald-50 px-3 py-4 text-center">
-        <div className="text-sm font-semibold text-emerald-700">Not set up</div>
-        <div className="text-xs text-emerald-600">Log a session or set your roll →</div>
+      <div className="mt-4 rounded-lg bg-surface-inset px-3 py-4 text-center">
+        <div className="text-sm font-semibold text-accent-text">Not set up</div>
+        <div className="text-xs text-accent-text">Log a session or set your roll →</div>
       </div>
     )
   }
   const netStr = `${s.net > 0 ? '+' : s.net < 0 ? '−' : ''}$${Math.abs(Math.round(s.net)).toLocaleString('en-US')}`
-  const netTone = s.net > 0 ? 'text-emerald-700' : s.net < 0 ? 'text-rose-600' : 'text-emerald-800'
+  const netTone = s.net > 0 ? 'text-accent-text' : s.net < 0 ? 'text-danger' : 'text-accent-text'
   return (
     <div className="mt-4 grid grid-cols-3 gap-2 text-center">
       <Stat value={s.sessions} label="Sessions" />
@@ -303,14 +303,14 @@ function ReferenceTileBody({ summary }) {
 }
 
 function Stat({ value, label }) {
-  return <StatTone value={value} label={label} tone="text-emerald-800" />
+  return <StatTone value={value} label={label} tone="text-accent-text" />
 }
 
 function StatTone({ value, label, tone }) {
   return (
     <div>
       <div className={`text-xl font-bold tabular-nums ${tone}`}>{value}</div>
-      <div className="text-[11px] uppercase tracking-wide text-gray-500">{label}</div>
+      <div className="text-[11px] uppercase tracking-wide text-ink-muted">{label}</div>
     </div>
   )
 }

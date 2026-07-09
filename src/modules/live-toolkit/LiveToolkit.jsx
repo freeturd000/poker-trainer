@@ -25,7 +25,7 @@ export default function LiveToolkit() {
       <div className="pt-rail">
         <header className="mb-4 text-center">
           <h1 className="pt-title">Live Play Toolkit</h1>
-          <p className="mt-1 text-sm text-emerald-200">
+          <p className="mt-1 text-sm text-onfelt-2">
             Track sessions, manage your roll, and brush up on live etiquette
           </p>
         </header>

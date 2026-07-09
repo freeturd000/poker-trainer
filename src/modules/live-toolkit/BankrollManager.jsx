@@ -24,15 +24,15 @@ import { computeSessionStats } from './stats.js'
 import { money, signedMoney, profitColor } from './format.js'
 
 const BADGE_TONE = {
-  good: 'bg-emerald-100 text-emerald-800',
-  warn: 'bg-amber-100 text-amber-800',
-  bad: 'bg-rose-100 text-rose-700',
+  good: 'bg-accent-soft text-accent-text',
+  warn: 'bg-gold-soft text-gold-ink',
+  bad: 'bg-danger-soft text-danger-text',
 }
 
 const ROW_TONE = {
-  comfortable: 'bg-emerald-50',
-  minimum: 'bg-amber-50',
-  under: 'bg-white',
+  comfortable: 'bg-surface-inset',
+  minimum: 'bg-gold-soft',
+  under: 'bg-surface',
 }
 
 export default function BankrollManager() {
@@ -57,14 +57,14 @@ export default function BankrollManager() {
     <div className="flex flex-col gap-6">
       {/* Set bankroll */}
       <div className="pt-card p-5">
-        <div className="text-sm font-semibold text-gray-800">Current bankroll</div>
+        <div className="text-sm font-semibold text-ink">Current bankroll</div>
         <div className="mt-3 flex flex-wrap items-end gap-3">
           <label className="flex flex-col gap-1">
-            <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+            <span className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">
               Amount ($)
             </span>
             <div className="flex items-center">
-              <span className="mr-1 text-lg font-bold text-gray-500">$</span>
+              <span className="mr-1 text-lg font-bold text-ink-muted">$</span>
               <input
                 type="number"
                 inputMode="decimal"
@@ -72,13 +72,13 @@ export default function BankrollManager() {
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 placeholder="5000"
-                className="w-40 rounded-lg border border-gray-300 px-3 py-2 text-lg font-bold text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                className="w-40 rounded-lg border border-line-strong bg-surface px-3 py-2 text-lg font-bold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
               />
             </div>
           </label>
           <button
             onClick={save}
-            className="rounded-xl bg-emerald-600 px-6 py-2.5 font-semibold text-white shadow hover:bg-emerald-500"
+            className="rounded-xl bg-accent px-6 py-2.5 font-semibold text-onfelt shadow hover:bg-accent-hover"
           >
             Save
           </button>
@@ -87,12 +87,12 @@ export default function BankrollManager() {
         {getSessions().length > 0 && (
           <button
             onClick={applyNet}
-            className="mt-3 text-xs font-semibold text-emerald-700 underline underline-offset-2 hover:text-emerald-800"
+            className="mt-3 text-xs font-semibold text-accent-text underline underline-offset-2 hover:text-accent-text"
           >
             Use logged session net ({signedMoney(sessionNet)}) → {money(bankroll + sessionNet)}
           </button>
         )}
-        <p className="mt-2 text-[11px] text-gray-400">
+        <p className="mt-2 text-[11px] text-ink-muted">
           Your bankroll is set manually and isn't changed automatically by logged sessions. The
           link above only fills the box — press Save to commit.
         </p>
@@ -100,30 +100,30 @@ export default function BankrollManager() {
 
       {/* Headline recommendation */}
       <div className="pt-card-dark p-5 text-center">
-        <div className="text-sm font-semibold uppercase tracking-wide text-emerald-300">
+        <div className="text-sm font-semibold uppercase tracking-wide text-onfelt-3">
           Rolled for
         </div>
         {bankroll <= 0 ? (
-          <p className="mt-2 text-emerald-100">Set your bankroll above to see which stakes fit.</p>
+          <p className="mt-2 text-onfelt-2">Set your bankroll above to see which stakes fit.</p>
         ) : rec ? (
           <>
-            <div className="mt-1 text-3xl font-bold text-white">{rec.stake.label}</div>
-            <div className={`mt-1 text-sm font-semibold ${rec.status === 'comfortable' ? 'text-emerald-200' : 'text-amber-200'}`}>
+            <div className="mt-1 text-3xl font-bold text-onfelt">{rec.stake.label}</div>
+            <div className={`mt-1 text-sm font-semibold ${rec.status === 'comfortable' ? 'text-onfelt-2' : 'text-gold-text'}`}>
               {rec.status === 'comfortable'
                 ? `Comfortably rolled — ${rec.buyIns.toFixed(0)} buy-ins`
                 : `Minimum roll — ${rec.buyIns.toFixed(0)} buy-ins (consider staying a touch below)`}
             </div>
-            <p className="mt-2 text-xs text-emerald-300">
+            <p className="mt-2 text-xs text-onfelt-3">
               Standard used: buy-in = 100 big blinds · {MIN_BUYINS} buy-ins minimum ·{' '}
               {COMFORTABLE_BUYINS}+ comfortable.
             </p>
           </>
         ) : (
           <>
-            <div className="mt-1 text-xl font-bold text-white">
+            <div className="mt-1 text-xl font-bold text-onfelt">
               Under-rolled for {STAKES[0].label}
             </div>
-            <p className="mt-1 text-sm text-amber-200">
+            <p className="mt-1 text-sm text-gold-text">
               You want at least {money(STAKES[0].buyIn * MIN_BUYINS)} ({MIN_BUYINS} buy-ins) to sit
               at {STAKES[0].label}. Build the roll or play smaller/home games first.
             </p>
@@ -133,11 +133,11 @@ export default function BankrollManager() {
 
       {/* Per-stake guide */}
       <div className="pt-card p-4">
-        <div className="mb-2 px-1 text-sm font-semibold text-gray-800">Stakes guide</div>
+        <div className="mb-2 px-1 text-sm font-semibold text-ink">Stakes guide</div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-[11px] uppercase tracking-wide text-gray-500">
+              <tr className="text-left text-[11px] uppercase tracking-wide text-ink-muted">
                 <th className="px-2 py-1 font-semibold">Stake</th>
                 <th className="px-2 py-1 font-semibold">Buy-in</th>
                 <th className="px-2 py-1 font-semibold">Min roll</th>
@@ -149,13 +149,13 @@ export default function BankrollManager() {
               {rows.map(({ stake, buyIns, status }) => {
                 const meta = statusMeta(status)
                 return (
-                  <tr key={stake.id} className={`border-t border-gray-100 ${ROW_TONE[status]}`}>
-                    <td className="px-2 py-2 font-semibold text-gray-800">{stake.label}</td>
-                    <td className="px-2 py-2 tabular-nums text-gray-600">{money(stake.buyIn)}</td>
-                    <td className="px-2 py-2 tabular-nums text-gray-600">
+                  <tr key={stake.id} className={`border-t border-line ${ROW_TONE[status]}`}>
+                    <td className="px-2 py-2 font-semibold text-ink">{stake.label}</td>
+                    <td className="px-2 py-2 tabular-nums text-ink-body">{money(stake.buyIn)}</td>
+                    <td className="px-2 py-2 tabular-nums text-ink-body">
                       {money(stake.buyIn * MIN_BUYINS)}
                     </td>
-                    <td className="px-2 py-2 tabular-nums text-gray-600">
+                    <td className="px-2 py-2 tabular-nums text-ink-body">
                       {money(stake.buyIn * COMFORTABLE_BUYINS)}
                     </td>
                     <td className="px-2 py-2 text-right">
@@ -171,8 +171,8 @@ export default function BankrollManager() {
           </table>
         </div>
         {bankroll > 0 && rec && rec.stake.id !== STAKES[STAKES.length - 1].id && (
-          <p className="mt-3 px-1 text-xs text-gray-500">
-            ⚠️ Anything marked <span className="font-semibold text-rose-600">Under-rolled</span> is
+          <p className="mt-3 px-1 text-xs text-ink-muted">
+            ⚠️ Anything marked <span className="font-semibold text-danger">Under-rolled</span> is
             above your roll — the variance can bust you. Move up only once a stake shows Rolled.
           </p>
         )}
@@ -180,7 +180,7 @@ export default function BankrollManager() {
 
       {/* Net context */}
       {getSessions().length > 0 && (
-        <p className="text-center text-xs text-emerald-300">
+        <p className="text-center text-xs text-onfelt-3">
           Lifetime logged result:{' '}
           <span className={`font-bold ${profitColor(sessionNet)}`}>{signedMoney(sessionNet)}</span>{' '}
           across your sessions.

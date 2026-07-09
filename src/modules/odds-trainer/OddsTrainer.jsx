@@ -111,7 +111,7 @@ export default function OddsTrainer() {
         <h1 className="pt-title">Pot Odds &amp; Equity Trainer</h1>
         <p className="pt-subtitle">Table math — pot odds, outs, and the call/fold verdict</p>
 
-        <p className="mt-6 text-sm text-emerald-200">Choose a drill:</p>
+        <p className="mt-6 text-sm text-onfelt-2">Choose a drill:</p>
         <div className="mt-2 flex flex-wrap justify-center gap-2">
           {DRILL_OPTIONS.map((opt) => {
             const active = drill === opt.value
@@ -127,7 +127,7 @@ export default function OddsTrainer() {
           })}
         </div>
 
-        <p className="mt-6 text-sm text-emerald-200">Choose a session length:</p>
+        <p className="mt-6 text-sm text-onfelt-2">Choose a session length:</p>
         <div className="mt-2 flex flex-wrap justify-center gap-3">
           {SESSION_LENGTHS.map((len) => (
             <button
@@ -141,29 +141,29 @@ export default function OddsTrainer() {
         </div>
 
         <div className="mt-6 flex flex-col items-center gap-1">
-          <p className="text-xs text-emerald-300">Lifetime accuracy: {lifetime.toFixed(1)}%</p>
+          <p className="text-xs text-onfelt-3">Lifetime accuracy: {lifetime.toFixed(1)}%</p>
           {!confirmingReset ? (
             <button
               onClick={() => setConfirmingReset(true)}
-              className="text-xs text-emerald-400 underline underline-offset-2 hover:text-emerald-200"
+              className="text-xs text-onfelt-4 underline underline-offset-2 hover:text-onfelt-2"
             >
               Reset lifetime stats
             </button>
           ) : (
-            <div className="mt-1 flex flex-col items-center gap-2 rounded-lg bg-emerald-950/40 px-4 py-3">
-              <p className="max-w-xs text-center text-xs text-emerald-100">
+            <div className="mt-1 flex flex-col items-center gap-2 rounded-lg bg-panel/40 px-4 py-3">
+              <p className="max-w-xs text-center text-xs text-onfelt-2">
                 This clears all saved progress and leaks for the odds trainer — are you sure?
               </p>
               <div className="flex gap-2">
                 <button
                   onClick={confirmReset}
-                  className="rounded-lg bg-rose-500 px-3 py-1.5 text-xs font-semibold text-white shadow hover:bg-rose-400"
+                  className="rounded-lg bg-danger-solid px-3 py-1.5 text-xs font-semibold text-onfelt shadow hover:bg-danger-hover"
                 >
                   Yes, reset
                 </button>
                 <button
                   onClick={() => setConfirmingReset(false)}
-                  className="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-emerald-900 shadow hover:bg-emerald-50"
+                  className="rounded-lg bg-surface px-3 py-1.5 text-xs font-semibold text-ink-heading shadow hover:bg-surface-inset"
                 >
                   Cancel
                 </button>
@@ -181,22 +181,22 @@ export default function OddsTrainer() {
       <Shell>
         <h1 className="pt-title">Session complete</h1>
         <div className="mt-4 pt-card p-5 text-center">
-          <div className="text-4xl font-bold text-emerald-700">{sessionAcc.toFixed(0)}%</div>
-          <div className="text-sm text-gray-600">
+          <div className="text-4xl font-bold text-accent-text">{sessionAcc.toFixed(0)}%</div>
+          <div className="text-sm text-ink-body">
             {stats.correct}/{stats.answered} correct · lifetime {lifetime.toFixed(1)}%
           </div>
         </div>
 
         <div className="mt-4 w-full max-w-sm pt-card p-4">
-          <div className="text-sm font-semibold text-gray-800">Weakest drills this session</div>
+          <div className="text-sm font-semibold text-ink">Weakest drills this session</div>
           {worstMisses.length === 0 ? (
-            <div className="mt-1 text-sm text-emerald-700">No misses — clean session! 🎉</div>
+            <div className="mt-1 text-sm text-accent-text">No misses — clean session! 🎉</div>
           ) : (
-            <ul className="mt-2 space-y-1 text-sm text-gray-700">
+            <ul className="mt-2 space-y-1 text-sm text-ink-body">
               {worstMisses.map((m) => (
                 <li key={m.type} className="flex justify-between">
                   <span>{TYPE_LABEL[m.type]}</span>
-                  <span className="tabular-nums text-red-600">×{m.count}</span>
+                  <span className="tabular-nums text-danger">×{m.count}</span>
                 </li>
               ))}
             </ul>
@@ -217,7 +217,7 @@ export default function OddsTrainer() {
   const spotNo = Math.min(stats.answered + (result ? 0 : 1), length)
   return (
     <Shell>
-      <div className="flex w-full max-w-md items-center justify-between text-sm text-emerald-100">
+      <div className="flex w-full max-w-md items-center justify-between text-sm text-onfelt-2">
         <span>
           Spot {spotNo} / {length}
         </span>
@@ -227,10 +227,10 @@ export default function OddsTrainer() {
       </div>
 
       {generating || !spot ? (
-        <div className="mt-16 text-emerald-100">Dealing…</div>
+        <div className="mt-16 text-onfelt-2">Dealing…</div>
       ) : (
         <>
-          <div className="mt-4 text-xs uppercase tracking-wide text-emerald-300">
+          <div className="mt-4 text-xs uppercase tracking-wide text-onfelt-3">
             {TYPE_LABEL[spot.type]}
           </div>
 
@@ -242,21 +242,21 @@ export default function OddsTrainer() {
             <div className="mt-6 flex w-full max-w-md flex-col items-center gap-3">
               <div
                 className={`w-full rounded-xl p-4 text-center shadow-lg ${
-                  result.correct ? 'bg-emerald-50' : 'bg-rose-50'
+                  result.correct ? 'bg-surface-inset' : 'bg-danger-soft'
                 }`}
               >
                 <div
                   className={`text-lg font-bold ${
-                    result.correct ? 'text-emerald-700' : 'text-rose-700'
+                    result.correct ? 'text-accent-text' : 'text-danger-text'
                   }`}
                 >
                   {result.correct ? 'Correct' : 'Incorrect'} — {result.correctText}
                 </div>
-                <div className="mt-1 text-sm text-gray-700">{result.explain}</div>
+                <div className="mt-1 text-sm text-ink-body">{result.explain}</div>
               </div>
               <button
                 onClick={next}
-                className="rounded-xl bg-white px-8 py-3 font-semibold text-emerald-900 shadow hover:bg-emerald-50"
+                className="rounded-xl bg-surface px-8 py-3 font-semibold text-ink-heading shadow hover:bg-surface-inset"
               >
                 {stats.answered >= length ? 'See summary' : 'Next spot'}
               </button>
@@ -274,49 +274,49 @@ function renderPrompt(spot) {
   switch (spot.type) {
     case 'potodds':
       return (
-        <div className="rounded-xl bg-emerald-950/40 p-5 text-center text-white">
-          <div className="text-sm text-emerald-200">Pot</div>
+        <div className="rounded-xl bg-panel/40 p-5 text-center text-onfelt">
+          <div className="text-sm text-onfelt-2">Pot</div>
           <div className="text-3xl font-bold">${spot.pot}</div>
-          <div className="mt-3 text-sm text-emerald-200">Opponent bets</div>
+          <div className="mt-3 text-sm text-onfelt-2">Opponent bets</div>
           <div className="text-3xl font-bold">${spot.bet}</div>
-          <div className="mt-4 text-sm text-emerald-100">
+          <div className="mt-4 text-sm text-onfelt-2">
             What equity % do you need to call?
           </div>
         </div>
       )
     case 'outs':
       return (
-        <div className="flex flex-col items-center gap-4 rounded-xl bg-emerald-950/40 p-5">
+        <div className="flex flex-col items-center gap-4 rounded-xl bg-panel/40 p-5">
           <BoardAndHand hole={spot.hole} board={spot.board} />
-          <div className="text-center text-sm text-emerald-100">
+          <div className="text-center text-sm text-onfelt-2">
             How many outs does your draw have?
           </div>
         </div>
       )
     case 'ruleof24':
       return (
-        <div className="rounded-xl bg-emerald-950/40 p-5 text-center text-white">
+        <div className="rounded-xl bg-panel/40 p-5 text-center text-onfelt">
           <div className="text-3xl font-bold">{spot.outs} outs</div>
-          <div className="mt-2 text-emerald-100">
+          <div className="mt-2 text-onfelt-2">
             {spot.cardsToCome === 2 ? 'Two cards to come (flop → river)' : 'One card to come (turn → river)'}
           </div>
-          <div className="mt-4 text-sm text-emerald-100">
+          <div className="mt-4 text-sm text-onfelt-2">
             Estimate your equity % with the Rule of 2 &amp; 4.
           </div>
         </div>
       )
     case 'combined':
       return (
-        <div className="flex flex-col items-center gap-4 rounded-xl bg-emerald-950/40 p-5">
+        <div className="flex flex-col items-center gap-4 rounded-xl bg-panel/40 p-5">
           <BoardAndHand hole={spot.hole} board={spot.board} />
-          <div className="text-center text-white">
-            <span className="text-sm text-emerald-200">Pot </span>
+          <div className="text-center text-onfelt">
+            <span className="text-sm text-onfelt-2">Pot </span>
             <span className="font-bold">${spot.pot}</span>
-            <span className="mx-2 text-emerald-400">·</span>
-            <span className="text-sm text-emerald-200">Opponent bets </span>
+            <span className="mx-2 text-onfelt-4">·</span>
+            <span className="text-sm text-onfelt-2">Opponent bets </span>
             <span className="font-bold">${spot.bet}</span>
           </div>
-          <div className="text-center text-sm text-emerald-100">Call or fold?</div>
+          <div className="text-center text-sm text-onfelt-2">Call or fold?</div>
         </div>
       )
     default:
@@ -332,13 +332,13 @@ function renderInput(spot, { input, setInput, submitNumber, submit }) {
       <div className="flex flex-wrap justify-center gap-3">
         <button
           onClick={() => submit('call')}
-          className="rounded-xl bg-emerald-500 px-7 py-3 text-lg font-bold text-white shadow transition hover:bg-emerald-400"
+          className="rounded-xl bg-accent-hover px-7 py-3 text-lg font-bold text-onfelt shadow transition hover:bg-accent-bright"
         >
           Call
         </button>
         <button
           onClick={() => submit('fold')}
-          className="rounded-xl bg-rose-500 px-7 py-3 text-lg font-bold text-white shadow transition hover:bg-rose-400"
+          className="rounded-xl bg-danger-solid px-7 py-3 text-lg font-bold text-onfelt shadow transition hover:bg-danger-hover"
         >
           Fold
         </button>
@@ -350,21 +350,21 @@ function renderInput(spot, { input, setInput, submitNumber, submit }) {
   const suffix = spot.type === 'outs' ? 'outs' : '%'
   return (
     <div className="flex justify-center gap-2">
-      <div className="flex items-center rounded-xl bg-white px-3 shadow">
+      <div className="flex items-center rounded-xl bg-surface px-3 shadow">
         <input
           type="number"
           autoFocus
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && submitNumber()}
-          className="w-24 bg-transparent py-3 text-lg font-semibold text-emerald-900 outline-none"
+          className="w-24 bg-transparent py-3 text-lg font-semibold text-ink-heading outline-none"
           placeholder="?"
         />
-        <span className="pl-1 text-sm text-gray-500">{suffix}</span>
+        <span className="pl-1 text-sm text-ink-muted">{suffix}</span>
       </div>
       <button
         onClick={submitNumber}
-        className="rounded-xl bg-emerald-500 px-6 py-3 font-bold text-white shadow hover:bg-emerald-400"
+        className="rounded-xl bg-accent-hover px-6 py-3 font-bold text-onfelt shadow hover:bg-accent-bright"
       >
         Submit
       </button>
@@ -376,7 +376,7 @@ function BoardAndHand({ hole, board }) {
   return (
     <div className="flex flex-col items-center gap-3">
       <div className="flex flex-col items-center gap-1">
-        <span className="text-xs uppercase tracking-wide text-emerald-300">Your hand</span>
+        <span className="text-xs uppercase tracking-wide text-onfelt-3">Your hand</span>
         <div className="flex gap-2">
           {hole.map((c) => (
             <Card key={c} card={c} size="md" />
@@ -384,7 +384,7 @@ function BoardAndHand({ hole, board }) {
         </div>
       </div>
       <div className="flex flex-col items-center gap-1">
-        <span className="text-xs uppercase tracking-wide text-emerald-300">Board</span>
+        <span className="text-xs uppercase tracking-wide text-onfelt-3">Board</span>
         <div className="flex gap-2">
           {board.map((c) => (
             <Card key={c} card={c} size="sm" />

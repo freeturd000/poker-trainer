@@ -47,19 +47,19 @@ export default function SimSetup({ onStart, session }) {
       <div className="w-full max-w-xl">
         <header className="mb-4 text-center">
           <h1 className="pt-title">Local Play Simulator</h1>
-          <p className="mt-1 text-sm text-emerald-200">
+          <p className="mt-1 text-sm text-onfelt-2">
             Play full hands against rule-based bots to drill mechanics, flow, and sizing.
           </p>
-          <p className="mt-1 inline-block rounded-full bg-amber-400/90 px-3 py-0.5 text-xs font-bold text-emerald-950">
+          <p className="mt-1 inline-block rounded-full bg-gold/90 px-3 py-0.5 text-xs font-bold text-felt-deep">
             PRACTICE · play-money only — no real stakes
           </p>
         </header>
 
         {session?.hands > 0 && (
-          <div className="mb-4 rounded-xl bg-emerald-950/50 p-3 text-center text-sm text-emerald-100">
+          <div className="mb-4 rounded-xl bg-panel/50 p-3 text-center text-sm text-onfelt-2">
             Last session: <span className="font-bold">{session.hands}</span> hand
             {session.hands === 1 ? '' : 's'} · your net{' '}
-            <span className={`font-bold ${session.heroNet >= 0 ? 'text-emerald-300' : 'text-rose-300'}`}>
+            <span className={`font-bold ${session.heroNet >= 0 ? 'text-onfelt-3' : 'text-danger'}`}>
               {session.heroNet >= 0 ? '+' : ''}
               {session.heroNet}
             </span>
@@ -83,11 +83,11 @@ export default function SimSetup({ onStart, session }) {
             <div className="space-y-2">
               {Array.from({ length: opponents }, (_, i) => (
                 <div key={i} className="flex items-center gap-2">
-                  <span className="w-16 text-xs font-semibold text-gray-500">Bot {i + 1}</span>
+                  <span className="w-16 text-xs font-semibold text-ink-muted">Bot {i + 1}</span>
                   <select
                     value={arches[i]}
                     onChange={(e) => setArch(i, e.target.value)}
-                    className="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-800"
+                    className="flex-1 rounded-lg border border-line-strong bg-surface px-3 py-1.5 text-sm text-ink"
                   >
                     {ARCHES.map((a) => (
                       <option key={a.id} value={a.id}>
@@ -121,7 +121,7 @@ export default function SimSetup({ onStart, session }) {
                 Step through
               </Chip>
             </div>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-ink-muted">
               {mode === 'auto'
                 ? 'Bots act automatically on a short timer.'
                 : 'Bots and each dealt street pause for a "Next" click so you can read every step.'}
@@ -138,7 +138,7 @@ export default function SimSetup({ onStart, session }) {
                 On
               </Chip>
             </div>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-ink-muted">
               {coach
                 ? 'Plain-English coaching: reads opponents’ actions, suggests your play, and recaps each hand. Great paired with Step through.'
                 : 'A guided tutorial with beginner-friendly explanations at every decision. Off by default.'}
@@ -154,14 +154,14 @@ export default function SimSetup({ onStart, session }) {
                 </Chip>
               ))}
             </div>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-ink-muted">
               = {depthBB * BLINDS[blindIdx].bb} chips at {BLINDS[blindIdx].label}
             </p>
           </Field>
 
           <button
             onClick={start}
-            className="w-full rounded-xl bg-emerald-600 py-3 text-base font-bold text-white shadow hover:bg-emerald-500"
+            className="w-full rounded-xl bg-accent py-3 text-base font-bold text-onfelt shadow hover:bg-accent-hover"
           >
             Deal first hand
           </button>
@@ -174,7 +174,7 @@ export default function SimSetup({ onStart, session }) {
 function Field({ label, children }) {
   return (
     <div>
-      <div className="mb-1.5 text-sm font-semibold text-emerald-900">{label}</div>
+      <div className="mb-1.5 text-sm font-semibold text-ink-heading">{label}</div>
       {children}
     </div>
   )
@@ -185,7 +185,7 @@ function Chip({ active, onClick, children }) {
     <button
       onClick={onClick}
       className={`rounded-lg px-4 py-1.5 text-sm font-semibold transition ${
-        active ? 'bg-emerald-600 text-white shadow' : 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
+        active ? 'bg-accent text-onfelt shadow' : 'bg-accent-soft text-accent-text hover:bg-accent-soft'
       }`}
     >
       {children}

@@ -26,8 +26,8 @@ export default defineConfig({
         short_name: 'Poker',
         description:
           'A local-first No-Limit Hold’em training suite — range drills, pot odds, board reading, a simulator, and more.',
-        theme_color: '#065f46',
-        background_color: '#065f46',
+        theme_color: '#0d1512',
+        background_color: '#0d1512',
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/',

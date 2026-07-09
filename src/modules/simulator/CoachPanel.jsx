@@ -11,12 +11,12 @@
 
 function Shell({ children }) {
   return (
-    <div className="mb-3 rounded-2xl border border-indigo-400/40 bg-indigo-950/80 p-3.5 text-left shadow-lg">
+    <div className="mb-3 rounded-2xl border border-special/40 bg-panel/80 p-3.5 text-left shadow-lg">
       <div className="mb-1.5 flex items-center gap-2">
-        <span className="rounded bg-indigo-400 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-indigo-950">
+        <span className="rounded bg-special px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-felt-deep">
           Coach
         </span>
-        <span className="text-[11px] font-semibold uppercase tracking-wide text-indigo-300">
+        <span className="text-[11px] font-semibold uppercase tracking-wide text-special">
           Learning mode
         </span>
       </div>
@@ -31,7 +31,7 @@ export default function CoachPanel({ content }) {
   if (content.kind === 'bot') {
     return (
       <Shell>
-        <p className="text-sm leading-snug text-indigo-100">{content.text}</p>
+        <p className="text-sm leading-snug text-onfelt-2">{content.text}</p>
       </Shell>
     )
   }
@@ -39,11 +39,11 @@ export default function CoachPanel({ content }) {
   if (content.kind === 'advice') {
     return (
       <Shell>
-        <p className="text-sm leading-snug text-indigo-100">
-          <span className="font-bold text-white">Coach suggests: {content.action}.</span>{' '}
+        <p className="text-sm leading-snug text-onfelt-2">
+          <span className="font-bold text-onfelt">Coach suggests: {content.action}.</span>{' '}
           {content.reason}
         </p>
-        <p className="mt-1.5 text-[11px] italic text-indigo-300/80">
+        <p className="mt-1.5 text-[11px] italic text-special/80">
           A heuristic guide to learn from — not gospel. It's your call; play it however you like.
         </p>
       </Shell>
@@ -53,8 +53,8 @@ export default function CoachPanel({ content }) {
   // result
   return (
     <Shell>
-      <p className="text-sm font-semibold leading-snug text-white">{content.summary}</p>
-      <p className="mt-1 text-sm leading-snug text-indigo-100">{content.lesson}</p>
+      <p className="text-sm font-semibold leading-snug text-onfelt">{content.summary}</p>
+      <p className="mt-1 text-sm leading-snug text-onfelt-2">{content.lesson}</p>
     </Shell>
   )
 }

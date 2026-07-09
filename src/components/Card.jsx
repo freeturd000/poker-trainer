@@ -26,21 +26,21 @@ export default function Card({ card, faceDown = false, size = 'md', className = 
   if (faceDown || !card) {
     return (
       <div
-        className={`${sizeCls} flex items-center justify-center border border-blue-900 bg-blue-700 shadow-sm ${className}`}
+        className={`${sizeCls} flex items-center justify-center border border-card-back-edge bg-card-back shadow-sm ${className}`}
         aria-label="Face-down card"
       >
-        <div className="h-3/4 w-3/4 rounded bg-blue-500/40 border border-blue-300/40" />
+        <div className="h-3/4 w-3/4 rounded bg-card-back-pip/40 border border-card-back-pip/40" />
       </div>
     )
   }
 
   const { rank, suit } = typeof card === 'string' ? parseCard(card) : card
   const isRed = RED_SUITS.has(suit)
-  const colorCls = isRed ? 'text-red-600' : 'text-gray-900'
+  const colorCls = isRed ? 'text-card-red' : 'text-card-ink'
 
   return (
     <div
-      className={`${sizeCls} relative flex flex-col justify-between border border-gray-300 bg-white shadow-sm p-1 leading-none ${colorCls} ${className}`}
+      className={`${sizeCls} relative flex flex-col justify-between border border-card-edge bg-card-face shadow-sm p-1 leading-none ${colorCls} ${className}`}
       aria-label={`${rank}${suit}`}
     >
       <span className="font-bold self-start">{rank}</span>

@@ -63,8 +63,8 @@ function MiniCard({ label }) {
   const isRed = label.includes('♥') || label.includes('♦')
   return (
     <span
-      className={`inline-flex h-9 w-7 items-center justify-center rounded border border-gray-300 bg-white font-mono text-[13px] font-bold ${
-        isRed ? 'text-red-600' : 'text-gray-900'
+      className={`inline-flex h-9 w-7 items-center justify-center rounded border border-card-edge bg-card-face font-mono text-[13px] font-bold ${
+        isRed ? 'text-card-red' : 'text-card-ink'
       }`}
     >
       {label}
@@ -76,29 +76,29 @@ export default function HandRankings() {
   return (
     <div className="not-prose mt-4 space-y-2">
       {RANKINGS.map((r, i) => (
-        <div key={r.name} className="flex gap-3 rounded-xl border border-gray-200 bg-gray-50 p-3">
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white text-sm font-bold text-emerald-700 ring-1 ring-gray-200">
+        <div key={r.name} className="flex gap-3 rounded-xl border border-line bg-surface-sunken-soft p-3">
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-surface text-sm font-bold text-accent-text ring-1 ring-line">
             {i + 1}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-bold text-emerald-900">{r.name}</p>
+            <p className="text-sm font-bold text-ink-heading">{r.name}</p>
             <div className="mt-1.5 flex flex-wrap gap-1">
               {r.cards.map((c, j) => (
                 <MiniCard key={j} label={c} />
               ))}
             </div>
-            <p className="mt-2 text-sm leading-relaxed text-gray-600">{r.desc}</p>
+            <p className="mt-2 text-sm leading-relaxed text-ink-body">{r.desc}</p>
           </div>
         </div>
       ))}
 
-      <div className="rounded-xl border border-l-4 border-gray-200 border-l-amber-400 bg-gray-50 p-4 text-sm text-gray-600">
+      <div className="rounded-xl border border-l-4 border-line border-l-gold bg-surface-sunken-soft p-4 text-sm text-ink-body">
         <p>
-          <b className="font-semibold text-emerald-900">The pattern:</b> rarer hands win. A flush is harder to make than
+          <b className="font-semibold text-ink-heading">The pattern:</b> rarer hands win. A flush is harder to make than
           a straight, so it beats it. Memorise the order and you’ve got the one thing you truly must know cold.
         </p>
         <p className="mt-2">
-          <b className="font-semibold text-emerald-900">Ties broken by the "kicker":</b> if two players both have a pair
+          <b className="font-semibold text-ink-heading">Ties broken by the "kicker":</b> if two players both have a pair
           of 10s, the highest side card decides it — A-kicker beats K-kicker, and so on. Suits never break ties.
         </p>
       </div>

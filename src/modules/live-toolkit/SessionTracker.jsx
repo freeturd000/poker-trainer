@@ -101,11 +101,11 @@ export default function SessionTracker() {
     <div className="flex flex-col gap-6">
       {/* Lifetime summary */}
       <div className="pt-card-dark p-5">
-        <div className="text-sm font-semibold uppercase tracking-wide text-emerald-300">
+        <div className="text-sm font-semibold uppercase tracking-wide text-onfelt-3">
           Lifetime
         </div>
         {sessions.length === 0 ? (
-          <p className="mt-2 text-sm text-emerald-200">
+          <p className="mt-2 text-sm text-onfelt-2">
             No sessions logged yet — add your first one below to start tracking your win rate.
           </p>
         ) : (
@@ -130,7 +130,7 @@ export default function SessionTracker() {
 
       {/* Add / edit form */}
       <div className="pt-card p-5">
-        <div className="text-sm font-semibold text-gray-800">
+        <div className="text-sm font-semibold text-ink">
           {editingId ? 'Edit session' : 'Log a session'}
         </div>
         <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -194,19 +194,19 @@ export default function SessionTracker() {
         {/* Live profit preview */}
         <ProfitPreview form={form} />
 
-        {error && <p className="mt-2 text-sm font-semibold text-rose-600">{error}</p>}
+        {error && <p className="mt-2 text-sm font-semibold text-danger">{error}</p>}
 
         <div className="mt-4 flex gap-2">
           <button
             onClick={submit}
-            className="rounded-xl bg-emerald-600 px-6 py-2.5 font-semibold text-white shadow hover:bg-emerald-500"
+            className="rounded-xl bg-accent px-6 py-2.5 font-semibold text-onfelt shadow hover:bg-accent-hover"
           >
             {editingId ? 'Save changes' : 'Add session'}
           </button>
           {editingId && (
             <button
               onClick={resetForm}
-              className="rounded-xl bg-gray-200 px-6 py-2.5 font-semibold text-gray-700 shadow hover:bg-gray-300"
+              className="rounded-xl bg-surface-sunken px-6 py-2.5 font-semibold text-ink-body shadow hover:bg-line-strong"
             >
               Cancel
             </button>
@@ -217,21 +217,21 @@ export default function SessionTracker() {
       {/* Session list */}
       {sessions.length > 0 && (
         <div className="pt-card p-4">
-          <div className="mb-1 px-1 text-sm font-semibold text-gray-800">
+          <div className="mb-1 px-1 text-sm font-semibold text-ink">
             Sessions ({sessions.length})
           </div>
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-line">
             {sessions.map((s) => {
               const p = sessionProfit(s)
               return (
                 <li key={s.id} className="flex items-center justify-between gap-3 py-3">
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-gray-800">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-ink">
                       <span>{s.date}</span>
-                      {s.stakes && <span className="text-gray-400">·</span>}
-                      {s.stakes && <span className="text-gray-600">{s.stakes}</span>}
+                      {s.stakes && <span className="text-ink-muted">·</span>}
+                      {s.stakes && <span className="text-ink-body">{s.stakes}</span>}
                     </div>
-                    <div className="truncate text-xs text-gray-500">
+                    <div className="truncate text-xs text-ink-muted">
                       {s.location ? `${s.location} · ` : ''}
                       {money(s.buyIn)} → {money(s.cashOut)} · {Number(s.hours)}h
                     </div>
@@ -244,13 +244,13 @@ export default function SessionTracker() {
                       <>
                         <button
                           onClick={() => remove(s.id)}
-                          className="rounded-lg bg-rose-500 px-2.5 py-1 text-xs font-semibold text-white hover:bg-rose-400"
+                          className="rounded-lg bg-danger-solid px-2.5 py-1 text-xs font-semibold text-onfelt hover:bg-danger-hover"
                         >
                           Delete
                         </button>
                         <button
                           onClick={() => setConfirmingDelete(null)}
-                          className="rounded-lg bg-gray-200 px-2.5 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-300"
+                          className="rounded-lg bg-surface-sunken px-2.5 py-1 text-xs font-semibold text-ink-body hover:bg-line-strong"
                         >
                           Keep
                         </button>
@@ -259,13 +259,13 @@ export default function SessionTracker() {
                       <>
                         <button
                           onClick={() => startEdit(s)}
-                          className="rounded-lg bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800 hover:bg-emerald-200"
+                          className="rounded-lg bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent-text hover:bg-accent-soft"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => setConfirmingDelete(s.id)}
-                          className="rounded-lg bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-500 hover:bg-gray-200"
+                          className="rounded-lg bg-surface-sunken px-2.5 py-1 text-xs font-semibold text-ink-muted hover:bg-surface-sunken"
                         >
                           ✕
                         </button>
@@ -283,23 +283,23 @@ export default function SessionTracker() {
 }
 
 const inputCls =
-  'w-full rounded-lg border border-gray-300 px-2.5 py-1.5 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500'
+  'w-full rounded-lg border border-line-strong bg-surface px-2.5 py-1.5 text-sm text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent'
 
 function Field({ label, children }) {
   return (
     <label className="flex flex-col gap-1">
-      <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">{label}</span>
+      <span className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">{label}</span>
       {children}
     </label>
   )
 }
 
-function Metric({ label, value, sub, tone = 'text-white' }) {
+function Metric({ label, value, sub, tone = 'text-onfelt' }) {
   return (
     <div>
       <div className={`text-xl font-bold tabular-nums ${tone}`}>{value}</div>
-      <div className="text-[11px] uppercase tracking-wide text-emerald-300">{label}</div>
-      {sub && <div className="text-[11px] text-emerald-400">{sub}</div>}
+      <div className="text-[11px] uppercase tracking-wide text-onfelt-3">{label}</div>
+      {sub && <div className="text-[11px] text-onfelt-4">{sub}</div>}
     </div>
   )
 }
@@ -313,7 +313,7 @@ function ProfitPreview({ form }) {
   }
   const p = cashOut - buyIn
   return (
-    <p className="mt-3 text-sm text-gray-600">
+    <p className="mt-3 text-sm text-ink-body">
       Session result: <span className={`font-bold ${profitColor(p)}`}>{signedMoney(p)}</span>
     </p>
   )
