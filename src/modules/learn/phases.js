@@ -242,12 +242,66 @@ export const PHASES = [
     description: 'C-bets, facing bets, and sizing — where the real edges live.',
     trainers: [{ view: 'postflop', label: 'Postflop Trainer' }],
     sections: [
-      { heading: 'The c-bet: when to fire as the aggressor', body: [] },
-      { heading: 'Checking back and pot control', body: [] },
-      { heading: 'Facing a bet: call, raise, or fold', body: [] },
-      { heading: 'Bet sizing tied to texture (⅓ / ½ / ¾ / pot)', body: [] },
-      { heading: 'Value bets vs bluffs', body: [] },
-      { heading: 'Why this is heuristic, not solved', body: [] },
+      {
+        heading: 'What "postflop" means',
+        body: [
+          `"Postflop" simply means everything that happens after the flop is dealt — the flop, turn, and river betting rounds, once there are community cards on the table. "Preflop" (Phase 1) was about which hands to play; postflop is about how to play them once real cards are out.`,
+          `This is where the biggest money decisions live. Preflop pots are small — usually just the blinds and a raise. Postflop, the pot grows with every bet, so the choices you make here — whether to bet, call, raise, or fold, and for how much — are worth far more than any single preflop decision. Good postflop play is the difference between a small winner and a big one.`,
+          `One honest caveat up front: perfect postflop poker is genuinely hard — it is the domain of solvers (computer programs that calculate near-optimal play). This phase does not try to make you perfect. It teaches solid default lines — reliable rules of thumb that are right most of the time and keep you out of big trouble. Think of them as strong training wheels, not the final word. The Postflop Trainer is labelled the same way: "heuristic default lines, not GTO-perfect."`,
+        ],
+      },
+      {
+        heading: 'Sorting your hand: value, draw, marginal, air',
+        body: [
+          `Before any postflop decision, sort your hand into one of four buckets. Almost every default line falls out of which bucket you are in, so this is the foundation for the rest of the phase.`,
+          `Value — a made hand strong enough to bet and raise for profit: two pair or better, or "top pair" (one of your cards pairs the highest card on the board) or an "overpair" (a pocket pair higher than every board card, like two queens on a 9-7-2 board). Value hands want to build the pot.`,
+          `Draw — you do not have much of a made hand yet, but you have a strong draw: a "flush draw" (four cards toward a flush, needing one more) or an "open-ended straight draw" (four in a row that completes at either end, eight cards to hit). Draws have lots of equity — chances to improve — so you play them aggressively or continue with them. Note a bare "gutshot" (an inside straight draw needing one specific rank) is NOT strong enough to count here.`,
+          `Marginal — a weak made pair: middle pair, bottom pair, or a small pocket pair below the top board card. It has some "showdown value" (it can win if you simply get to the end and show it down) but it is fragile, so you keep the pot small with it. Air — no pair and no strong draw (a bare gutshot lands here too). It has no value now; if you bet, you are bluffing.`,
+          `One rule about overlap: the strongest action wins. A weak pair that also has a flush draw is treated as a draw, not a marginal hand, because its equity — not its showdown value — is what should drive the decision.`,
+        ],
+      },
+      {
+        heading: 'The c-bet: betting as the preflop aggressor',
+        body: [
+          `If you were the last player to raise before the flop, you are the "preflop aggressor," and a bet on the flop is called a "continuation bet," or "c-bet" — you are continuing the aggression you showed preflop. Deciding when to c-bet is the first big postflop skill, and it follows straight from your bucket and the board.`,
+          `With a value hand, always c-bet — you want to build the pot and charge worse hands and draws to keep playing. With a strong draw, c-bet as a "semi-bluff": you can win the pot right now if they fold, and if they do not, you still might improve to the best hand. Both of these are betting for good reasons.`,
+          `With air, only c-bet as a bluff on boards that favor your range — dry boards that do not favor the caller. This ties directly back to board texture (Phase 3): high, dry, disconnected flops hit the raiser's big cards and big pairs, so a bluff there tells a believable story and folds out their weak hands. On a wet or caller-favoring board (low, connected), bluffing into the range that just connected only burns chips — so check and give up. With a marginal hand, split by texture too: on a dry board a small c-bet takes it down often and denies equity to overcards; on a wet board, check for "pot control" — keeping the pot small rather than bloating it with a hand that cannot stand pressure.`,
+          `The whole rule collapses to one sentence: bet more on dry boards that favor your range, and check more on wet boards that favor the caller.`,
+        ],
+      },
+      {
+        heading: 'Facing a bet: fold, call, or raise',
+        body: [
+          `Now flip roles: someone bets into you and you must choose fold, call, or raise. Combine three things — how strong your hand is (your bucket), the board texture, and your "pot odds" (the price the bet is laying you, from Phase 2's math).`,
+          `With a big value hand — two pair or better — raise for value; you rate to be well ahead, so build the pot. With a one-pair value hand (top pair or an overpair), just call. Raising here mostly folds out the worse hands you beat and bloats the pot against the better hands that would continue, so calling keeps things controlled.`,
+          `With a draw, do the Phase 2 math: estimate your equity with the Rule of 2 and 4 (outs × 4 on the flop, × 2 on the turn) and compare it to the equity the bet requires. Priced in — your equity meets the price — call; if not, fold. For example, a flush draw (about 9 outs, ~36% on the flop) against a half-pot bet (which needs about 25%) is an easy call.`,
+          `With a marginal hand, only "bluff-catch" small bets — call a small bet because at a cheap price you beat enough of their bluffs to make it worth it, but fold to a large one. Be tighter on wet boards (call only very small bets there) than on dry ones, because wet boards give opponents more strong hands to be betting. With air, fold — there is nothing to continue with.`,
+        ],
+      },
+      {
+        heading: 'Bet sizing: ⅓, ½, ¾, or pot',
+        body: [
+          `Once you have decided to bet, how much? Sizes are measured as a fraction of the pot: about a third, a half, three-quarters, or a full pot-sized bet. The default rule is to size by how "dynamic" the board is — how many draws are out and how likely the best hand is to change by the river.`,
+          `Bet small on dry, static boards and big on wet, dynamic ones. Concretely: a dry board like K♠ 7♦ 2♣ takes about a third-pot bet (a "range bet" — few draws to charge, and a small size keeps their weak hands in). A semi-connected board like K-Q-7 takes about half pot. A wet board like 9-8-7 takes about three-quarters. And a very wet board — three to a flush, or a connected two-tone like 9♠ 8♠ 7♦ — takes a full pot-sized bet to charge the many draws and build the pot before a scary card lands.`,
+          `A word on value bets versus bluffs: the beginner instinct is to bet big with strong hands and small with weak ones, but that is a leak — observant opponents read you instantly. The default here is the opposite discipline: let the board texture pick your size, and use the same size whether you are betting for value or bluffing. Matching your sizes is what keeps you balanced and hard to exploit. (Advanced players sometimes vary sizes deliberately, but texture-based, matched sizing is the solid default to start from.)`,
+        ],
+      },
+      {
+        heading: 'Common beginner mistakes',
+        body: [
+          `C-betting every board. Firing the flop every single time just because you raised preflop is the classic leak. On wet, caller-favoring boards your bluffs get called and raised — those are the boards to check.`,
+          `Never folding a made hand. Falling in love with top pair or an overpair and refusing to let it go when the betting screams you are beaten. A pair is not the nuts; when a marginal or one-pair hand faces heavy pressure, folding is often the whole skill.`,
+          `Calling too wide out of position. "Out of position" means you have to act first on every street (Phase 1). Defending too many hands there means guessing all the way down and leaking chips — you need a stronger hand to continue when you will be acting first.`,
+          `Raising your one-pair hands for value. Blasting a raise with top pair usually folds out everything you beat and only gets called by better. Most one-pair hands prefer to call and keep the pot small, not raise.`,
+        ],
+      },
+      {
+        heading: 'How to practice this',
+        body: [
+          `The Postflop Trainer drills the three decisions from this phase directly: C-bet Decision (bet or check as the preflop aggressor), Facing a Bet (fold, call, or raise when bet into), and Bet Sizing (pick ⅓, ½, ¾, or pot). Each grades your answer against the default lines above and explains why, so the reasoning sinks in.`,
+          `Keep the framing honest as you drill: the trainer grades "heuristic default lines, not GTO-perfect" play. Real postflop is solver territory, and these rules are strong defaults, not laws — their job is to give you sound instincts and keep you out of big mistakes, which is exactly what a beginner needs. Learn them cold first; refine later. Tap "Postflop Trainer" above to begin.`,
+        ],
+      },
     ],
   },
   {
