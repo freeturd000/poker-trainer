@@ -18,6 +18,8 @@ import HandRankings from './HandRankings.jsx'
 import OutsVisual from './OutsVisual.jsx'
 import RuleOf24Demo from './RuleOf24Demo.jsx'
 import PotOddsCalc from './PotOddsCalc.jsx'
+import TextureClassifierVisual from './TextureClassifierVisual.jsx'
+import RangeFavorVisual from './RangeFavorVisual.jsx'
 
 // Registry of inline visuals a phase section can render. phases.js references these
 // by string name (keeping that file plain data), and the article renderer looks the
@@ -29,6 +31,8 @@ const VISUALS = {
   OutsVisual,
   RuleOf24Demo,
   PotOddsCalc,
+  TextureClassifierVisual,
+  RangeFavorVisual,
 }
 
 export default function Learn({ onNavigate }) {

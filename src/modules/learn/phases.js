@@ -202,7 +202,9 @@ export const PHASES = [
           `The other two questions are about suits and pairs, and each adds its own label on top of dry or wet. "Monotone" means all three flop cards are the same suit, like A♥ 9♥ 4♥ — a flush (five cards of one suit) is already possible, so anyone holding two hearts already has one and even a single heart is a strong draw. A monotone flop always counts as wet. "Two-tone" means exactly two suits are present — two cards share a suit, like Q♥ 7♥ 2♣ — so a flush draw is live but not yet complete. Two-tone alone does not make a board wet; it just adds flush danger on top of whatever the connectedness says. (A board with three different suits is called "rainbow" — no flush is coming, so it carries no suit label at all.)`,
           `"Paired" means two of the board cards share a rank, like K♠ K♦ 7♣. Now someone holding the third card of that rank has three of a kind ("trips"), and full houses become possible — so even a strong two pair is worth less. Paired boards tend to be dry in other respects, because a repeated rank leaves fewer distinct cards to build straights from.`,
           `Put together, a board can be several of these at once. 9♠ 8♠ 7♦ is both wet (connected) and two-tone (a flush draw) — about as dangerous a flop as there is. Learning to spot every label a board carries is exactly what the Texture drill trains.`,
+          `Watch the classifier work below. Cycle through one flop per texture — or deal a random one — and see the exact labels it applies and the reason why. These are the same tags the Board Reader's Texture ID drill grades you against.`,
         ],
+        visual: 'TextureClassifierVisual',
       },
       {
         heading: 'Thinking in ranges, not hands',
@@ -226,7 +228,9 @@ export const PHASES = [
           `Boards do not hit both players equally. Consider the most common spot: someone raised before the flop while in position (acting last), and the big blind called. The "preflop raiser" chose to come in for a raise, so their range is strong at the top — big cards like ace-king and ace-queen, and big pairs. The caller's range is wider and more capped: suited connectors, small pairs, and other speculative hands that were cheap to call with.`,
           `That difference means some flops favor one player's range over the other. High, broadway, disconnected flops favor the raiser — a board like A-K-4 or K-Q-7 slots right into their big cards and big pairs, hands the caller rarely has. Low, connected flops favor the caller — a board like 7-6-5 or 9-8-7 smashes into suited connectors and small pairs, making straights, sets, and two pair the raiser almost never holds. Boards in between favor neither much; call those neutral.`,
           `Treat this as a helpful rule of thumb, not a law — it is a heuristic tuned for that specific raiser-versus-caller situation, and real spots have shades of grey. But the core idea is rock-solid and worth internalizing: before you decide who should be betting, ask whose range the board actually helps. The Range Interaction drill quizzes you on exactly these clear-cut boards.`,
+          `Try it below. Step through a few archetypal flops and see which player's range the heuristic says each one favors, and why — the very same call the Range Interaction drill makes.`,
         ],
+        visual: 'RangeFavorVisual',
       },
       {
         heading: 'Common beginner mistakes',
