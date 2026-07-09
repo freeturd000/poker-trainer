@@ -174,11 +174,65 @@ export const PHASES = [
     description: 'Read the board and think in ranges, not just your own two cards.',
     trainers: [{ view: 'board', label: 'Board Reader' }],
     sections: [
-      { heading: 'Dry, wet, and draw-heavy boards', body: [] },
-      { heading: 'Paired and monotone textures', body: [] },
-      { heading: 'What beats you: reading the nuts', body: [] },
-      { heading: 'Whose range does this flop favor?', body: [] },
-      { heading: 'How texture drives your decision', body: [] },
+      {
+        heading: 'What "board texture" means',
+        body: [
+          `In Hold'em, some cards are dealt face-up in the middle of the table for everyone to share — these are the "community cards," or simply "the board." They come in stages: the "flop" (the first three), the "turn" (a fourth), and the "river" (a fifth). You combine them with your own two cards to make your hand.`,
+          `"Board texture" is the personality of those community cards — how they fit together and what kinds of hands they make likely. Two flops with the same high card can be worlds apart: one is quiet and safe, the other is a minefield of possible straights and flushes. Reading that difference is the skill this phase builds.`,
+          `Why it matters: the same pair of aces in your hand is a monster on one board and a trap on another. Good players barely look at their own two cards until they have read the board, because the board decides which hands are even possible — for you and for your opponent.`,
+        ],
+      },
+      {
+        heading: 'The five textures: dry, wet, paired, monotone, two-tone',
+        body: [
+          `Textures come from three separate questions about the board, so a single flop can wear more than one label at once. The first and most important question is how connected the cards are — the dry/wet axis.`,
+          `A "dry" board is disconnected: the cards do not work together, so very few strong hands or draws are possible. Example: K♠ 7♦ 2♣ — three different ranks far apart, three different suits. Nothing here makes a straight or a flush. On a dry board a single strong pair is usually safe, and it is hard for anyone to have hit a big hand. The danger is low.`,
+          `A "wet" board is connected and full of possibilities. A "draw" is an unfinished hand waiting on one more card — like four cards toward a straight or a flush — and wet boards are covered in them. Example: 9♥ 8♠ 7♦ — even with three different suits, so many straights are already there or one card away that the board is dangerous. On a wet board your single pair is fragile, because so many hands beat it or are drawing to beat it. (The more draws, the "wetter" — a very wet board is sometimes called draw-heavy.)`,
+          `The other two questions are about suits and pairs, and each adds its own label on top of dry or wet. "Monotone" means all three flop cards are the same suit, like A♥ 9♥ 4♥ — a flush (five cards of one suit) is already possible, so anyone holding two hearts already has one and even a single heart is a strong draw. A monotone flop always counts as wet. "Two-tone" means exactly two suits are present — two cards share a suit, like Q♥ 7♥ 2♣ — so a flush draw is live but not yet complete. Two-tone alone does not make a board wet; it just adds flush danger on top of whatever the connectedness says. (A board with three different suits is called "rainbow" — no flush is coming, so it carries no suit label at all.)`,
+          `"Paired" means two of the board cards share a rank, like K♠ K♦ 7♣. Now someone holding the third card of that rank has three of a kind ("trips"), and full houses become possible — so even a strong two pair is worth less. Paired boards tend to be dry in other respects, because a repeated rank leaves fewer distinct cards to build straights from.`,
+          `Put together, a board can be several of these at once. 9♠ 8♠ 7♦ is both wet (connected) and two-tone (a flush draw) — about as dangerous a flop as there is. Learning to spot every label a board carries is exactly what the Texture drill trains.`,
+        ],
+      },
+      {
+        heading: 'Thinking in ranges, not hands',
+        body: [
+          `Here is the mental shift that separates beginners from real players. A beginner asks, "what do I have?" A stronger player asks, "what could my opponent have?" — and answers it with a range.`,
+          `A "range" is the full set of hands someone could be holding in a given spot, not one specific guess. You almost never know an opponent's exact two cards, and trying to guess them is a fool's errand. But you can narrow the possibilities: their seat, whether they raised or called before the flop, and how they have bet all point to a group of likely hands. That group is their range.`,
+          `You read ranges because it is both more honest and more useful than guessing a single hand. Instead of "I bet he has ace-king," you think "his range here is big pairs, strong aces, and a few draws — how does this board hit that range, and how does it hit mine?" Every idea in the rest of this phase — what beats you, who the board favors — is really an exercise in comparing your range to theirs.`,
+        ],
+      },
+      {
+        heading: 'What beats you: seeing the danger',
+        body: [
+          `Once you can read a board, you can ask the concrete question that keeps you out of trouble: given my hand and this board, what stronger hands are actually possible?`,
+          `The trick is to look only at the board and imagine what an opponent's two cards could add to it. Say you hold two pair on a board of 9♠ 8♠ 7♦ 2♣. Anyone holding a ten and a six already has a straight (T-9-8-7-6), and combos like jack-ten or six-five make one too — so several very real hands already beat you. On top of that, two of the board cards are spades, so an opponent with two spades holds a flush draw that could beat you on the river. Your two pair looked great a moment ago; now it is in real danger — and that is information you need before you put more chips in.`,
+          `This is not about being paranoid; it is about being accurate. Sometimes the answer is "almost nothing beats me — this board is dry and my hand is huge." Other times it is "a lot beats me here." Either way, naming the hands that beat you turns a vague nervous feeling into a clear read. The What Beats You drill is exact combinatorial truth — it checks every possible opponent holding — so it is a perfect way to train this instinct.`,
+        ],
+      },
+      {
+        heading: 'Whose range does the board favor?',
+        body: [
+          `Boards do not hit both players equally. Consider the most common spot: someone raised before the flop while in position (acting last), and the big blind called. The "preflop raiser" chose to come in for a raise, so their range is strong at the top — big cards like ace-king and ace-queen, and big pairs. The caller's range is wider and more capped: suited connectors, small pairs, and other speculative hands that were cheap to call with.`,
+          `That difference means some flops favor one player's range over the other. High, broadway, disconnected flops favor the raiser — a board like A-K-4 or K-Q-7 slots right into their big cards and big pairs, hands the caller rarely has. Low, connected flops favor the caller — a board like 7-6-5 or 9-8-7 smashes into suited connectors and small pairs, making straights, sets, and two pair the raiser almost never holds. Boards in between favor neither much; call those neutral.`,
+          `Treat this as a helpful rule of thumb, not a law — it is a heuristic tuned for that specific raiser-versus-caller situation, and real spots have shades of grey. But the core idea is rock-solid and worth internalizing: before you decide who should be betting, ask whose range the board actually helps. The Range Interaction drill quizzes you on exactly these clear-cut boards.`,
+        ],
+      },
+      {
+        heading: 'Common beginner mistakes',
+        body: [
+          `Only looking at your own two cards. The most common error of all is falling in love with your hand and never asking what the board makes possible for everyone else. Your hand's value is set by the board, not by how pretty your cards looked preflop.`,
+          `Not noticing a scary board. Beginners miss that the board now has three to a flush, or four to a straight, and keep betting a hand that is no longer good. Train yourself to re-read the board every time a card is added.`,
+          `Overvaluing one pair on a wet board. Top pair is a fine hand on a dry board and a liability on a soaked one. The same holding is not worth the same on 9♥ 8♠ 7♦ as it is on K♠ 7♦ 2♣ — and playing it the same way on both is how stacks get lost.`,
+          `Ignoring the opponent's range. Assuming your opponent "probably has nothing" (or, just as bad, "probably has the nuts") instead of thinking through the actual group of hands they can hold. Read their range, then read how the board hits it.`,
+        ],
+      },
+      {
+        heading: 'How to practice this',
+        body: [
+          `The Board Reader trainer drills the three skills from this phase directly. Texture ID shows you a flop and asks you to tag it — dry or wet, plus paired, monotone, or two-tone where they apply. What Beats You gives you a hand and a full board and asks which kinds of hands could beat you. Range Interaction shows a raiser-versus-caller flop and asks whose range it favors.`,
+          `Run a mix of all three every night. Texture ID builds the fast read, What Beats You keeps you honest about danger, and Range Interaction trains the higher-level "who does this board help" question — together they turn board reading from something you puzzle over into something you see at a glance. Tap "Board Reader" above to start.`,
+        ],
+      },
     ],
   },
   {
