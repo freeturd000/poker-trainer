@@ -127,7 +127,9 @@ export const PHASES = [
           `Open-ended straight draw = 8 outs. A "straight" is five cards in a row (like 5-6-7-8-9). "Open-ended" means you have four in a row and can complete it at either end. Example: you hold 6 5 and the board has 7 8 — now any 4 or any 9 makes your straight. There are four 4s and four 9s in the deck, so 4 + 4 = 8 outs.`,
           `Gutshot (inside straight draw) = 4 outs. This is a straight draw missing a card in the middle, so only one rank completes it. Example: you hold 9 8 with 6 5 on the board — only a 7 fills 9-8-7-6-5. There are four 7s, so 4 outs.`,
           `A few more the trainer will show you: two "overcards" (two cards both higher than anything on the board) is 6 outs, a pocket pair hoping to make three-of-a-kind (a "set") is 2 outs, and big combination draws — a flush draw plus an open-ended draw — can be 15. One catch when you combine draws: do not double-count a card that helps both, which is why a flush-plus-straight draw is 15 outs, not 17.`,
+          `See it concretely below — a real hand and board for each draw, with the exact cards that are your outs laid out and counted. Tap through the examples until "count the outs" feels like just looking.`,
         ],
+        visual: 'OutsVisual',
       },
       {
         heading: 'The Rule of 2 and 4',
@@ -136,7 +138,9 @@ export const PHASES = [
           `If there is one card still to come (you are on the turn, waiting on the river), multiply your outs by 2. If there are two cards still to come (you are on the flop, with the turn and river to come), multiply your outs by 4. The result is roughly your percentage chance to hit.`,
           `Worked examples. A flush draw (9 outs) on the flop: 9 × 4 = 36% (the true figure is about 35% — close enough). That same flush draw on the turn, one card to come: 9 × 2 = 18%. An open-ended straight draw (8 outs) on the flop: 8 × 4 = 32%. A gutshot (4 outs) on the turn: 4 × 2 = 8%.`,
           `Remember it is an estimate, not an exact figure. The ×4 version runs a little high for very large draws (15 outs × 4 = 60%, where the true number is closer to 54%), but it is more than accurate enough to make the right decision at the table.`,
+          `Try it yourself below. Set the number of outs, flip between one and two cards to come, and watch the estimate — outs × 2 or × 4 — update instantly. The common-draw presets jump you to the counts worth memorising.`,
         ],
+        visual: 'RuleOf24Demo',
       },
       {
         heading: 'Pot odds: the price of a call',
@@ -145,7 +149,9 @@ export const PHASES = [
           `The break-even rule is simple: you call some amount to win what is already in the pot, and your required equity is that call divided by the total. Put plainly — you call $X to win the $Y that is now in the pot, so you need to win at least X ÷ (X + Y) of the time. That fraction is the minimum equity that makes calling worthwhile.`,
           `You do not have to run that division every time, because a few bet sizes cover most spots. Measuring the bet against the pot before the bet: if your opponent bets about a third of the pot, you need roughly 20% equity to call; if they bet half the pot, you need about 25%; if they bet the full pot, you need about 33%.`,
           `Where do those come from? The bigger the bet relative to the pot, the worse the price, so the more equity you need. Take the full-pot case: say $50 is in the pot and your opponent bets $50. Now the pot holds $100 and it costs you $50 to call — you are risking $50 to win that $100, which works out to 50 ÷ (50 + 100), about 33%. The half-pot and third-pot numbers come out the same way. (A three-quarter-pot bet lands around 30%, and a bet bigger than the pot needs more still.)`,
+          `Play with it below. Change the pot and the bet — or tap a quick bet size — and watch the equity you need move; when the bet matches a common fraction, its shortcut lights up. This is the exact calculation the Odds Trainer grades you on.`,
         ],
+        visual: 'PotOddsCalc',
       },
       {
         heading: 'Putting it together: the call/fold verdict',

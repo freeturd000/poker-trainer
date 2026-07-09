@@ -1,0 +1,99 @@
+// Learn visual — the Rule of 2 and 4 demonstrator (Phase 2).
+//
+// Set the out count (stepper or a common-draw preset) and toggle one vs two cards
+// to come; the estimate updates live as outs × multiplier. The multiplier comes
+// from the Odds Trainer's own `ruleOf24Multiplier` (imported, not re-derived) so
+// the convention matches the trainer exactly.
+
+import { useState } from 'react'
+import { ruleOf24Multiplier } from '../odds-trainer/drills.js'
+
+// Common draws → their standard out counts, mirroring /src/data/draws.js.
+const PRESETS = [
+  { label: 'Flush', outs: 9 },
+  { label: 'OESD', outs: 8 },
+  { label: 'Gutshot', outs: 4 },
+  { label: 'Overcards', outs: 6 },
+  { label: 'Combo', outs: 15 },
+]
+
+export default function RuleOf24Demo() {
+  const [outs, setOuts] = useState(9)
+  const [cardsToCome, setCardsToCome] = useState(2) // 2 = flop (×4), 1 = turn (×2)
+
+  const multiplier = ruleOf24Multiplier(cardsToCome) // ← identical to the Odds Trainer
+  const estimate = outs * multiplier
+
+  return (
+    <div className="not-prose mt-4 rounded-xl border border-gray-200 bg-gray-50 p-4">
+      {/* Outs stepper */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="text-xs font-semibold uppercase tracking-wide text-gray-400">Outs</div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setOuts((o) => Math.max(1, o - 1))}
+            aria-label="Fewer outs"
+            className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-lg font-bold text-emerald-700 transition hover:bg-emerald-100"
+          >
+            −
+          </button>
+          <div className="min-w-[2.5rem] text-center font-mono text-xl font-bold text-emerald-900">{outs}</div>
+          <button
+            onClick={() => setOuts((o) => Math.min(20, o + 1))}
+            aria-label="More outs"
+            className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-lg font-bold text-emerald-700 transition hover:bg-emerald-100"
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      {/* Common-draw presets */}
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {PRESETS.map((p) => (
+          <button
+            key={p.label}
+            onClick={() => setOuts(p.outs)}
+            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+              outs === p.outs ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+            }`}
+          >
+            {p.label} ({p.outs})
+          </button>
+        ))}
+      </div>
+
+      {/* Cards-to-come toggle */}
+      <div className="mt-4">
+        <div className="text-xs font-semibold uppercase tracking-wide text-gray-400">Cards to come</div>
+        <div className="mt-1.5 flex gap-1.5">
+          <button
+            onClick={() => setCardsToCome(2)}
+            className={`flex-1 rounded-lg px-2 py-2 text-sm font-semibold transition ${
+              cardsToCome === 2 ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+            }`}
+          >
+            Two (flop → river) ×4
+          </button>
+          <button
+            onClick={() => setCardsToCome(1)}
+            className={`flex-1 rounded-lg px-2 py-2 text-sm font-semibold transition ${
+              cardsToCome === 1 ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+            }`}
+          >
+            One (turn → river) ×2
+          </button>
+        </div>
+      </div>
+
+      {/* Live estimate */}
+      <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-center">
+        <div className="font-mono text-lg text-emerald-700">
+          {outs} × {multiplier} ={' '}
+          <span className="text-2xl font-bold text-emerald-800">≈ {estimate}%</span>
+        </div>
+        <div className="mt-1 text-xs text-emerald-600">estimated chance to hit your draw</div>
+      </div>
+    </div>
+  )
+}

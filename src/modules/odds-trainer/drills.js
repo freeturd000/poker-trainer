@@ -80,7 +80,10 @@ function pickPotBet() {
 // With call === bet this is bet / (pot + 2·bet). Matches the spec's
 // requiredEquity = callAmount / (pot + callAmount), where `pot` there is the pot
 // INCLUDING villain's bet (pot + bet here).
-function requiredEquity(pot, bet) {
+//
+// Exported (additively) so the Learn section's pot-odds calculator can reuse this
+// exact formula rather than duplicate it — single source of truth for the math.
+export function requiredEquity(pot, bet) {
   const call = bet
   const potIncludingBet = pot + bet
   return (100 * call) / (potIncludingBet + call)
@@ -109,11 +112,16 @@ function genOuts() {
   }
 }
 
+// ⚠️ the Rule of 2 and 4: ×4 with two cards to come (flop → river), ×2 with one
+// (turn → river). Exported additively so the Learn demonstrator reuses this exact
+// convention instead of duplicating it.
+export const ruleOf24Multiplier = (cardsToCome) => (cardsToCome === 2 ? 4 : 2)
+
 function genRuleOf24() {
   // Realistic out counts that map to the draws we teach.
   const outs = pick([2, 4, 6, 8, 9, 12, 15])
   const cardsToCome = pick([1, 2]) // 1 = turn only (×2), 2 = flop, two to come (×4)
-  const multiplier = cardsToCome === 2 ? 4 : 2 // ⚠️ the Rule of 2 and 4
+  const multiplier = ruleOf24Multiplier(cardsToCome)
   return { type: 'ruleof24', outs, cardsToCome, multiplier, answer: outs * multiplier }
 }
 
