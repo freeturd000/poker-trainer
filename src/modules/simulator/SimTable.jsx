@@ -208,7 +208,10 @@ function Seat({
   isFirstToAct,
 }) {
   const folded = p.status === 'folded'
-  const showCards = reveal && p.holeCards.length === 2 && !folded
+  // The hero keeps their own cards face-up after folding so they can review the
+  // hand they laid down as it plays out. Every other seat still hides folded
+  // cards (opponents are never revealed by folding).
+  const showCards = reveal && p.holeCards.length === 2 && (!folded || isHero)
   const descr =
     reveal && !folded && board.length === 5 && p.holeCards.length === 2
       ? evaluateHand(p.holeCards, board).descr
