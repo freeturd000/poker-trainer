@@ -289,11 +289,20 @@ export default function Simulator() {
       if (heroLegal) {
         const hero = view.players[HERO]
         const toCall = Math.max(0, view.currentBet - hero.streetCommitted)
-        // The current aggressor (a non-hero seat matching the high bet), used to
-        // pick the right BB-defense line preflop.
-        const raiser = view.players.find(
-          (p) => p.seat !== HERO && p.streetCommitted === view.currentBet && view.currentBet > cfg.bb,
-        )
+        // The current aggressor (a non-hero seat matching the high bet hero must
+        // match). Used to pick the BB-defense line preflop AND — the key coaching
+        // signal — to read WHO bet, by their archetype, on every street.
+        const aggressor =
+          toCall > 0
+            ? view.players.find((p) => p.seat !== HERO && p.streetCommitted === view.currentBet)
+            : null
+        const opponent = aggressor ? { archId: botsRef.current.archBySeat[aggressor.seat] } : undefined
+        // "Checked to you": postflop, nothing to call, and the player just before
+        // hero checked — so the coach can point out that nobody has shown strength.
+        const checkedToHero =
+          toCall === 0 &&
+          view.board.length > 0 &&
+          Boolean(lastActed && lastActed.seat !== HERO && lastActed.type === 'check')
         const advice = adviseHero({
           hole: hero.holeCards,
           board: view.board,
@@ -304,7 +313,9 @@ export default function Simulator() {
           pot: view.pot,
           toCall,
           isBB: hero.position === 'BB',
-          raiserPos: raiser?.position,
+          raiserPos: aggressor?.position,
+          opponent,
+          checkedToHero,
         })
         return { kind: 'advice', ...advice }
       }
