@@ -201,14 +201,13 @@ function advisePreflop({ token, position, facingRaise, isBB, canCheck, raiserPos
   // reasonable guide otherwise.
   if (raiserPos && BBDEF_POSITIONS.includes(raiserPos)) {
     const act = getBBDefAction(raiserPos, token) // '3bet' | 'call' | 'fold'
-    const rough = isBB ? '' : ` (This chart is really for the big blind, so treat it as a rough guide from your seat.)`
     let reason
     if (act === '3bet')
-      reason = `${hand} is strong enough to re-raise — that is, raise on top of their raise (poker players call this a "3-bet"). Put in the re-raise for value.${oppNote}${rough}`
+      reason = `${hand} is strong enough to re-raise — that is, raise on top of their raise (poker players call this a "3-bet"). Put in the re-raise for value.${oppNote}`
     else if (act === 'call')
-      reason = `${hand} is good enough to call and see the flop, but not strong enough to re-raise. Just call.${oppNote}${rough}`
+      reason = `${hand} is good enough to call and see the flop, but not strong enough to re-raise. Just call.${oppNote}`
     else
-      reason = `${hand} isn't strong enough to keep going against a raise. Fold and wait for a better spot.${oppNote}${rough}`
+      reason = `${hand} isn't strong enough to keep going against a raise — fold and wait for a better hand.${oppNote}`
     return { action: VERB[act] ?? VERB.fold, reason, approx: !isBB }
   }
 
