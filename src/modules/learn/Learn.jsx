@@ -22,6 +22,7 @@ import TextureClassifierVisual from './TextureClassifierVisual.jsx'
 import RangeFavorVisual from './RangeFavorVisual.jsx'
 import HandBucketVisual from './HandBucketVisual.jsx'
 import CbetHelperVisual from './CbetHelperVisual.jsx'
+import BankrollCalcVisual from './BankrollCalcVisual.jsx'
 
 // Registry of inline visuals a phase section can render. phases.js references these
 // by string name (keeping that file plain data), and the article renderer looks the
@@ -37,6 +38,7 @@ const VISUALS = {
   RangeFavorVisual,
   HandBucketVisual,
   CbetHelperVisual,
+  BankrollCalcVisual,
 }
 
 export default function Learn({ onNavigate }) {

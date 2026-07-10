@@ -412,7 +412,9 @@ export const PHASES = [
           `The core rule for live cash: a "buy-in" is the amount you sit down with, standardly 100 big blinds. At $1/$2 the big blind is $2, so a buy-in is about $200; at $1/$3 it is about $300. Then keep enough buy-ins in your roll to survive bad luck: at least 20 buy-ins for a stake as a minimum, and 30 or more to be comfortable. For $1/$2 that means roughly $4,000 minimum and $6,000 comfortable; for $1/$3, about $6,000 and $9,000.`,
           `Why so much? Because "variance" — short-term luck — is real and swingy. Even a genuinely winning player goes through losing stretches of many buy-ins; that is normal, not a sign you are bad. A big enough roll means an ordinary downswing cannot bust you. Too small a roll, and bad luck alone can end your poker before your skill ever gets to matter.`,
           `Hold this framing firmly: live poker is a craft with strict money rules, not an income plan. Do not sit down expecting it to pay your bills, and never reload with money you cannot afford to lose. Play the stake your roll covers, move up only when the roll says you can, and the whole thing stays fun and sustainable. The Live Toolkit's Bankroll tab does this math for you — enter your roll and it tells you which stakes you are comfortably rolled for, at the minimum edge, or under-rolled for, using exactly these thresholds.`,
+          `Try it right here. Enter a bankroll and watch which stakes it covers, at the minimum edge, or leaves you under-rolled for — the same thresholds and math the Live Toolkit's Bankroll Manager uses.`,
         ],
+        visual: 'BankrollCalcVisual',
       },
       {
         heading: 'Table mechanics and etiquette',
