@@ -19,15 +19,37 @@
 //     NO backdrop. The trainer beside it stays at full visibility and fully
 //     interactive — you can read the drawer and still click trainer buttons without
 //     closing it. It does not dim, trap focus, or capture clicks outside itself; close
-//     it with the ✕, the 📖 toggle, or Escape (no tap-outside on desktop).
+//     it with the ✕, the 📖 toggle, or Escape (no tap-outside on desktop). Its width
+//     is user-adjustable via a drag handle on its left edge and persists across
+//     sessions.
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { PHASES } from '../modules/learn/phases.js'
 import GlossaryContent from '../modules/learn/GlossaryContent.jsx'
 import PhaseArticleBody from '../modules/learn/PhaseArticleBody.jsx'
+import {
+  getDrawerWidth,
+  setDrawerWidth,
+  MIN_DRAWER_WIDTH,
+  MAX_DRAWER_WIDTH,
+} from '../store/index.js'
 
 // Matches Tailwind's `sm` breakpoint — the mobile-sheet ↔ desktop-panel dividing line.
 const DESKTOP_QUERY = '(min-width: 640px)'
+
+// Keyboard resize step (px) when the drag handle has focus and arrows are pressed.
+const RESIZE_STEP = 24
+
+// Upper bound at drag time: never let the panel exceed the configured max OR half
+// the viewport, so the trainer beside it always keeps usable space.
+function maxWidthNow() {
+  const half = typeof window !== 'undefined' ? Math.floor(window.innerWidth * 0.5) : MAX_DRAWER_WIDTH
+  return Math.max(MIN_DRAWER_WIDTH, Math.min(MAX_DRAWER_WIDTH, half))
+}
+
+function clampNow(px) {
+  return Math.min(maxWidthNow(), Math.max(MIN_DRAWER_WIDTH, Math.round(px)))
+}
 
 export default function ReferenceDrawer({ open, onClose }) {
   // 'glossary' | 'phases' — which section of the drawer is showing. openPhaseId is
@@ -49,6 +71,12 @@ export default function ReferenceDrawer({ open, onClose }) {
     return () => mq.removeEventListener('change', onChange)
   }, [])
 
+  // Desktop panel width (px), user-resizable via the left-edge drag handle and
+  // persisted across sessions. Ignored on mobile, where the sheet is full-width.
+  const [width, setWidth] = useState(getDrawerWidth)
+  const widthRef = useRef(width)
+  widthRef.current = width
+
   // Escape closes — only wired while open, so it never swallows Escape for the
   // trainer when the drawer is shut.
   useEffect(() => {
@@ -59,6 +87,56 @@ export default function ReferenceDrawer({ open, onClose }) {
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [open, onClose])
+
+  // Live drag-resize. The panel is anchored to the right edge, so the width is the
+  // distance from the pointer to the viewport's right edge. We update on every move
+  // for real-time reflow and persist once on release. Window-level listeners let the
+  // drag continue even if the pointer outruns the thin handle.
+  const dragging = useRef(false)
+  const endDrag = useCallback(() => {
+    if (!dragging.current) return
+    dragging.current = false
+    document.body.style.userSelect = ''
+    document.body.style.cursor = ''
+    setDrawerWidth(widthRef.current)
+  }, [])
+
+  useEffect(() => {
+    const onMove = (e) => {
+      if (!dragging.current) return
+      setWidth(clampNow(window.innerWidth - e.clientX))
+    }
+    const onUp = () => endDrag()
+    window.addEventListener('pointermove', onMove)
+    window.addEventListener('pointerup', onUp)
+    window.addEventListener('pointercancel', onUp)
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerup', onUp)
+      window.removeEventListener('pointercancel', onUp)
+    }
+  }, [endDrag])
+
+  const startDrag = useCallback((e) => {
+    e.preventDefault()
+    dragging.current = true
+    document.body.style.userSelect = 'none'
+    document.body.style.cursor = 'col-resize'
+  }, [])
+
+  // Keyboard resize when the handle is focused. The handle is on the LEFT edge, so
+  // ArrowLeft widens (grows leftward) and ArrowRight narrows.
+  const onHandleKey = useCallback((e) => {
+    let next = null
+    if (e.key === 'ArrowLeft') next = clampNow(widthRef.current + RESIZE_STEP)
+    else if (e.key === 'ArrowRight') next = clampNow(widthRef.current - RESIZE_STEP)
+    else if (e.key === 'Home') next = clampNow(MIN_DRAWER_WIDTH)
+    else if (e.key === 'End') next = clampNow(MAX_DRAWER_WIDTH)
+    if (next === null) return
+    e.preventDefault()
+    setWidth(next)
+    setDrawerWidth(next)
+  }, [])
 
   const phase = openPhaseId ? PHASES.find((p) => p.id === openPhaseId) : null
 
@@ -80,15 +158,39 @@ export default function ReferenceDrawer({ open, onClose }) {
         }`}
       />
 
-      {/* The panel: full-width sheet on mobile, slim fixed-width column on desktop. */}
+      {/* The panel: full-width sheet on mobile, slim resizable column on desktop. The
+          inline width applies on desktop only; on mobile the w-full class wins. */}
       <aside
         role="dialog"
         aria-modal={isDesktop ? 'false' : 'true'}
         aria-label="Learn reference"
-        className={`pointer-events-auto absolute inset-y-0 right-0 flex w-full max-w-full flex-col bg-surface shadow-2xl transition-transform duration-300 ease-out sm:w-[340px] sm:max-w-[85vw] ${
+        style={isDesktop ? { width: `${width}px` } : undefined}
+        className={`pointer-events-auto absolute inset-y-0 right-0 flex w-full max-w-full flex-col bg-surface shadow-2xl transition-transform duration-300 ease-out sm:max-w-[50vw] ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
+        {/* Drag handle — desktop only. Grab and drag left/right to resize; the whole
+            left edge is the target. role="separator" + arrow keys make it keyboard-
+            operable. Non-blocking: dragging only changes this panel's width. */}
+        <div
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize reference panel"
+          aria-valuemin={MIN_DRAWER_WIDTH}
+          aria-valuemax={MAX_DRAWER_WIDTH}
+          aria-valuenow={width}
+          tabIndex={0}
+          onPointerDown={startDrag}
+          onKeyDown={onHandleKey}
+          className="group absolute inset-y-0 left-0 hidden w-2 -translate-x-1/2 cursor-col-resize touch-none items-center justify-center sm:flex"
+        >
+          {/* Subtle visible grip that thickens on hover/focus. */}
+          <span
+            aria-hidden="true"
+            className="h-16 w-1 rounded-full bg-line transition-colors group-hover:bg-accent group-focus:bg-accent"
+          />
+        </div>
+
         {/* Header: title + tabs + close. Sticky within the panel so the controls
             stay reachable while the content scrolls. */}
         <div className="shrink-0 border-b border-line bg-surface px-4 pt-4">

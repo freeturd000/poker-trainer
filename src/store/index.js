@@ -17,3 +17,11 @@ export {
   clearLiveToolkit,
 } from './liveToolkit.js'
 export { getTheme, setTheme, applyTheme, DEFAULT_THEME } from './theme.js'
+export {
+  getDrawerWidth,
+  setDrawerWidth,
+  clampDrawerWidth,
+  MIN_DRAWER_WIDTH,
+  MAX_DRAWER_WIDTH,
+  DEFAULT_DRAWER_WIDTH,
+} from './referenceDrawer.js'
