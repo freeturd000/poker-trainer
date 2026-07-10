@@ -3,6 +3,7 @@
 // engine's min/max, with quick ⅓ / ½ / ¾ / pot / all-in shortcuts.
 
 import { useEffect, useState } from 'react'
+import Term from '../../components/Term.jsx'
 
 const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x))
 
@@ -103,6 +104,26 @@ export default function SimControls({ legal, pot, currentBet, onAct }) {
           </Btn>
         )}
       </div>
+
+      {/* Subtle glossary legend — define each offered action without hijacking the
+          buttons themselves (tapping a button must still act). */}
+      <p className="mt-2 text-center text-[11px] text-onfelt-3">
+        New here? Tap to define:{' '}
+        {[
+          fold && { id: 'fold', label: 'Fold' },
+          check && { id: 'check', label: 'Check' },
+          call && { id: 'call', label: 'Call' },
+          bet && { id: 'bet', label: 'Bet' },
+          raise && { id: 'raise', label: 'Raise' },
+        ]
+          .filter(Boolean)
+          .map((a, i) => (
+            <span key={a.id}>
+              {i > 0 && ' · '}
+              <Term id={a.id}>{a.label}</Term>
+            </span>
+          ))}
+      </p>
     </div>
   )
 }

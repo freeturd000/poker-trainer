@@ -8,6 +8,7 @@
 
 import { useState } from 'react'
 import Card from '../../components/Card.jsx'
+import Term from '../../components/Term.jsx'
 import { getProgress, recordAttempt, recordLeak, resetProgress, clearLeaks } from '../../store'
 import {
   DRILL_TYPES,
@@ -314,7 +315,9 @@ function renderPrompt(spot) {
             {spot.scenario.text}
           </div>
           <BoardRow cards={spot.flop} />
-          <div className="text-center text-sm text-onfelt-2">Whose range does this flop favor?</div>
+          <div className="text-center text-sm text-onfelt-2">
+            Whose <Term id="range">range</Term> does this <Term id="flop">flop</Term> favor?
+          </div>
         </div>
       )
     default:
@@ -372,6 +375,17 @@ function renderInput(spot, { selected, toggle, submit }) {
       >
         Submit{spot.type === 'whatbeats' && selected.length === 0 ? ' (nothing beats me)' : ''}
       </button>
+      {spot.type === 'texture' && (
+        <p className="text-xs text-onfelt-3">
+          What do these mean? Tap:{' '}
+          {TEXTURE_TAGS.map((tag, i) => (
+            <span key={tag}>
+              {i > 0 && ' · '}
+              <Term id={tag}>{tag}</Term>
+            </span>
+          ))}
+        </p>
+      )}
     </div>
   )
 }
@@ -379,7 +393,9 @@ function renderInput(spot, { selected, toggle, submit }) {
 function BoardRow({ cards }) {
   return (
     <div className="flex flex-col items-center gap-1">
-      <span className="text-xs uppercase tracking-wide text-onfelt-3">Board</span>
+      <span className="text-xs uppercase tracking-wide text-onfelt-3">
+        <Term id="board">Board</Term>
+      </span>
       <div className="flex gap-2">
         {cards.map((c) => (
           <Card key={c} card={c} size="md" />

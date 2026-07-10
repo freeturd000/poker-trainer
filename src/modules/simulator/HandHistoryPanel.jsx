@@ -7,6 +7,7 @@
 // first, in a bounded scroll area.
 
 import { useState } from 'react'
+import Term from '../../components/Term.jsx'
 import { parseCard } from '../../engine/card.js'
 
 const SUIT_SYMBOL = { s: '♠', h: '♥', d: '♦', c: '♣' }
@@ -78,7 +79,7 @@ function HandBlock({ h }) {
         <div className="mt-1 text-[11px] text-onfelt-3/80">
           {h.reveals.map((r, i) => (
             <span key={i} className="mr-3">
-              {r.name} ({r.position})
+              {r.name} (<Term id={r.position}>{r.position}</Term>)
               <Cards cards={r.cards} />
               {r.hand ? ` — ${r.hand}` : ''}
             </span>

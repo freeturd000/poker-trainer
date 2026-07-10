@@ -8,6 +8,7 @@
 
 import { useState } from 'react'
 import Card from '../../components/Card.jsx'
+import Term from '../../components/Term.jsx'
 import { getProgress, recordAttempt, recordLeak, resetProgress, clearLeaks } from '../../store'
 import {
   DRILL_TYPES,
@@ -278,11 +279,11 @@ function renderPrompt(spot) {
       return (
         <div className="flex flex-col items-center gap-4 rounded-xl bg-panel/40 p-5">
           <div className="text-center text-sm text-onfelt-2">
-            {spot.scenario.text} You are the preflop raiser.
+            {spot.scenario.text} You are the <Term id="preflop">preflop</Term> raiser.
           </div>
           <HandAndBoard hole={spot.hole} board={spot.board} boardLabel="Flop" />
           <div className="text-center text-sm font-semibold text-onfelt">
-            Do you continuation-bet, or check?
+            Do you <Term id="cbet">continuation-bet</Term>, or <Term id="check">check</Term>?
           </div>
         </div>
       )
@@ -290,7 +291,8 @@ function renderPrompt(spot) {
       return (
         <div className="flex flex-col items-center gap-4 rounded-xl bg-panel/40 p-5">
           <div className="text-center text-sm text-onfelt-2">
-            You called a raise. On the {spot.street}, your opponent bets{' '}
+            You called a <Term id="raise">raise</Term>. On the{' '}
+            <Term id={spot.street}>{spot.street}</Term>, your opponent bets{' '}
             <span className="font-bold text-onfelt">{spot.betLabel}</span>.
           </div>
           <HandAndBoard hole={spot.hole} board={spot.board} boardLabel={spot.street[0].toUpperCase() + spot.street.slice(1)} />
@@ -303,13 +305,17 @@ function renderPrompt(spot) {
           <div className="text-center text-sm text-onfelt-2">
             Betting is correct here — you're{' '}
             <span className="font-bold text-onfelt">
-              {spot.role === 'value' ? 'value-betting' : 'semi-bluffing'}
+              {spot.role === 'value' ? (
+                <Term id="value">value-betting</Term>
+              ) : (
+                <>semi-<Term id="bluff">bluffing</Term></>
+              )}
             </span>
             . Which size?
           </div>
           <HandAndBoard hole={spot.hole} board={spot.board} boardLabel="Flop" />
           <div className="text-center text-sm font-semibold text-onfelt">
-            Pick a bet size (fraction of the pot).
+            Pick a bet size (fraction of the <Term id="pot">pot</Term>).
           </div>
         </div>
       )
@@ -325,18 +331,31 @@ function AnswerButtons({ type, onPick }) {
   // Sizing has four compact options; cbet/facing use larger primary buttons.
   const compact = type === 'sizing'
   return (
-    <div className="flex flex-wrap justify-center gap-3">
-      {options.map((opt) => (
-        <button
-          key={opt.value}
-          onClick={() => onPick(opt.value)}
-          className={`rounded-xl font-bold text-onfelt shadow transition ${
-            compact ? 'px-6 py-3 text-xl' : 'px-8 py-3 text-lg'
-          } ${buttonColor(opt.value)}`}
-        >
-          {opt.label}
-        </button>
-      ))}
+    <div className="flex flex-col items-center gap-3">
+      <div className="flex flex-wrap justify-center gap-3">
+        {options.map((opt) => (
+          <button
+            key={opt.value}
+            onClick={() => onPick(opt.value)}
+            className={`rounded-xl font-bold text-onfelt shadow transition ${
+              compact ? 'px-6 py-3 text-xl' : 'px-8 py-3 text-lg'
+            } ${buttonColor(opt.value)}`}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+      {!compact && (
+        <p className="text-xs text-onfelt-3">
+          New here? Tap to define:{' '}
+          {options.map((opt, i) => (
+            <span key={opt.value}>
+              {i > 0 && ' · '}
+              <Term id={opt.value}>{opt.label}</Term>
+            </span>
+          ))}
+        </p>
+      )}
     </div>
   )
 }

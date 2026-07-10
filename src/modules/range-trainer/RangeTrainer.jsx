@@ -9,6 +9,8 @@
 
 import { useState } from 'react'
 import Card from '../../components/Card.jsx'
+import Term from '../../components/Term.jsx'
+import { describeHand } from '../../components/glossary.js'
 import { getProgress, recordAttempt, recordLeak, resetProgress, clearLeaks } from '../../store'
 import { getAction, whyText, getBBDefAction, bbDefWhyText, POSITIONS } from './ranges.js'
 import { nextSpot, leakTag, parseLeakTag, bbDefLeakTag, parseBBDefLeakTag } from './spot.js'
@@ -279,7 +281,7 @@ export default function RangeTrainer() {
           {mode === 'bbdef' ? 'You are in the BB vs an open from' : 'You are in'}
         </span>
         <span className="rounded-lg bg-panel/40 px-4 py-1 text-2xl font-bold text-onfelt">
-          {spot.position}
+          <Term id={spot.position}>{spot.position}</Term>
         </span>
         <span className="text-xs text-onfelt-3">
           {mode === 'bbdef'
@@ -298,16 +300,27 @@ export default function RangeTrainer() {
       </div>
 
       {!selection ? (
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          {ACTIONS[mode].map((a) => (
-            <button
-              key={a.id}
-              onClick={() => answer(a.id)}
-              className={`rounded-xl px-7 py-3 text-lg font-bold text-onfelt shadow transition ${TONE_CLASS[a.tone]}`}
-            >
-              {a.label}
-            </button>
-          ))}
+        <div className="mt-8 flex flex-col items-center gap-3">
+          <div className="flex flex-wrap justify-center gap-3">
+            {ACTIONS[mode].map((a) => (
+              <button
+                key={a.id}
+                onClick={() => answer(a.id)}
+                className={`rounded-xl px-7 py-3 text-lg font-bold text-onfelt shadow transition ${TONE_CLASS[a.tone]}`}
+              >
+                {a.label}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-onfelt-3">
+            New here? Tap to define:{' '}
+            {ACTIONS[mode].map((a, i) => (
+              <span key={a.id}>
+                {i > 0 && ' · '}
+                <Term id={a.id}>{a.label}</Term>
+              </span>
+            ))}
+          </p>
         </div>
       ) : (
         <div className="mt-8 flex w-full max-w-md flex-col items-center gap-3">
@@ -321,7 +334,8 @@ export default function RangeTrainer() {
                 result.correct ? 'text-accent-text' : 'text-danger-text'
               }`}
             >
-              {result.correct ? 'Correct' : 'Incorrect'} — {spot.token} is a{' '}
+              {result.correct ? 'Correct' : 'Incorrect'} —{' '}
+              <Term def={describeHand(spot.token)}>{spot.token}</Term> is a{' '}
               {ACTION_LABEL[result.correctAction].toUpperCase()}
             </div>
             {!result.correct && <div className="mt-1 text-sm text-ink-body">{result.why}</div>}

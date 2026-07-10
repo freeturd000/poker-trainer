@@ -12,6 +12,7 @@
 // felt. Only the *arrangement* lives here; each seat renders exactly as before.
 
 import Card from '../../components/Card.jsx'
+import Term from '../../components/Term.jsx'
 import { evaluateHand } from '../../engine/evaluator.js'
 
 // Oval geometry, in % of the table wrapper. Seats are centred on this ellipse;
@@ -156,7 +157,7 @@ function Seat({ p, label, isHero, isButton, isTurn, stepMode, reveal, won, board
       <div className="flex items-center justify-center gap-2">
         <span className="text-sm font-bold text-onfelt">{label}</span>
         <span className="rounded bg-felt-rail px-1.5 py-0.5 text-[10px] font-semibold uppercase text-onfelt-2">
-          {p.position}
+          <Term id={p.position}>{p.position}</Term>
         </span>
       </div>
 

@@ -7,6 +7,7 @@
 
 import { useState } from 'react'
 import Card from '../../components/Card.jsx'
+import Term from '../../components/Term.jsx'
 import { getProgress, recordAttempt, recordLeak, resetProgress, clearLeaks } from '../../store'
 import {
   DRILL_TYPES,
@@ -275,12 +276,14 @@ function renderPrompt(spot) {
     case 'potodds':
       return (
         <div className="rounded-xl bg-panel/40 p-5 text-center text-onfelt">
-          <div className="text-sm text-onfelt-2">Pot</div>
+          <div className="text-sm text-onfelt-2">
+            <Term id="pot">Pot</Term>
+          </div>
           <div className="text-3xl font-bold">${spot.pot}</div>
           <div className="mt-3 text-sm text-onfelt-2">Opponent bets</div>
           <div className="text-3xl font-bold">${spot.bet}</div>
           <div className="mt-4 text-sm text-onfelt-2">
-            What equity % do you need to call?
+            What <Term id="equity">equity</Term> % do you need to call?
           </div>
         </div>
       )
@@ -289,7 +292,7 @@ function renderPrompt(spot) {
         <div className="flex flex-col items-center gap-4 rounded-xl bg-panel/40 p-5">
           <BoardAndHand hole={spot.hole} board={spot.board} />
           <div className="text-center text-sm text-onfelt-2">
-            How many outs does your draw have?
+            How many <Term id="outs">outs</Term> does your <Term id="draw">draw</Term> have?
           </div>
         </div>
       )
@@ -301,7 +304,7 @@ function renderPrompt(spot) {
             {spot.cardsToCome === 2 ? 'Two cards to come (flop → river)' : 'One card to come (turn → river)'}
           </div>
           <div className="mt-4 text-sm text-onfelt-2">
-            Estimate your equity % with the Rule of 2 &amp; 4.
+            Estimate your <Term id="equity">equity</Term> % with the Rule of 2 &amp; 4.
           </div>
         </div>
       )
@@ -310,7 +313,7 @@ function renderPrompt(spot) {
         <div className="flex flex-col items-center gap-4 rounded-xl bg-panel/40 p-5">
           <BoardAndHand hole={spot.hole} board={spot.board} />
           <div className="text-center text-onfelt">
-            <span className="text-sm text-onfelt-2">Pot </span>
+            <span className="text-sm text-onfelt-2"><Term id="pot">Pot</Term> </span>
             <span className="font-bold">${spot.pot}</span>
             <span className="mx-2 text-onfelt-4">·</span>
             <span className="text-sm text-onfelt-2">Opponent bets </span>
