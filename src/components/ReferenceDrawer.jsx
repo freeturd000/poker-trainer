@@ -11,13 +11,23 @@
 // searchable glossary, PhaseArticleBody for each phase article. Nothing is
 // duplicated — same data (phases.js / glossary.js), same components.
 //
-// Layout: full-screen dismissible sheet on mobile, right-side drawer on desktop.
-// Closes on the ✕ button, on Escape, and on tapping the dimmed backdrop.
+// Layout differs by viewport:
+//   • Mobile (< sm): a full-screen dismissible sheet over a dimmed backdrop. Modal —
+//     tap the backdrop, the ✕, or Escape to close. A slim side panel is unusable on a
+//     phone, so mobile keeps the sheet.
+//   • Desktop (≥ sm): a slim, non-blocking reference column (~340px) on the right with
+//     NO backdrop. The trainer beside it stays at full visibility and fully
+//     interactive — you can read the drawer and still click trainer buttons without
+//     closing it. It does not dim, trap focus, or capture clicks outside itself; close
+//     it with the ✕, the 📖 toggle, or Escape (no tap-outside on desktop).
 
 import { useEffect, useState } from 'react'
 import { PHASES } from '../modules/learn/phases.js'
 import GlossaryContent from '../modules/learn/GlossaryContent.jsx'
 import PhaseArticleBody from '../modules/learn/PhaseArticleBody.jsx'
+
+// Matches Tailwind's `sm` breakpoint — the mobile-sheet ↔ desktop-panel dividing line.
+const DESKTOP_QUERY = '(min-width: 640px)'
 
 export default function ReferenceDrawer({ open, onClose }) {
   // 'glossary' | 'phases' — which section of the drawer is showing. openPhaseId is
@@ -25,6 +35,19 @@ export default function ReferenceDrawer({ open, onClose }) {
   // is intentionally local and separate from anything in the trainer underneath.
   const [tab, setTab] = useState('glossary')
   const [openPhaseId, setOpenPhaseId] = useState(null)
+
+  // Track desktop vs mobile so we can drop modal semantics on desktop, where the
+  // drawer is a non-blocking side panel. Purely a presentation concern.
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(DESKTOP_QUERY).matches,
+  )
+  useEffect(() => {
+    const mq = window.matchMedia(DESKTOP_QUERY)
+    const onChange = (e) => setIsDesktop(e.matches)
+    mq.addEventListener('change', onChange)
+    setIsDesktop(mq.matches)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
 
   // Escape closes — only wired while open, so it never swallows Escape for the
   // trainer when the drawer is shut.
@@ -40,27 +63,29 @@ export default function ReferenceDrawer({ open, onClose }) {
   const phase = openPhaseId ? PHASES.find((p) => p.id === openPhaseId) : null
 
   return (
-    // Kept mounted (not conditionally removed) so the slide transition plays. When
-    // closed it is fully transparent AND pointer-events-none, so it never blocks a
-    // tap meant for the trainer beneath it.
+    // Kept mounted (not conditionally removed) so the slide transition plays. The
+    // container itself is always pointer-events-none — only the backdrop (mobile) and
+    // the panel opt back in — so on desktop the trainer area beside the slim panel
+    // keeps receiving clicks, and when closed nothing blocks a tap for the trainer.
     <div
-      className={`fixed inset-0 z-[60] ${open ? '' : 'pointer-events-none'}`}
+      className="pointer-events-none fixed inset-0 z-[60]"
       aria-hidden={open ? undefined : true}
     >
-      {/* Dimmed backdrop — tap to dismiss. */}
+      {/* Dimmed backdrop — mobile only (sm:hidden). Tap to dismiss. On desktop there
+          is no backdrop at all, so the trainer stays fully visible and interactive. */}
       <div
         onClick={onClose}
-        className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ${
-          open ? 'opacity-100' : 'opacity-0'
+        className={`absolute inset-0 bg-black/50 transition-opacity duration-300 sm:hidden ${
+          open ? 'pointer-events-auto opacity-100' : 'opacity-0'
         }`}
       />
 
-      {/* The panel: full-width sheet on mobile, fixed-width drawer on desktop. */}
+      {/* The panel: full-width sheet on mobile, slim fixed-width column on desktop. */}
       <aside
         role="dialog"
-        aria-modal="true"
+        aria-modal={isDesktop ? 'false' : 'true'}
         aria-label="Learn reference"
-        className={`absolute inset-y-0 right-0 flex w-full max-w-full flex-col bg-surface shadow-2xl transition-transform duration-300 ease-out sm:max-w-md ${
+        className={`pointer-events-auto absolute inset-y-0 right-0 flex w-full max-w-full flex-col bg-surface shadow-2xl transition-transform duration-300 ease-out sm:w-[340px] sm:max-w-[85vw] ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
