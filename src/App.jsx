@@ -18,7 +18,7 @@ import { getTheme, setTheme } from './store/theme.js'
 
 // Views where you're mid-session and may want to look something up without leaving:
 // the drills and the simulator. The reference drawer button shows only on these.
-const REFERENCE_VIEWS = new Set(['range', 'odds', 'board', 'postflop', 'simulator'])
+const REFERENCE_VIEWS = new Set(['range', 'odds', 'board', 'postflop', 'concept', 'simulator'])
 
 // Concise tab labels keep the 8-item bar scannable and let it fit a phone width.
 // Dashboard leads (home), then the trainers in build order, then the tools.
@@ -29,8 +29,8 @@ const VIEWS = [
   { id: 'odds', label: 'Odds' },
   { id: 'board', label: 'Board' },
   { id: 'postflop', label: 'Postflop' },
-  { id: 'simulator', label: 'Simulator' },
   { id: 'concept', label: 'Concept' },
+  { id: 'simulator', label: 'Simulator' },
   { id: 'live', label: 'Live' },
 ]
 
