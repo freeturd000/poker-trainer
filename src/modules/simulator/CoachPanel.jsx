@@ -7,9 +7,14 @@
 //   • { kind: 'advice', action, reason, approx, context }  — a suggestion on hero's
 //     turn, optionally preceded by a "what just happened" line reading opponents'
 //     most recent meaningful action
-//   • { kind: 'result', summary, lesson }         — the showdown recap
+//   • { kind: 'result', summary, lesson, showdown? } — the showdown recap; when the
+//     hand reached showdown, `showdown` carries a ranked, plain-English breakdown of
+//     every hand shown (best → worst) and a one-line "why the winner won"
 // Deliberately separate from the felt/table styling so explanations read as a
 // tutor's aside, not part of the game surface.
+
+import Card from '../../components/Card.jsx'
+import Term from '../../components/Term.jsx'
 
 function Shell({ children }) {
   return (
@@ -70,7 +75,52 @@ export default function CoachPanel({ content }) {
   return (
     <Shell>
       <p className="text-sm font-semibold leading-snug text-onfelt">{content.summary}</p>
-      <p className="mt-1 text-sm leading-snug text-onfelt-2">{content.lesson}</p>
+      {content.showdown && <ShowdownBreakdown showdown={content.showdown} />}
+      <p className="mt-2 text-sm leading-snug text-onfelt-2">{content.lesson}</p>
     </Shell>
+  )
+}
+
+// The at-showdown breakdown: every hand shown, ranked best → worst with its plain-
+// English made hand and hole cards, then a one-line "why". Pure presentation — all
+// naming, ranking, and the verdict come from ./coach.js (via the /engine evaluator).
+function ShowdownBreakdown({ showdown }) {
+  return (
+    <div className="mt-2.5 rounded-xl border border-special/25 bg-special/5 p-2.5">
+      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-special">
+        <Term id="showdown">Showdown</Term> — best hand to worst
+      </p>
+      <ol className="space-y-1.5">
+        {showdown.rows.map((r, i) => (
+          <li key={i} className="flex items-center gap-2">
+            <span
+              className={`w-3 shrink-0 text-right text-xs tabular-nums ${
+                r.isWinner ? 'font-bold text-gold-text' : 'text-onfelt-3'
+              }`}
+            >
+              {i + 1}
+            </span>
+            <span className="flex shrink-0 gap-1">
+              <Card card={r.hole[0]} size="sm" />
+              <Card card={r.hole[1]} size="sm" />
+            </span>
+            <span className="text-sm leading-snug">
+              <span className={`font-semibold ${r.isWinner ? 'text-gold-text' : 'text-onfelt'}`}>
+                {r.name}
+                {r.isWinner ? ' — winner' : ''}:
+              </span>{' '}
+              <span className="text-onfelt-2">{r.made}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+      <p className="mt-2 text-sm leading-snug text-onfelt-2">
+        <span className="font-semibold text-onfelt">Why: </span>
+        {showdown.verdict}
+      </p>
+      <p className="mt-1 text-[11px] italic text-special/80">
+        Every hand slots into poker's <Term id="handrankings">hand-ranking order</Term>.
+      </p>
+    </div>
   )
 }

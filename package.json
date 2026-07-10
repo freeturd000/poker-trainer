@@ -11,6 +11,7 @@
     "test:board": "node src/modules/board-reader/board-reader.test.mjs",
     "test:postflop": "node src/modules/postflop-trainer/postflop-trainer.test.mjs",
     "test:sim": "node src/modules/simulator/simulator.test.mjs",
+    "test:coach": "node src/modules/simulator/coach.test.mjs",
     "test:bots": "node src/modules/simulator/bots.test.mjs",
     "test:concept": "node src/modules/concept-deck/concept-deck.test.mjs",
     "test:live": "node src/modules/live-toolkit/live-toolkit.test.mjs"

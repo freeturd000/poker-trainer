@@ -64,6 +64,8 @@ export const GLOSSARY = {
   bluff: 'Bluff — betting or raising a weak hand to make a stronger hand fold, winning the pot without having to show down the best cards.',
   'made hand': 'Made hand — a hand that is already complete and has real value now (a pair or better), as opposed to a draw that still needs another card.',
   showdown: 'Showdown — the end of a hand where the remaining players turn their cards face-up and the best five-card hand wins the pot.',
+  handrankings:
+    'Hand rankings — the fixed order of poker hands from weakest to strongest: high card (no pair), one pair, two pair, three of a kind, straight, flush, full house, four of a kind, straight flush. A higher-ranked hand always beats a lower one; when two hands are the same type, the higher cards (the “kicker”) break the tie.',
   blinds: 'Blinds — the forced bets posted before the cards are dealt (a small blind and a big blind) that seed the pot so there’s something to play for.',
   pot: 'The pot — all the chips wagered so far in the current hand. The winner (or winners) take it.',
   'buy-in': 'Buy-in — the amount of chips you sit down with. Cash games have a range (100 big blinds is a standard buy-in).',

@@ -38,7 +38,7 @@ import {
 import { classifyTexture } from '../board-reader/texture.js'
 import { favorFlop } from '../board-reader/rangeInteraction.js'
 import { coachSizing } from './sizing.js'
-import { evaluateHand } from '../../engine/evaluator.js'
+import { evaluateHand, compareHands } from '../../engine/evaluator.js'
 import { GLOSSARY, describeHand as describeToken } from '../../components/glossary.js'
 
 // ── Archetype descriptions ────────────────────────────────────────────────────
@@ -510,10 +510,110 @@ export function adviseHero({ hole, board, position, street, currentBet, bb, pot,
 
 // ── Explaining the result ─────────────────────────────────────────────────────
 
+// Beginner-friendly restatements of the evaluator's own result. These reformat the
+// strings the /engine evaluator returns — they add NO new hand judgement (the rank,
+// category, and winner all come straight from evaluateHand / compareHands).
+const RANK_HIGH = { A: 'ace', K: 'king', Q: 'queen', J: 'jack', T: 'ten', 9: 'nine', 8: 'eight', 7: 'seven', 6: 'six', 5: 'five', 4: 'four', 3: 'three', 2: 'two' }
+const RANK_PLURAL = { A: 'aces', K: 'kings', Q: 'queens', J: 'jacks', T: 'tens', 9: 'nines', 8: 'eights', 7: 'sevens', 6: 'sixes', 5: 'fives', 4: 'fours', 3: 'threes', 2: 'twos' }
+const highWord = (r) => RANK_HIGH[r] ?? String(r)
+const pluralWord = (r) => RANK_PLURAL[r] ?? `${r}s`
+
+// Plain-English hand-type phrase for a hand-ranking comparison, keyed by the
+// evaluator's `name` (its rank category). Used to say WHY one type beats another.
+const CAT_PHRASE = {
+  'High Card': 'a no-pair (high-card) hand',
+  Pair: 'a pair',
+  'Two Pair': 'two pair',
+  'Three of a Kind': 'three of a kind',
+  Straight: 'a straight',
+  Flush: 'a flush',
+  'Full House': 'a full house',
+  'Four of a Kind': 'four of a kind',
+  'Straight Flush': 'a straight flush',
+}
+
+const cap = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s)
+const listNames = (names) =>
+  names.length <= 1
+    ? names[0] ?? ''
+    : names.length === 2
+      ? `${names[0]} and ${names[1]}`
+      : `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`
+
 /**
- * A plain-English recap at showdown: who won with what, plus one line on the key
- * decision point when identifiable.
- * @returns {{ summary:string, lesson:string }}
+ * Translate one evaluated hand into a short, plain phrase a beginner can read,
+ * e.g. "a pair of sixes", "two pair, aces and kings", "king-high". Built ONLY from
+ * the evaluator's own `name` (category) and `descr` (ranks); no re-evaluation.
+ * @param {import('../../engine/evaluator.js').HandResult} res
+ * @returns {string}
+ */
+function plainMadeHand(res) {
+  const d = res.descr || ''
+  if (d === 'Royal Flush') return 'a royal flush — the best possible hand'
+  const one = (d.match(/,\s*([2-9TJQKA])/) || [])[1] // first named rank in the descr
+  switch (res.name) {
+    case 'Straight Flush':
+      return `a straight flush, ${highWord(one)}-high`
+    case 'Four of a Kind':
+      return `four of a kind, ${pluralWord(one)}`
+    case 'Full House': {
+      const m = d.match(/,\s*([2-9TJQKA])'s over ([2-9TJQKA])'s/) || []
+      return `a full house, ${pluralWord(m[1])} full of ${pluralWord(m[2])}`
+    }
+    case 'Flush':
+      return `a flush, ${highWord(one)}-high`
+    case 'Straight':
+      return `a straight, ${highWord(one)}-high`
+    case 'Three of a Kind':
+      return `three of a kind, ${pluralWord(one)}`
+    case 'Two Pair': {
+      const m = d.match(/,\s*([2-9TJQKA])'s\s*&\s*([2-9TJQKA])'s/) || []
+      return `two pair, ${pluralWord(m[1])} and ${pluralWord(m[2])}`
+    }
+    case 'Pair':
+      return `a pair of ${pluralWord(one)}`
+    case 'High Card': {
+      const h = (d.match(/^([2-9TJQKA])/) || [])[1]
+      return `${highWord(h)}-high (no pair)`
+    }
+    default:
+      return d.toLowerCase()
+  }
+}
+
+// One plain sentence on WHY the winning hand beats the best losing hand — always
+// grounded in poker's fixed hand-ranking order (higher type wins; same type →
+// higher cards win). `win`/`lose` are evaluator results.
+function beatReason(win, lose) {
+  if (win.rank !== lose.rank)
+    return `${CAT_PHRASE[win.name] ?? 'the higher hand'} always ranks above ${CAT_PHRASE[lose.name] ?? 'the lower hand'} in poker's hand-ranking order.`
+  return `when two hands are the same type, the higher cards (the "kicker") decide it.`
+}
+
+// The verdict line for a showdown: names the winner's hand, the best beaten hand,
+// and the ranking rule that separates them. Handles split pots and full chops.
+// `rows` is sorted best → worst; each row carries its evaluator result in `res`.
+function showdownVerdict(rows) {
+  const top = rows[0]
+  const tiedTop = rows.filter((r) => compareHands(top.res, r.res) === 0)
+  const loser = rows.find((r) => compareHands(top.res, r.res) === 1)
+  const topMade = plainMadeHand(top.res)
+  if (!loser) {
+    return `Every hand here ties exactly (${topMade}), so the players split the pot evenly.`
+  }
+  const loseMade = plainMadeHand(loser.res)
+  const because = beatReason(top.res, loser.res)
+  if (tiedTop.length > 1) {
+    return `${listNames(tiedTop.map((r) => r.name))} tie with ${topMade} and split the pot — and that beats ${loseMade} because ${because}`
+  }
+  return `${cap(topMade)} beats ${loseMade} because ${because}`
+}
+
+/**
+ * A plain-English recap at showdown: who won with what, a full ranked breakdown of
+ * every hand shown (best → worst, for wins AND losses) with a one-line "why", plus
+ * a general teaching takeaway from the outcome.
+ * @returns {{ summary:string, lesson:string, showdown?:{rows:Array, verdict:string} }}
  */
 export function recapResult({ view, heroSeat, nameBySeat }) {
   const nameOf = (i) => (i === heroSeat ? 'You' : nameBySeat[i] ?? `Seat ${i}`)
@@ -524,14 +624,32 @@ export function recapResult({ view, heroSeat, nameBySeat }) {
   const heroFolded = hero.status === 'folded'
   const heroWon = winners.some((w) => w.index === heroSeat)
 
-  // Who won, with what.
+  // Every hand that reached showdown, evaluated once by the shared engine, sorted
+  // best → worst so the beginner sees the hierarchy for this exact board.
+  let rows = []
+  if (showdown) {
+    view.players.forEach((p, i) => {
+      if (p.status === 'folded' || !p.holeCards || p.holeCards.length !== 2) return
+      rows.push({
+        name: nameOf(i),
+        isHero: i === heroSeat,
+        isWinner: winners.some((w) => w.index === i),
+        hole: p.holeCards,
+        res: evaluateHand(p.holeCards, view.board),
+      })
+    })
+    // Stronger hand first (compareHands returns 1 when its first arg wins).
+    rows.sort((a, b) => compareHands(b.res, a.res))
+  }
+
+  // Who won, with what — in beginner terms drawn from the evaluator's own result.
   const summary = winners
     .map((w) => {
       const p = view.players[w.index]
       const verb = w.index === heroSeat ? 'win' : 'wins'
       const why =
         showdown && p.status !== 'folded' && p.holeCards.length === 2
-          ? ` with ${evaluateHand(p.holeCards, view.board).descr}`
+          ? ` with ${plainMadeHand(evaluateHand(p.holeCards, view.board))}`
           : ' — everyone else folded'
       return `${nameOf(w.index)} ${verb} ${w.amount}${why}.`
     })
@@ -542,19 +660,27 @@ export function recapResult({ view, heroSeat, nameBySeat }) {
   if (heroFolded) {
     lesson = `Lesson: you folded. Letting go when you're likely behind is exactly how you save chips for stronger spots — folds like this are wins, not losses.`
   } else if (heroWon && showdown) {
-    lesson = `Lesson: you stayed in with a hand strong enough to win at showdown (the end, where cards are turned face-up and the best hand takes the pot). That's the payoff for playing solid holdings.`
+    lesson = `Lesson: you stayed in with the winning hand at showdown (the end, where cards are turned face-up and the best hand takes the pot). That's the payoff for playing solid holdings.`
   } else if (heroWon) {
     lesson = `Lesson: everyone folded to you, so you won without showing your cards. Winning a pot uncontested like this is a clean result — your betting got them to give up.`
   } else if (showdown) {
-    const winHand = (() => {
-      const w = winners[0]
-      const p = w && view.players[w.index]
-      return p && p.holeCards.length === 2 ? evaluateHand(p.holeCards, view.board).descr : 'a better hand'
-    })()
-    lesson = `Lesson: you went all the way to showdown but ran into ${winHand}. When you're beaten like this, betting less on the earlier rounds is what keeps the loss small.`
+    lesson = `Lesson: you saw it through to showdown but were beaten. Losses like this are worth studying — the breakdown above shows exactly which hand topped yours and why. Betting less on the earlier rounds is what keeps a beat like this small.`
   } else {
     lesson = `Lesson: the hand ended without a showdown. Next time, notice which round the big money went in — that's usually where the hand was really won or lost.`
   }
 
-  return { summary, lesson }
+  const result = { summary, lesson }
+  if (showdown && rows.length > 1) {
+    result.showdown = {
+      rows: rows.map((r) => ({
+        name: r.name,
+        isHero: r.isHero,
+        isWinner: r.isWinner,
+        hole: r.hole,
+        made: plainMadeHand(r.res),
+      })),
+      verdict: showdownVerdict(rows),
+    }
+  }
+  return result
 }
