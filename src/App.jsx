@@ -13,7 +13,12 @@ import PostflopTrainer from './modules/postflop-trainer/PostflopTrainer.jsx'
 import Simulator from './modules/simulator/Simulator.jsx'
 import ConceptDeck from './modules/concept-deck/ConceptDeck.jsx'
 import LiveToolkit from './modules/live-toolkit/LiveToolkit.jsx'
+import ReferenceDrawer from './components/ReferenceDrawer.jsx'
 import { getTheme, setTheme } from './store/theme.js'
+
+// Views where you're mid-session and may want to look something up without leaving:
+// the drills and the simulator. The reference drawer button shows only on these.
+const REFERENCE_VIEWS = new Set(['range', 'odds', 'board', 'postflop', 'simulator'])
 
 // Concise tab labels keep the 8-item bar scannable and let it fit a phone width.
 // Dashboard leads (home), then the trainers in build order, then the tools.
@@ -48,6 +53,10 @@ function ThemeToggle({ theme, onToggle }) {
 export default function App() {
   const [view, setView] = useState('dashboard')
   const [theme, setThemeState] = useState(() => getTheme())
+  // Reference drawer visibility. Lives here (above the views) so it floats over any
+  // trainer/sim without that trainer knowing or resetting. Toggling it never
+  // re-renders or resets the active drill.
+  const [refOpen, setRefOpen] = useState(false)
 
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark'
@@ -85,6 +94,20 @@ export default function App() {
               </button>
             ))}
           </nav>
+          {/* Unobtrusive reference affordance — only while training or in the sim,
+              tucked in the top bar (never over the action controls). Opens the
+              slide-out Learn/glossary drawer over the current view. */}
+          {REFERENCE_VIEWS.has(view) && (
+            <button
+              onClick={() => setRefOpen(true)}
+              className="flex shrink-0 items-center gap-1 rounded-lg px-2 py-1.5 text-sm font-semibold text-onfelt-2 transition hover:bg-panel/60 hover:text-onfelt"
+              aria-label="Open Learn reference"
+              title="Learn & reference"
+            >
+              <span className="text-base leading-none" aria-hidden="true">📖</span>
+              <span className="hidden sm:inline">Learn</span>
+            </button>
+          )}
           <ThemeToggle theme={theme} onToggle={toggleTheme} />
         </div>
       </header>
@@ -98,6 +121,10 @@ export default function App() {
       {view === 'simulator' && <Simulator />}
       {view === 'concept' && <ConceptDeck />}
       {view === 'live' && <LiveToolkit />}
+
+      {/* Slide-out Learn/reference drawer. Rendered once at the app root so it can
+          float over any view; kept mounted for its open/close transition. */}
+      <ReferenceDrawer open={refOpen} onClose={() => setRefOpen(false)} />
     </div>
   )
 }

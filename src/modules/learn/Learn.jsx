@@ -13,36 +13,7 @@
 import { useState } from 'react'
 import { PHASES, getPhase } from './phases.js'
 import GlossaryPage from './GlossaryPage.jsx'
-import HandFlowVisual from './HandFlowVisual.jsx'
-import PositionDiagram from './PositionDiagram.jsx'
-import RangeGridVisual from './RangeGridVisual.jsx'
-import HandRankings from './HandRankings.jsx'
-import OutsVisual from './OutsVisual.jsx'
-import RuleOf24Demo from './RuleOf24Demo.jsx'
-import PotOddsCalc from './PotOddsCalc.jsx'
-import TextureClassifierVisual from './TextureClassifierVisual.jsx'
-import RangeFavorVisual from './RangeFavorVisual.jsx'
-import HandBucketVisual from './HandBucketVisual.jsx'
-import CbetHelperVisual from './CbetHelperVisual.jsx'
-import BankrollCalcVisual from './BankrollCalcVisual.jsx'
-
-// Registry of inline visuals a phase section can render. phases.js references these
-// by string name (keeping that file plain data), and the article renderer looks the
-// component up here and drops it in after the section's prose.
-const VISUALS = {
-  HandFlowVisual,
-  PositionDiagram,
-  RangeGridVisual,
-  HandRankings,
-  OutsVisual,
-  RuleOf24Demo,
-  PotOddsCalc,
-  TextureClassifierVisual,
-  RangeFavorVisual,
-  HandBucketVisual,
-  CbetHelperVisual,
-  BankrollCalcVisual,
-}
+import PhaseArticleBody from './PhaseArticleBody.jsx'
 
 export default function Learn({ onNavigate }) {
   // Local sub-route: null = the phase index, otherwise the open phase id. Kept
@@ -144,46 +115,7 @@ function PhaseArticle({ phase, onBack, onNavigate }) {
         </button>
 
         <article className="pt-card p-5 sm:p-8">
-          <header className="mb-6 border-b border-line pb-5">
-            <div className="pt-eyebrow text-accent-text">Phase {phase.number}</div>
-            <h1 className="mt-1 text-2xl font-bold text-ink-heading sm:text-3xl">{phase.title}</h1>
-            <p className="mt-2 text-base leading-relaxed text-ink-body">{phase.description}</p>
-            {phase.trainers?.length > 0 && (
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                <span className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
-                  Practice this
-                </span>
-                {phase.trainers.map((t) => (
-                  <button
-                    key={t.view}
-                    onClick={() => onNavigate(t.view)}
-                    className="rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-onfelt shadow transition hover:bg-accent-hover"
-                  >
-                    {t.label} →
-                  </button>
-                ))}
-              </div>
-            )}
-          </header>
-
-          <div className="space-y-8">
-            {phase.sections.map((s, i) => {
-              const Visual = s.visual ? VISUALS[s.visual] : null
-              return (
-                <section key={i}>
-                  <h2 className="text-lg font-bold text-ink-heading">{s.heading}</h2>
-                  {s.body.length > 0
-                    ? s.body.map((para, j) => (
-                        <p key={j} className="mt-3 text-base leading-relaxed text-ink-body">
-                          {para}
-                        </p>
-                      ))
-                    : !Visual && <p className="mt-2 text-sm italic text-ink-muted">Content coming soon.</p>}
-                  {Visual && <Visual />}
-                </section>
-              )
-            })}
-          </div>
+          <PhaseArticleBody phase={phase} onNavigate={onNavigate} showTrainers />
         </article>
 
         <div className="mt-6 text-center">
