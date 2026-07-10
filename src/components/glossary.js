@@ -32,8 +32,13 @@ export const GLOSSARY = {
   raise: "Raise — increase the amount when there's already a bet on the table, forcing everyone else to pay more to keep playing.",
   '3bet':
     'A 3-bet is simply a re-raise. The big blind counts as the first bet, the opener’s raise is the second, so raising again is the “third bet.”',
+  'all-in':
+    "All-in — betting every chip you have in front of you. Nobody can force you out of the hand after that, but you can't bet any more either, and losing it means you're out of chips.",
+  limp: 'Limp — just calling the big blind before the flop instead of raising. It’s usually a weak, passive play; strong players prefer to raise or fold rather than limp in.',
 
   // ── Core concepts ────────────────────────────────────────────────────────────
+  position:
+    'Position — where you sit relative to the dealer button, which decides when it is your turn to act. Acting later (closer to the button) is a real advantage because you see what everyone else does before you decide.',
   equity:
     'Equity — your share of the pot right now: the percentage of the time your hand would win if every remaining card were dealt out. 40% equity means you’d win about 4 times in 10.',
   outs: 'Outs — the cards still left in the deck that would complete your hand and likely make it the winner (for example, 9 cards of your suit are left when you’re drawing to a flush).',
@@ -63,6 +68,15 @@ export const GLOSSARY = {
   pot: 'The pot — all the chips wagered so far in the current hand. The winner (or winners) take it.',
   'buy-in': 'Buy-in — the amount of chips you sit down with. Cash games have a range (100 big blinds is a standard buy-in).',
   bb: 'Big blind (bb) — the forced bet posted by the big-blind seat. It’s also the unit stacks and winnings are measured in (e.g. “100bb deep”).',
+
+  // ── Live play, bankroll & mindset ────────────────────────────────────────────
+  bankroll:
+    'Bankroll — the money you’ve set aside just for poker, kept separate from the cash you actually live on. Managing it (only playing stakes you’re rolled for) is what keeps the game sustainable.',
+  variance:
+    'Variance — the short-term swings of luck. Over a single night, good and bad luck can completely swamp skill; only over many sessions does your real skill show up in the results.',
+  tilt: 'Tilt — playing emotionally and recklessly, usually after a bad beat or a loss. Noticing it and stepping away is a core discipline, because tilt quietly costs far more than any one hand.',
+  straddle:
+    'Straddle — an optional extra blind (usually double the big blind) posted before the cards are dealt. It’s voluntary and simply raises the stakes for that hand; you never have to do it.',
 
   // ── Bot archetypes (wording from simulator/coach.js ARCHETYPE_INFO) ─────────
   nit: 'Nit — an extremely tight player who only plays premium hands.',

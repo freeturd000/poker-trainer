@@ -12,6 +12,7 @@
 
 import { useState } from 'react'
 import { PHASES, getPhase } from './phases.js'
+import GlossaryPage from './GlossaryPage.jsx'
 import HandFlowVisual from './HandFlowVisual.jsx'
 import PositionDiagram from './PositionDiagram.jsx'
 import RangeGridVisual from './RangeGridVisual.jsx'
@@ -47,16 +48,22 @@ export default function Learn({ onNavigate }) {
   // Local sub-route: null = the phase index, otherwise the open phase id. Kept
   // here (not in App) so the whole Learn section stays one self-contained tab.
   const [openId, setOpenId] = useState(null)
+  // Separate flag for the Glossary reference page — it's not one of the numbered
+  // phases, so it routes on its own rather than through openId/getPhase.
+  const [showGlossary, setShowGlossary] = useState(false)
   const phase = openId ? getPhase(openId) : null
 
   if (phase) {
     return <PhaseArticle phase={phase} onBack={() => setOpenId(null)} onNavigate={onNavigate} />
   }
-  return <LearnHome onOpen={setOpenId} />
+  if (showGlossary) {
+    return <GlossaryPage onBack={() => setShowGlossary(false)} />
+  }
+  return <LearnHome onOpen={setOpenId} onOpenGlossary={() => setShowGlossary(true)} />
 }
 
 // ── Learn home: the phase index ──────────────────────────────────────────────
-function LearnHome({ onOpen }) {
+function LearnHome({ onOpen, onOpenGlossary }) {
   return (
     <div className="pt-screen">
       <div className="pt-rail">
@@ -86,6 +93,31 @@ function LearnHome({ onOpen }) {
             </li>
           ))}
         </ol>
+
+        {/* Glossary — a reference, not a numbered phase. Pinned below the path and
+            visually distinguished (book icon + "Reference" label) so it never reads
+            as "Phase 8". Tap it any time to look up a term. */}
+        <div className="mt-4 border-t border-line-felt/40 pt-4">
+          <button
+            onClick={onOpenGlossary}
+            className="flex w-full items-center gap-4 pt-card p-4 text-left transition hover:bg-surface-raised sm:p-5"
+          >
+            <span
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface-inset text-xl text-accent-text"
+              aria-hidden="true"
+            >
+              📖
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-xs font-semibold uppercase tracking-wide text-ink-muted">Reference</span>
+              <span className="block text-base font-bold text-ink-heading sm:text-lg">Glossary</span>
+              <span className="block text-sm text-ink-muted">
+                Every poker term in the app, in plain English. Look one up any time.
+              </span>
+            </span>
+            <span className="shrink-0 text-xl text-accent-text" aria-hidden="true">›</span>
+          </button>
+        </div>
 
         <p className="mt-6 text-center text-xs text-onfelt-4">
           Read a phase, then drill it in the matching trainer. Study and reps together.
