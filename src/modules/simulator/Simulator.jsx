@@ -21,7 +21,7 @@ import SimControls from './SimControls.jsx'
 import CoachPanel from './CoachPanel.jsx'
 import HandHistoryPanel from './HandHistoryPanel.jsx'
 import { adviseHero, explainBotAction, narrateSinceHero, recapResult } from './coach.js'
-import { fracToAmount } from './sizing.js'
+import { fracToAmount, preflopRaiseAmount } from './sizing.js'
 import { beginHand, recordAction, buildRecord, describeHand } from './handHistory.js'
 import { evaluateHand } from '../../engine/evaluator.js'
 
@@ -325,24 +325,50 @@ export default function Simulator() {
           checkedToHero,
         })
         // When the coach recommends a bet/raise, turn its sizing category into a
-        // concrete chip amount using the SAME math as the bet slider (via
-        // sizing.js), so the number the coach shows equals what the slider offers.
+        // concrete chip amount, clamped to the engine's legal [min,max] so it is
+        // always valid. Postflop uses the board-texture pot fraction (same math as
+        // the slider); preflop uses the standard raise conventions (via sizing.js).
         if (advice.sizing) {
           const aggr =
             heroLegal.find((a) => a.type === 'raise') || heroLegal.find((a) => a.type === 'bet')
-          advice.sizing = aggr
-            ? {
-                ...advice.sizing,
-                amount: fracToAmount({
-                  frac: advice.sizing.frac,
-                  pot: view.pot,
-                  currentBet: view.currentBet,
-                  isRaise: aggr.type === 'raise',
-                  min: aggr.min,
-                  max: aggr.max,
-                }),
-              }
-            : null // no legal bet/raise to size (shouldn't happen) → hide the size line
+          if (!aggr) {
+            advice.sizing = null // no legal bet/raise to size → hide the size line
+          } else if (advice.sizing.kind === 'pot') {
+            advice.sizing = {
+              ...advice.sizing,
+              amount: fracToAmount({
+                frac: advice.sizing.frac,
+                pot: view.pot,
+                currentBet: view.currentBet,
+                isRaise: aggr.type === 'raise',
+                min: aggr.min,
+                max: aggr.max,
+              }),
+            }
+          } else {
+            // Preflop open / re-raise: count the limpers/callers already in this
+            // round (exclude hero, exclude the forced big blind on an unraised pot,
+            // and exclude the raiser we're re-raising on a raised pot).
+            const isRaised = view.currentBet > cfg.bb
+            const callers = view.players.filter(
+              (p) =>
+                p.seat !== HERO &&
+                p.status !== 'folded' &&
+                p.streetCommitted === view.currentBet &&
+                (isRaised ? p.seat !== aggressor?.seat : p.position !== 'BB'),
+            ).length
+            advice.sizing = {
+              ...advice.sizing,
+              amount: preflopRaiseAmount({
+                bb: cfg.bb,
+                currentBet: view.currentBet,
+                callers,
+                isRaised,
+                min: aggr.min,
+                max: aggr.max,
+              }),
+            }
+          }
         }
         // "What just happened": narrate opponents' meaningful action since hero
         // last acted, read from the same recorded action stream (no new logic).

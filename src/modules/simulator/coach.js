@@ -286,6 +286,7 @@ function advisePreflop({ token, position, facingRaise, isBB, canCheck, raiserPos
       ? {
           action: 'Raise',
           reason: `Your two cards, ${hand}, are strong enough to play from your seat (${position}). Come in with a raise — betting first takes the lead and can win the blinds right away.`,
+          sizing: { kind: 'preflopOpen', label: 'roughly 3 big blinds, plus one more for each player already in the pot' },
           approx: false,
         }
       : {
@@ -308,7 +309,9 @@ function advisePreflop({ token, position, facingRaise, isBB, canCheck, raiserPos
       reason = `${hand} is good enough to call and see the flop, but not strong enough to re-raise. Just call.${oppNote}`
     else
       reason = `${hand} isn't strong enough to keep going against a raise — fold and wait for a better hand.${oppNote}`
-    return { action: VERB[act] ?? VERB.fold, reason, approx: !isBB }
+    const sizing =
+      act === '3bet' ? { kind: 'preflop3bet', label: 'roughly 3× the amount they raised to' } : undefined
+    return { action: VERB[act] ?? VERB.fold, reason, sizing, approx: !isBB }
   }
 
   // Fallback when the raiser's seat is unknown (e.g. a limped pot that got raised).

@@ -58,10 +58,10 @@ export default function CoachPanel({ content }) {
         </p>
         {size?.amount != null && (
           <p className="mt-1.5 text-sm font-semibold leading-snug text-onfelt">
-            How much: {content.action.toLowerCase()} {size.label}
-            {' '}
-            <span className="tabular-nums text-gold-text">(≈{size.amount} chips)</span>. The bet
-            slider is set here — nudge it to bet more or less.
+            How much:{' '}
+            {content.action === 'Bet' ? 'bet about ' : `${content.action.toLowerCase()} to about `}
+            <span className="tabular-nums text-gold-text">{size.amount}</span> — {size.label}. The
+            slider is set here; adjust as you like.
           </p>
         )}
         <p className="mt-1.5 text-[11px] italic text-special/80">

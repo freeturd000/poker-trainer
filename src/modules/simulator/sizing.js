@@ -13,11 +13,13 @@ import { classifyTexture } from '../board-reader/texture.js'
 // same ⅓ / ½ / ¾ glyphs the slider's shortcut buttons use).
 const FRAC = { '1/3': 1 / 3, '1/2': 1 / 2, '3/4': 3 / 4, pot: 1 }
 const LABEL = {
-  '1/3': 'small, about ⅓ of the pot',
-  '1/2': 'about ½ of the pot',
-  '3/4': 'big, about ¾ of the pot',
-  pot: 'the full pot',
+  '1/3': 'small, roughly ⅓ of the pot',
+  '1/2': 'roughly half the pot',
+  '3/4': 'big, roughly ¾ of the pot',
+  pot: 'a full, pot-sized bet',
 }
+
+const clampInt = (x, min, max) => Math.max(min, Math.min(max, Math.round(x)))
 
 /**
  * Fraction-of-pot → a legal TO-amount. IDENTICAL math to SimControls' sizeFor: for
@@ -27,6 +29,21 @@ const LABEL = {
 export function fracToAmount({ frac, pot, currentBet, isRaise, min, max }) {
   const base = isRaise ? currentBet + Math.round(pot * frac) : Math.round(pot * frac)
   return Math.max(min, Math.min(max, base))
+}
+
+/**
+ * Preflop raise TO-amount — there is no board texture to size off yet, so we use
+ * the standard conventions:
+ *   • open (unraised pot): about 3 big blinds, +1 big blind per limper/caller.
+ *   • re-raise (facing a raise): about 3× the amount they raised to, +1 bb per
+ *     other caller already in.
+ * Clamped to the engine's legal raise [min, max] so it is always a valid raise.
+ * @param {{ bb:number, currentBet:number, callers:number, isRaised:boolean,
+ *           min:number, max:number }} ctx
+ */
+export function preflopRaiseAmount({ bb, currentBet, callers, isRaised, min, max }) {
+  const target = isRaised ? 3 * currentBet + callers * bb : (3 + callers) * bb
+  return clampInt(target, min, max)
 }
 
 /**
@@ -41,5 +58,5 @@ export function coachSizing(board, role = 'value') {
   if (!Array.isArray(board) || board.length < 3) return null
   const { wetness } = classifyTexture(board.slice(0, 3))
   const { size } = sizingDecision({ wetness, role })
-  return { size, frac: FRAC[size], label: LABEL[size] }
+  return { kind: 'pot', size, frac: FRAC[size], label: LABEL[size] }
 }
