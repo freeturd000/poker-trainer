@@ -4,7 +4,9 @@
 // plain-English guidance produced by ./coach.js. It owns no poker logic — it just
 // displays one of three content shapes:
 //   • { kind: 'bot',    text }                    — read on an opponent's action
-//   • { kind: 'advice', action, reason, approx }  — a suggestion on hero's turn
+//   • { kind: 'advice', action, reason, approx, context }  — a suggestion on hero's
+//     turn, optionally preceded by a "what just happened" line reading opponents'
+//     most recent meaningful action
 //   • { kind: 'result', summary, lesson }         — the showdown recap
 // Deliberately separate from the felt/table styling so explanations read as a
 // tutor's aside, not part of the game surface.
@@ -37,12 +39,26 @@ export default function CoachPanel({ content }) {
   }
 
   if (content.kind === 'advice') {
+    const size = content.sizing
     return (
       <Shell>
+        {content.context && (
+          <p className="mb-2 border-l-2 border-special/50 pl-2.5 text-sm leading-snug text-onfelt">
+            {content.context}
+          </p>
+        )}
         <p className="text-sm leading-snug text-onfelt-2">
           <span className="font-bold text-onfelt">Coach suggests: {content.action}.</span>{' '}
           {content.reason}
         </p>
+        {size?.amount != null && (
+          <p className="mt-1.5 text-sm font-semibold leading-snug text-onfelt">
+            How much: {content.action.toLowerCase()} {size.label}
+            {' '}
+            <span className="tabular-nums text-gold-text">(≈{size.amount} chips)</span>. The bet
+            slider is set here — nudge it to bet more or less.
+          </p>
+        )}
         <p className="mt-1.5 text-[11px] italic text-special/80">
           A heuristic guide to learn from — not gospel. It's your call; play it however you like.
         </p>

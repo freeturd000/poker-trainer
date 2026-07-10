@@ -7,7 +7,7 @@ import Term from '../../components/Term.jsx'
 
 const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x))
 
-export default function SimControls({ legal, pot, currentBet, onAct }) {
+export default function SimControls({ legal, pot, currentBet, onAct, presetAmount = null }) {
   const fold = legal.find((a) => a.type === 'fold')
   const check = legal.find((a) => a.type === 'check')
   const call = legal.find((a) => a.type === 'call')
@@ -16,11 +16,14 @@ export default function SimControls({ legal, pot, currentBet, onAct }) {
   const aggr = raise || bet // at most one of these is offered at a time
   const isRaise = Boolean(raise)
 
-  const [to, setTo] = useState(aggr ? aggr.min : 0)
-  // Reset the slider whenever the offered sizing bounds change (new street/spot).
+  // Start at the coach's recommended amount when one is offered, else the minimum.
+  const [to, setTo] = useState(aggr ? (presetAmount ?? aggr.min) : 0)
+  // Reset the slider whenever the offered sizing bounds — or the coach's suggested
+  // amount — change (a new street/spot). The user can still drag freely afterward:
+  // this only sets the STARTING value, exactly like the old min default.
   useEffect(() => {
-    if (aggr) setTo(aggr.min)
-  }, [aggr?.type, aggr?.min, aggr?.max])
+    if (aggr) setTo(presetAmount ?? aggr.min)
+  }, [aggr?.type, aggr?.min, aggr?.max, presetAmount])
 
   // Fraction-of-pot sizing → a legal TO-amount. For a raise the fraction is added
   // on top of the current bet; for an open bet it's a fraction of the pot.

@@ -20,7 +20,8 @@ import SimTable from './SimTable.jsx'
 import SimControls from './SimControls.jsx'
 import CoachPanel from './CoachPanel.jsx'
 import HandHistoryPanel from './HandHistoryPanel.jsx'
-import { adviseHero, explainBotAction, recapResult } from './coach.js'
+import { adviseHero, explainBotAction, narrateSinceHero, recapResult } from './coach.js'
+import { fracToAmount } from './sizing.js'
 import { beginHand, recordAction, buildRecord, describeHand } from './handHistory.js'
 import { evaluateHand } from '../../engine/evaluator.js'
 
@@ -280,6 +281,12 @@ export default function Simulator() {
   // ./coach.js, which reuses the range/postflop/board-reader analysis modules.
   const coachOn = Boolean(cfg.coach)
   const coachContent = coachOn ? coachContentFor() : null
+  // When coach mode recommends a sized bet/raise, pre-fill the slider with that
+  // amount so the user sees and can confirm it (they can still drag it freely).
+  const coachPreset =
+    coachContent?.kind === 'advice' && coachContent.sizing?.amount != null
+      ? coachContent.sizing.amount
+      : null
 
   function coachContentFor() {
     try {
@@ -317,7 +324,37 @@ export default function Simulator() {
           opponent,
           checkedToHero,
         })
-        return { kind: 'advice', ...advice }
+        // When the coach recommends a bet/raise, turn its sizing category into a
+        // concrete chip amount using the SAME math as the bet slider (via
+        // sizing.js), so the number the coach shows equals what the slider offers.
+        if (advice.sizing) {
+          const aggr =
+            heroLegal.find((a) => a.type === 'raise') || heroLegal.find((a) => a.type === 'bet')
+          advice.sizing = aggr
+            ? {
+                ...advice.sizing,
+                amount: fracToAmount({
+                  frac: advice.sizing.frac,
+                  pot: view.pot,
+                  currentBet: view.currentBet,
+                  isRaise: aggr.type === 'raise',
+                  min: aggr.min,
+                  max: aggr.max,
+                }),
+              }
+            : null // no legal bet/raise to size (shouldn't happen) → hide the size line
+        }
+        // "What just happened": narrate opponents' meaningful action since hero
+        // last acted, read from the same recorded action stream (no new logic).
+        const context = builderRef.current
+          ? narrateSinceHero({
+              actions: builderRef.current.actions,
+              heroSeat: HERO,
+              nameBySeat: botsRef.current.nameBySeat,
+              archBySeat: botsRef.current.archBySeat,
+            })
+          : ''
+        return { kind: 'advice', context, ...advice }
       }
       if (lastActed && lastActed.seat !== HERO) {
         const text = explainBotAction(botsRef.current.archBySeat[lastActed.seat], { type: lastActed.type })
@@ -415,6 +452,7 @@ export default function Simulator() {
               pot={view.pot}
               currentBet={view.currentBet}
               onAct={heroAct}
+              presetAmount={coachPreset}
             />
           ) : (
             <div className="rounded-2xl bg-panel/50 p-4 text-center text-sm text-onfelt-2">

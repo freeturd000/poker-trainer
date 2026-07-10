@@ -37,6 +37,7 @@ import {
 } from '../postflop-trainer/heuristics.js'
 import { classifyTexture } from '../board-reader/texture.js'
 import { favorFlop } from '../board-reader/rangeInteraction.js'
+import { coachSizing } from './sizing.js'
 import { evaluateHand } from '../../engine/evaluator.js'
 import { GLOSSARY, describeHand as describeToken } from '../../components/glossary.js'
 
@@ -125,6 +126,105 @@ export function explainBotAction(archId, action) {
     default:
       return ''
   }
+}
+
+// ── "What just happened" — a one-line recap of opponents' recent action ───────
+// Before advising hero, the coach narrates the meaningful thing opponents did
+// since hero last acted, in beginner terms and coloured by archetype. It reads
+// ONLY the action stream the table already records (the hand-history builder) —
+// no cards, no new poker judgement. Returns '' when nothing meaningful happened
+// (e.g. hero is first to act), so the caller can simply omit the line.
+
+// Concise, archetype-flavoured read on an opponent betting or raising into hero.
+const AGGRO_READ = {
+  tag: "they play tight, so that usually means real strength — be cautious.",
+  nit: 'a Nit only puts chips in with premium hands, so treat this as a big warning.',
+  station: "that's unusual for a player who mostly just calls, so it's more likely a real hand than a bluff.",
+}
+// Read on an opponent flat-calling hero's bet.
+const CALL_READ = {
+  station: 'remember, they call with almost anything, so it tells you little about their hand.',
+  tag: 'a flat call from a tight player usually means a decent hand, not their strongest.',
+  nit: 'even a call from such a tight player points to a real hand.',
+}
+
+const numberWord = (n) =>
+  ({ 1: 'One', 2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five' }[n] ?? String(n))
+
+/**
+ * A short "what just happened" line for the hero's turn, built from the recorded
+ * action stream. Focuses on the most recent street with opponent action since
+ * hero last acted, and narrates the single most meaningful thing about it.
+ * @param {object} p
+ * @param {Array<{seat:number,street:string,type:string}>} p.actions - builder.actions
+ * @param {number} p.heroSeat
+ * @param {Object<number,string>} p.nameBySeat - seat -> display name ("TAG"/"Station"/…)
+ * @param {Object<number,string>} p.archBySeat - seat -> archetype id
+ * @returns {string} one sentence, or '' if nothing meaningful happened
+ */
+export function narrateSinceHero({ actions, heroSeat, nameBySeat, archBySeat }) {
+  if (!Array.isArray(actions) || actions.length === 0) return ''
+
+  // Everything opponents did after hero's most recent action.
+  let last = -1
+  for (let i = actions.length - 1; i >= 0; i--) {
+    if (actions[i].seat === heroSeat) {
+      last = i
+      break
+    }
+  }
+  const heroLast = last >= 0 ? actions[last] : null
+  const heroBetLast = heroLast && (heroLast.type === 'bet' || heroLast.type === 'raise')
+  const since = actions.slice(last + 1).filter((a) => a.seat !== heroSeat)
+  if (since.length === 0) return ''
+
+  // Narrate only the most recent street with action, so a new street doesn't get
+  // muddied by earlier calls (e.g. preflop callers before a flop check-around).
+  const lastStreet = since[since.length - 1].street
+  const cluster = since.filter((a) => a.street === lastStreet)
+
+  const nameOf = (seat) => nameBySeat[seat] ?? `Seat ${seat}`
+  const readFor = (map, seat, fallback) => map[archBySeat[seat]] ?? fallback
+
+  // 1) Aggression trumps everything — narrate the most recent bettor/raiser.
+  const aggro = [...cluster].reverse().find((a) => a.type === 'bet' || a.type === 'raise')
+  if (aggro) {
+    const verb = aggro.type === 'raise' ? 'raised' : 'bet'
+    const read = readFor(AGGRO_READ, aggro.seat, 'a bet like this shows strength — proceed with care.')
+    return `The ${nameOf(aggro.seat)} ${verb} — ${read}`
+  }
+
+  const calls = cluster.filter((a) => a.type === 'call')
+  const checks = cluster.filter((a) => a.type === 'check')
+  const folds = cluster.filter((a) => a.type === 'fold')
+
+  // 2) Opponents called hero's bet (the bet closed the street, now hero's turn again).
+  if (calls.length) {
+    const alsoFolded = heroBetLast && folds.length ? ` (${numberWord(folds.length).toLowerCase()} folded)` : ''
+    if (calls.length === 1) {
+      const read = readFor(CALL_READ, calls[0].seat, 'a call keeps them in the pot.')
+      return `The ${nameOf(calls[0].seat)} just called${alsoFolded} — ${read}`
+    }
+    return `${numberWord(calls.length)} players called${alsoFolded} — more opponents left in means you'll want a stronger hand to keep betting.`
+  }
+
+  // 3) Nobody bet — it's checked to you.
+  if (checks.length) {
+    return `Everyone checked to you — nobody's shown strength, so it's often a good spot to bet.`
+  }
+
+  // 4) Only folds — your bet thinned or cleared the field.
+  if (folds.length) {
+    if (heroBetLast)
+      return folds.length === 1
+        ? `The ${nameOf(folds[0].seat)} folded to your bet — your bet worked, and there's one fewer player to beat.`
+        : `${numberWord(folds.length)} players folded to your bet — fewer opponents left to beat.`
+    return folds.length === 1
+      ? `The ${nameOf(folds[0].seat)} folded — one fewer player to beat.`
+      : `${numberWord(folds.length)} players folded — fewer opponents left to beat.`
+  }
+
+  return ''
 }
 
 // A one-sentence read on the player who bet or raised into hero, plus whether
@@ -258,6 +358,7 @@ function adviseRiver({ hole, board, facingBet, toCall, pot, opponent }) {
       return {
         action: 'Raise',
         reason: `You have ${descr} — a strong hand, and this is the last card, so nothing can beat you by improving. Raise, or at least call, to get paid.`,
+        sizing: coachSizing(board, 'value'),
         approx: true,
       }
     if (tier === 'pair') {
@@ -288,7 +389,7 @@ function adviseRiver({ hole, board, facingBet, toCall, pot, opponent }) {
   }
 
   if (tier === 'strong')
-    return { action: 'Bet', reason: `You have ${descr} — a strong hand. Bet the river so weaker hands pay you off (betting a strong hand to get called is called betting "for value").`, approx: true }
+    return { action: 'Bet', reason: `You have ${descr} — a strong hand. Bet the river so weaker hands pay you off (betting a strong hand to get called is called betting "for value").`, sizing: coachSizing(board, 'value'), approx: true }
   if (tier === 'pair')
     return { action: 'Check', reason: `One pair (${descr}) on the river is usually a check, not a bet: worse hands fold and only better hands call, so betting tends to lose money. Check and hope to win at showdown.`, approx: true }
   return { action: 'Check', reason: `You have only ${descr}. Check and give up the pot — there's no hand worth betting here.`, approx: true }
@@ -323,7 +424,7 @@ function advisePostflop({ hole, board, facingBet, toCall, pot, opponent, checked
         const caution = read?.rarelyBluffs && opponent?.archId === 'nit'
           ? ` One caution: a Nit betting big can hold an even bigger hand, so if they raise you back, believe them.`
           : ''
-        return { action: 'Raise', reason: `You have ${made} — a big hand (two pairs or better). Raise to build the pot while you're ahead.${caution}`, approx: false }
+        return { action: 'Raise', reason: `You have ${made} — a big hand (two pairs or better). Raise to build the pot while you're ahead.${caution}`, sizing: coachSizing(board, 'value'), approx: false }
       }
       return { action: 'Call', reason: `You have a solid one pair (${made}). It's good enough to call with, but raising would mostly scare off the weaker hands you beat — so just call and keep the pot under control.`, approx: false }
     }
@@ -378,16 +479,16 @@ function advisePostflop({ hole, board, facingBet, toCall, pot, opponent, checked
       : ''
 
   if (a.bucket === 'value')
-    return { action: 'Bet', reason: `${lead}You have ${made} — a strong hand. Bet it to build the pot and get paid by weaker hands (betting a strong hand for chips is called betting "for value").`, approx: true }
+    return { action: 'Bet', reason: `${lead}You have ${made} — a strong hand. Bet it to build the pot and get paid by weaker hands (betting a strong hand for chips is called betting "for value").`, sizing: coachSizing(board, 'value'), approx: true }
   if (a.bucket === 'draw')
-    return { action: 'Bet', reason: `${lead}You have ${drawPhrase(a)}. Betting can win the pot right now, and if you get called you still might complete your draw — a bet that can win two ways like this is called a "semi-bluff".`, approx: true }
+    return { action: 'Bet', reason: `${lead}You have ${drawPhrase(a)}. Betting can win the pot right now, and if you get called you still might complete your draw — a bet that can win two ways like this is called a "semi-bluff".`, sizing: coachSizing(board, 'bluff'), approx: true }
   if (a.bucket === 'marginal')
     return tex.wet
       ? { action: 'Check', reason: `You have a weak pair (${made}) on a "wet" board — one where lots of straights and flushes are possible. Betting would only build a big pot against the hands that beat you. Check and try to reach showdown cheaply.`, approx: true }
-      : { action: 'Bet', reason: `${lead}You have a weak pair (${made}) on a "dry" board — few draws are out there. A small bet often wins it right now and pushes out hands with two high cards that could otherwise catch up.`, approx: true }
+      : { action: 'Bet', reason: `${lead}You have a weak pair (${made}) on a "dry" board — few draws are out there. A bet often wins it right now and pushes out hands with two high cards that could otherwise catch up.`, sizing: coachSizing(board, 'value'), approx: true }
   // air
   return fav.favor !== 'caller' && !tex.wet
-    ? { action: 'Bet', reason: `${lead}You have nothing yet, but this board is unlikely to have helped anyone. A small bet often takes it down — a well-timed bluff on a board that's good for it.`, approx: true }
+    ? { action: 'Bet', reason: `${lead}You have nothing yet, but this board is unlikely to have helped anyone. A bet often takes it down — a well-timed bluff on a board that's good for it.`, sizing: coachSizing(board, 'bluff'), approx: true }
     : { action: 'Check', reason: `You have nothing, and this board likely helped the other players more than you. Don't bluff into it — check and give up the pot.`, approx: true }
 }
 
