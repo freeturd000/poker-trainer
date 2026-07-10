@@ -20,6 +20,8 @@ import RuleOf24Demo from './RuleOf24Demo.jsx'
 import PotOddsCalc from './PotOddsCalc.jsx'
 import TextureClassifierVisual from './TextureClassifierVisual.jsx'
 import RangeFavorVisual from './RangeFavorVisual.jsx'
+import HandBucketVisual from './HandBucketVisual.jsx'
+import CbetHelperVisual from './CbetHelperVisual.jsx'
 
 // Registry of inline visuals a phase section can render. phases.js references these
 // by string name (keeping that file plain data), and the article renderer looks the
@@ -33,6 +35,8 @@ const VISUALS = {
   PotOddsCalc,
   TextureClassifierVisual,
   RangeFavorVisual,
+  HandBucketVisual,
+  CbetHelperVisual,
 }
 
 export default function Learn({ onNavigate }) {

@@ -273,7 +273,9 @@ export const PHASES = [
           `Draw — you do not have much of a made hand yet, but you have a strong draw: a "flush draw" (four cards toward a flush, needing one more) or an "open-ended straight draw" (four in a row that completes at either end, eight cards to hit). Draws have lots of equity — chances to improve — so you play them aggressively or continue with them. Note a bare "gutshot" (an inside straight draw needing one specific rank) is NOT strong enough to count here.`,
           `Marginal — a weak made pair: middle pair, bottom pair, or a small pocket pair below the top board card. It has some "showdown value" (it can win if you simply get to the end and show it down) but it is fragile, so you keep the pot small with it. Air — no pair and no strong draw (a bare gutshot lands here too). It has no value now; if you bet, you are bluffing.`,
           `One rule about overlap: the strongest action wins. A weak pair that also has a flush draw is treated as a draw, not a marginal hand, because its equity — not its showdown value — is what should drive the decision.`,
+          `Sort a few hands yourself below. Cycle through a clear example of each bucket and see which one the trainer's analyzer assigns, and why — the same bucketing every drill in this module reasons from.`,
         ],
+        visual: 'HandBucketVisual',
       },
       {
         heading: 'The c-bet: betting as the preflop aggressor',
@@ -282,7 +284,9 @@ export const PHASES = [
           `With a value hand, always c-bet — you want to build the pot and charge worse hands and draws to keep playing. With a strong draw, c-bet as a "semi-bluff": you can win the pot right now if they fold, and if they do not, you still might improve to the best hand. Both of these are betting for good reasons.`,
           `With air, only c-bet as a bluff on boards that favor your range — dry boards that do not favor the caller. This ties directly back to board texture (Phase 3): high, dry, disconnected flops hit the raiser's big cards and big pairs, so a bluff there tells a believable story and folds out their weak hands. On a wet or caller-favoring board (low, connected), bluffing into the range that just connected only burns chips — so check and give up. With a marginal hand, split by texture too: on a dry board a small c-bet takes it down often and denies equity to overcards; on a wet board, check for "pot control" — keeping the pot small rather than bloating it with a hand that cannot stand pressure.`,
           `The whole rule collapses to one sentence: bet more on dry boards that favor your range, and check more on wet boards that favor the caller.`,
+          `See the rule decide below. Step through a few spots as the preflop raiser and watch the trainer's c-bet helper call bet or check — and pick a size when it bets — with its reason each time.`,
         ],
+        visual: 'CbetHelperVisual',
       },
       {
         heading: 'Facing a bet: fold, call, or raise',
