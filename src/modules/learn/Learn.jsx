@@ -12,6 +12,7 @@
 
 import { useState } from 'react'
 import { PHASES, getPhase } from './phases.js'
+import HandFlowVisual from './HandFlowVisual.jsx'
 import PositionDiagram from './PositionDiagram.jsx'
 import RangeGridVisual from './RangeGridVisual.jsx'
 import HandRankings from './HandRankings.jsx'
@@ -28,6 +29,7 @@ import BankrollCalcVisual from './BankrollCalcVisual.jsx'
 // by string name (keeping that file plain data), and the article renderer looks the
 // component up here and drops it in after the section's prose.
 const VISUALS = {
+  HandFlowVisual,
   PositionDiagram,
   RangeGridVisual,
   HandRankings,
@@ -61,7 +63,7 @@ function LearnHome({ onOpen }) {
         <header className="mb-6 text-center">
           <h1 className="pt-title">Learn</h1>
           <p className="mt-1 text-sm text-onfelt-2">
-            A guided path from complete beginner to a confident $1/$2 table — six phases, in order.
+            A guided path from complete beginner to a confident $1/$2 table — seven phases, in order.
           </p>
         </header>
 

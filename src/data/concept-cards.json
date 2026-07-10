@@ -1,7 +1,13 @@
 {
-  "_comment": "⚠️ CARD CONTENT — FLAG FOR REVIEW (CLAUDE.md §4 Module 6). Starter deck for the Spaced-Repetition Concept Deck. Each card is { id, category, front, back }. `id` is the STABLE scheduling key — never reuse or renumber an id once cards have been reviewed, or a card's saved schedule will attach to the wrong prompt. To grow the deck, append new cards with fresh ids; order here is only the tie-break order in which brand-new cards are introduced. Categories in use: Positions, Preflop, Math, Board Texture, Hand Rankings, Bankroll.",
+  "_comment": "⚠️ CARD CONTENT — FLAG FOR REVIEW (CLAUDE.md §4 Module 6). Starter deck for the Spaced-Repetition Concept Deck. Each card is { id, category, front, back }. `id` is the STABLE scheduling key — never reuse or renumber an id once cards have been reviewed, or a card's saved schedule will attach to the wrong prompt. To grow the deck, append new cards with fresh ids; order here is only the tie-break order in which brand-new cards are introduced. Categories in use: Basics, Positions, Preflop, Math, Board Texture, Hand Rankings, Bankroll.",
   "version": 1,
   "cards": [
+    {
+      "id": "basics-hand-flow",
+      "category": "Basics",
+      "front": "What is the sequence of a single hand of Hold'em?",
+      "back": "Blinds posted → two hole cards dealt → preflop betting (no board) → flop (3 community cards) + betting → turn (4th card) + betting → river (5th card) + betting → showdown. At showdown the best five-card hand — your two hole cards plus the five community cards — wins the pot."
+    },
     {
       "id": "pos-utg",
       "category": "Positions",

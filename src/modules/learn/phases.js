@@ -18,6 +18,80 @@
 
 export const PHASES = [
   {
+    id: 'how-a-hand-works',
+    number: 0,
+    title: 'How a hand plays out',
+    description: 'Start here — the rules of a single hand of Texas Hold’em, from the first forced bet to the winner taking the pot.',
+    trainers: [],
+    sections: [
+      {
+        heading: 'One hand of poker, top to bottom',
+        body: [
+          `Before any strategy makes sense, you need to know how a single hand of poker actually works — who puts in money, what cards get dealt and when, what you are allowed to do on your turn, and how a winner is decided. This phase walks through exactly that, one step at a time, using one example hand you can follow from start to finish. Nothing here is about playing well yet; it is just the rules of the road.`,
+          `The game is No-Limit Texas Hold'em — the version played almost everywhere, online and in casinos. A "hand" is one complete round of play: cards are dealt, players bet across a few stages, and someone wins. Then the cards are gathered up and the next hand begins. This app deals hands six players at a time, which is the most common online setup.`,
+          `The goal of every hand is to win "the pot" — the pile of chips in the middle of the table. We will define the pot properly in a moment; for now, just know that everything you do in a hand is in service of winning that pile (or of losing as little as possible when the hand is not going your way).`,
+        ],
+      },
+      {
+        heading: 'The table, the dealer button, and the blinds',
+        body: [
+          `Picture up to six players sitting around a table. One of them is marked as the nominal dealer for this hand by a small disc called the "button" (often shown as a "D"). The button does not do anything special during the hand — it just marks a reference point — but it matters because it moves one seat clockwise after every hand, so each player takes a turn being in each spot over time.`,
+          `Before any cards are dealt, the two players immediately to the button's left are required to put chips in. The first posts the "small blind" and the next posts the "big blind" — the big blind is the larger of the two and is the basic betting unit the whole table is measured against. These are called "blinds" because you post them blind: you pay them before you have seen a single card, whether you like it or not. They are forced bets, not a choice.`,
+          `Why force anyone to bet? Because those blinds create "the pot" — all the chips that have been bet in a hand, gathered in the middle of the table. The player who wins the hand takes the pot. Without the blinds seeding it, everyone could simply wait forever for a perfect hand and nothing would ever happen. The blinds put money on the table from the very first moment, giving everyone something to compete for.`,
+        ],
+      },
+      {
+        heading: 'Your hole cards',
+        body: [
+          `With the blinds posted, the dealer gives every player two cards, face down. These two private cards are your "hole cards," and only you get to see them. This is the one piece of secret information you hold — nobody else knows what you have, just as you do not know theirs.`,
+          `Your hole cards on their own are rarely a finished hand. The trick of Hold'em is that you will combine them with shared cards dealt later to build the best five-card hand you can. So two cards is just your starting point — where the hand goes depends on what comes next and how everyone bets.`,
+        ],
+      },
+      {
+        heading: 'The four betting rounds and the community cards',
+        body: [
+          `A hand of Hold'em unfolds over four "betting rounds" — four separate chances for the players to bet. Between the rounds, the dealer places shared cards face up in the middle of the table. These shared cards are the "community cards," or simply "the board," and every player uses them together with their own hole cards. Each stage of the hand — each betting round and the cards that come with it — is often called a "street." The four streets, in order, are:`,
+          `Preflop — the first betting round. It happens right after the hole cards are dealt, before any community cards are out ("pre-flop" literally means "before the flop"). Here you are acting on just your two hole cards and nothing else. In our example hand, this is where you raise and one opponent decides to keep playing by matching your bet.`,
+          `The flop — the second betting round. The dealer turns over three community cards at once. Suddenly there is a lot more to work with: you now read your two hole cards plus these three shared cards together. After the flop cards appear, there is a round of betting.`,
+          `The turn — the third betting round. A single fourth community card is added to the board, followed by another round of betting.`,
+          `The river — the fourth and final betting round. A fifth and last community card is dealt, completing the board at five shared cards. One last round of betting happens here. After the river betting is done, the hand is ready to be decided.`,
+          `Keep the shape in your head: two private hole cards that never change, and a board that grows from zero cards (preflop) to three (flop) to four (turn) to five (river). Your final hand is always the best five cards you can make from your two hole cards and those five shared ones. The diagram below walks the whole sequence.`,
+        ],
+        visual: 'HandFlowVisual',
+      },
+      {
+        heading: 'The five things you can do on your turn',
+        body: [
+          `During every betting round, players take turns acting one at a time. When the action reaches you, you choose one of a small set of moves. Learn these five words cold — they are the entire vocabulary of poker actions, and every trainer in this app uses them.`,
+          `Fold — give up the hand. You push your cards away and you are out until the next hand is dealt. Folding costs you nothing more, but you forfeit any chips you already put in this hand and you can no longer win the pot. When your cards are weak, folding is often the right, disciplined choice.`,
+          `Check — pass without betting. You can only check when no one has bet yet in the current round: you decline to bet, put in no chips, and the turn moves on to the next player. It keeps you in the hand for free. If everyone checks, the round simply ends and the next community card comes.`,
+          `Call — match the current bet. If someone has already bet in this round, you "call" by putting in the same amount to stay in the hand and see what comes next. Here is the key contrast: you check when nobody has bet (it is free), and you call when somebody has bet (you must pay to match them).`,
+          `Bet — put chips in when no one has bet yet this round. A bet is you being the first to wager on that street. Once you bet, everyone still in must at least match your bet (call), raise it, or fold.`,
+          `Raise — increase a bet that someone else already made. If an opponent has bet and you want to put in more, you raise; now they must match the higher amount to continue. The difference between a bet and a raise is simply whether you are first (a bet) or you are increasing someone else's wager (a raise). Raising an opponent's raise is a "re-raise," which you will later hear called a "3-bet" — for now just file away that a 3-bet is a re-raise; the naming is explained in a later phase.`,
+          `One note on the name "No-Limit": there is no cap on how large you may bet or raise. At any point you can push in all the chips in front of you — that is called going "all-in." Betting is always limited to the chips you have on the table, but within that, the sky is the limit.`,
+        ],
+      },
+      {
+        heading: 'Showdown: deciding the winner',
+        body: [
+          `There are two ways a hand ends. The first: at any point, if everyone folds except one player, that last player left standing wins the pot immediately — they do not even have to show their cards. A hand often ends this way, well before all the community cards are out.`,
+          `The second way is the "showdown." If two or more players are still in after the final (river) betting round, they turn their hole cards face up and compare hands. Each player makes their best five-card hand from their two hole cards plus the five community cards, and the strongest five-card hand wins the pot. If it happens that two players tie exactly, they split the pot.`,
+          `That raises the obvious question — which five-card hands beat which? That ranking (pair, two pair, straight, flush, and so on, up to the strongest) is the very first thing covered in Phase 1, so we will not repeat it here. For this phase, the only thing to take away is that the showdown is the moment the hand is settled, and the best five-card hand takes the pot.`,
+        ],
+      },
+      {
+        heading: 'One full hand, start to finish',
+        body: [
+          `Let us put every piece together with the example hand from the diagram above, so you can see the whole flow in motion. You are dealt the ace and king of clubs and diamonds — a strong start.`,
+          `Blinds and deal: the small blind and big blind post their forced bets, seeding the pot, and everyone receives their two hole cards. Preflop (first round): the action folds around to you, and rather than just matching the big blind you raise. One opponent, in the big blind, calls to keep playing; everyone else folds. There is now a real pot building in the middle.`,
+          `The flop (second round): the dealer turns over three community cards — the king of spades, the nine of hearts, and the four of clubs. Your ace-king now makes a pair of kings (you paired one of your hole cards with the king on the board), a strong holding here. Your opponent checks (declines to bet), you bet, and they call.`,
+          `The turn (third round): a fourth community card, the two of diamonds, joins the board. It does not change much. Your opponent checks again, you bet again, and again they call. The river (fourth round): the final community card, the queen of spades, completes the board. Your opponent checks one more time. This time you choose to check too, deciding you would rather just see the hands than bet again.`,
+          `Showdown: with the betting over and both of you still in, you turn your cards face up. Your opponent shows a busted draw — jack-high, no pair. You show your pair of kings, which is the better five-card hand, so you win the pot. That is one complete hand of No-Limit Hold'em, from the forced blinds to the chips being pushed your way. Every other phase in this app is about making those betting decisions well — but the sequence itself never changes.`,
+        ],
+      },
+    ],
+  },
+  {
     id: 'preflop-ranges',
     number: 1,
     title: 'Preflop ranges & position',
