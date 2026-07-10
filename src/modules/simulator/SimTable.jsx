@@ -14,6 +14,45 @@
 import Card from '../../components/Card.jsx'
 import Term from '../../components/Term.jsx'
 import { evaluateHand } from '../../engine/evaluator.js'
+import { firstToActPreflop, firstToActPostflop } from './positions.js'
+
+/**
+ * Rank every still-acting seat by the order it acts THIS street — purely for a
+ * visual "who acts when" cue. Reads existing hand state only (same first-to-act
+ * rule the engine uses): preflop opens at UTG, postflop at the first live seat
+ * left of the button, then clockwise. All-in/folded seats take no turn and are
+ * skipped, so ranks reflect the real remaining sequence.
+ *
+ * @returns {{ rankBySeat: Record<number, number>, firstSeat: number, total: number }}
+ */
+function streetActionOrder(view, n, buttonIndex) {
+  const rankBySeat = {}
+  if (view.complete || view.toAct === -1) return { rankBySeat, firstSeat: -1, total: 0 }
+  const first =
+    view.street === 'preflop'
+      ? firstToActPreflop(n, buttonIndex)
+      : firstToActPostflop(n, buttonIndex)
+  const bySeat = {}
+  view.players.forEach((p) => (bySeat[p.seat] = p))
+  let firstSeat = -1
+  let rank = 0
+  for (let i = 0; i < n; i++) {
+    const seat = (first + i) % n
+    const p = bySeat[seat]
+    if (p && p.status === 'active') {
+      rank += 1
+      rankBySeat[seat] = rank
+      if (firstSeat === -1) firstSeat = seat
+    }
+  }
+  return { rankBySeat, firstSeat, total: rank }
+}
+
+/** "st"/"nd"/"rd"/"th" for a small positive ordinal (used only in tooltips). */
+function ordinalSuffix(k) {
+  if (k % 100 >= 11 && k % 100 <= 13) return 'th'
+  return { 1: 'st', 2: 'nd', 3: 'rd' }[k % 10] ?? 'th'
+}
 
 // Oval geometry, in % of the table wrapper. Seats are centred on this ellipse;
 // the felt is drawn a little inside it. Tuned so seat boxes (2–6 of them) never
@@ -59,7 +98,12 @@ export default function SimTable({
   const shownBoard =
     visibleBoardLen == null ? view.board : view.board.slice(0, visibleBoardLen)
 
+  // Action-order cue for the current street (only meaningful with 2+ live actors).
+  const { rankBySeat, firstSeat, total } = streetActionOrder(view, n, buttonIndex)
+  const showOrder = total >= 2
+
   return (
+    <>
     <div className="relative mx-auto h-[440px] w-full max-w-3xl sm:h-[560px]">
       {/* Felt oval */}
       <div className="absolute inset-x-[4%] inset-y-[8%] rounded-[50%] bg-felt-rail shadow-2xl ring-4 ring-line-felt/50" />
@@ -114,15 +158,55 @@ export default function SimTable({
               // dealt (its action belongs to the previous street's feed).
               lastAction={seatJustActed ? justActed.text : lastBySeat[p.seat]}
               justActed={seatJustActed}
+              actOrder={showOrder ? rankBySeat[p.seat] : undefined}
+              isFirstToAct={showOrder && p.seat === firstSeat}
             />
           </div>
         )
       })}
     </div>
+
+    {/* Legend: decodes the action-order cues for a beginner. Only shown while a
+        street has a live sequence to read. */}
+    {showOrder && (
+      <div className="mx-auto mt-2 flex max-w-3xl flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-onfelt-3">
+        <span className="inline-flex items-center gap-1.5">
+          <span className="inline-block h-2.5 w-2.5 animate-pulse rounded-full bg-gold" />
+          to act now
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[9px] font-bold text-onfelt">
+            1
+          </span>
+          acts first this street
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-felt-rail text-[9px] font-bold text-onfelt-2">
+            2
+          </span>
+          then in order clockwise
+        </span>
+      </div>
+    )}
+    </>
   )
 }
 
-function Seat({ p, label, isHero, isButton, isTurn, stepMode, reveal, won, board, lastAction, justActed }) {
+function Seat({
+  p,
+  label,
+  isHero,
+  isButton,
+  isTurn,
+  stepMode,
+  reveal,
+  won,
+  board,
+  lastAction,
+  justActed,
+  actOrder,
+  isFirstToAct,
+}) {
   const folded = p.status === 'folded'
   const showCards = reveal && p.holeCards.length === 2 && !folded
   const descr =
@@ -147,6 +231,32 @@ function Seat({ p, label, isHero, isButton, isTurn, stepMode, reveal, won, board
         folded ? 'bg-panel/40 opacity-50' : 'bg-panel/80'
       } ${ring}`}
     >
+      {/* Pulsing halo on the seat that is on the clock right now — the loudest cue
+          on the table, drawn just outside the seat's own gold ring. */}
+      {isTurn && (
+        <span className="pointer-events-none absolute -inset-1 animate-pulse rounded-[1.1rem] ring-4 ring-gold/70" />
+      )}
+
+      {/* "to act" flag floating above the current actor. */}
+      {isTurn && (
+        <span className="absolute -top-3 left-1/2 flex -translate-x-1/2 items-center gap-0.5 whitespace-nowrap rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold-ink shadow">
+          <span aria-hidden="true">←</span> to act
+        </span>
+      )}
+
+      {/* Action-order badge (top-left, opposite the dealer button): where this seat
+          falls in this street's sequence. Rank 1 (first to act) is accented. */}
+      {actOrder != null && !isTurn && (
+        <span
+          className={`absolute -left-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold shadow ${
+            isFirstToAct ? 'bg-accent text-onfelt ring-2 ring-accent-bright' : 'bg-felt-rail text-onfelt-2'
+          }`}
+          title={isFirstToAct ? 'First to act this street' : `Acts ${actOrder}${ordinalSuffix(actOrder)} this street`}
+        >
+          {actOrder}
+        </span>
+      )}
+
       {/* Button chip */}
       {isButton && (
         <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-onfelt text-xs font-bold text-felt-deep shadow">
